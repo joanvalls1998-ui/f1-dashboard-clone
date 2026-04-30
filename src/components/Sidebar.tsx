@@ -12,8 +12,8 @@ import {
   Swords,
   Activity,
   Flame,
-  Wrench,
   CircleDot,
+  Wrench,
   Bomb,
   Dna,
   ScrollText,
@@ -21,25 +21,47 @@ import {
   ChevronRight,
   Calendar,
   Home,
+  Radio,
+  Clock,
+  Cloud,
+  Gauge,
+  Flag,
+  Map,
+  TrendingUp,
+  AlertTriangle,
+  BarChart,
 } from "lucide-react";
 import { useState } from "react";
 
 const navItems = [
   { href: "/", label: "Home", icon: Home },
+  { href: "/live", label: "Live Timing", icon: Radio },
   { href: "/calendar", label: "Race Calendar", icon: Calendar },
-  { href: "/standings", label: "Driver Standings", icon: Trophy },
-  { href: "/constructors", label: "Constructor Standings", icon: Crown },
+  { href: "/standings", label: "Standings", icon: Trophy },
   { href: "/drivers", label: "Drivers", icon: IdCard },
   { href: "/teams", label: "Teams", icon: Users },
   { href: "/driver-stats", label: "Driver Stats", icon: BarChart3 },
-  { href: "/head-to-head", label: "Head To Head", icon: Swords },
-  { href: "/consistency", label: "Consistency", icon: Activity },
+  { href: "/head-to-head", label: "Head to Head", icon: Swords },
+  { href: "/driver-comparison", label: "Driver Comparison", icon: Activity },
   { href: "/race-pace", label: "Race Pace", icon: Flame },
+  { href: "/sector-times", label: "Sector Times", icon: Clock },
+  { href: "/intervals", label: "Intervals", icon: TrendingUp },
   { href: "/pit-stops", label: "Pit Stops", icon: CircleDot },
+  { href: "/tyre-strategy", label: "Tyre Strategy", icon: Gauge },
+  { href: "/speed-trap", label: "Speed Trap", icon: Gauge },
+  { href: "/speed-histogram", label: "Speed Histogram", icon: BarChart },
+  { href: "/qualifying", label: "Qualifying", icon: Flag },
+  { href: "/starting-grid", label: "Starting Grid", icon: Flag },
+  { href: "/race-history", label: "Race History", icon: Map },
+  { href: "/weather", label: "Weather", icon: Cloud },
+  { href: "/track-map", label: "Track Map", icon: Map },
+  { href: "/season-stats", label: "Season Stats", icon: TrendingUp },
+  { href: "/dnf", label: "DNF Tracker", icon: AlertTriangle },
   { href: "/tech-updates", label: "Tech Updates", icon: Wrench },
   { href: "/used-elements", label: "Used Elements", icon: Wrench },
-  { href: "/destructors", label: "Destructors Championship", icon: Bomb },
+  { href: "/destructors", label: "Destructors", icon: Bomb },
   { href: "/track-dna", label: "Track DNA", icon: Dna },
+  { href: "/consistency", label: "Consistency", icon: Activity },
 ];
 
 export function Sidebar() {
@@ -98,14 +120,14 @@ export function Sidebar() {
         <ul className="space-y-1">
           <li>
             <a
-              href="https://formula1dashboard.canny.io/feature-requests"
+              href="https://github.com/joanvalls1998-ui/f1-dashboard-clone"
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center gap-3 px-3 py-2 rounded-md text-sm text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground transition-colors"
-              title={collapsed ? "Feedback" : undefined}
+              title={collapsed ? "GitHub" : undefined}
             >
               <ScrollText className="w-5 h-5 shrink-0" />
-              {!collapsed && <span className="truncate">Feedback</span>}
+              {!collapsed && <span className="truncate">GitHub</span>}
             </a>
           </li>
         </ul>
