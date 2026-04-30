@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { useState } from "react";
-import { IdCard, Search, Filter } from "lucide-react";
+import { User, Search, Filter } from "lucide-react";
 
 interface Driver {
   number: number;
@@ -42,7 +42,7 @@ const drivers: Driver[] = [
   { number: 23, code: "ALB", name: "Alex Albon", team: "Williams", teamColor: "64c4ff", country: "Thailand", countryCode: "THA", headshot: "https://media.formula1.com/d_driver_fallback_image.png/content/dam/fom-website/drivers/A/ALEALB01_Alexander_Albon/alealb01.png.transform/1col/image.png", podiums: 2, wins: 0, championships: 0, points: 76 },
 ];
 
-const teams = [...new Set(drivers.map(d => d.team))];
+const teams = Array.from(new Set(drivers.map(d => d.team)));
 
 export function DriversList() {
   const [search, setSearch] = useState("");
@@ -66,7 +66,7 @@ export function DriversList() {
   return (
     <div className="space-y-4">
       <div className="flex items-center gap-2">
-        <IdCard className="w-5 h-5 text-blue-500" />
+        <User className="w-5 h-5 text-blue-500" />
         <h2 className="text-lg font-semibold">All Drivers</h2>
       </div>
 

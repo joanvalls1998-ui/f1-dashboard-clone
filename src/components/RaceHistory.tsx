@@ -12,6 +12,7 @@ interface PositionRecord {
   total_laps: number;
   final_position: number;
   fastest_lap: number;
+  fastest_lap_time?: string;
   pit_stops: number;
 }
 
@@ -43,7 +44,7 @@ export function RaceHistory() {
           const data = await response.json();
           if (data.length > 0) {
             // Transform position data into race history
-            const drivers = [...new Set(data.map((p: any) => p.driver_number))];
+            const drivers = Array.from(new Set(data.map((p: any) => p.driver_number))) as number[];
             const history: PositionRecord[] = drivers.map((driverNum: number) => {
               const driverPositions = data
                 .filter((p: any) => p.driver_number === driverNum)

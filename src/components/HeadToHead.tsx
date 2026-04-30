@@ -23,7 +23,7 @@ const drivers: Driver[] = [
   { code: "RUS", name: "George Russell", team: "Mercedes", teamColor: "27f4d2", headshot: "https://media.formula1.com/d_driver_fallback_image.png/content/dam/fom-website/drivers/G/GEORUS01_George_Russell/georus01.png.transform/1col/image.png" },
 ];
 
-const comparisonData: Record<string, Record<string, { wins: number; races: number }>> = {
+const comparisonData: Record<string, { wins: number; races: number }> = {
   "VER-NOR": { wins: 8, races: 24 },
   "VER-LEC": { wins: 12, races: 24 },
   "NOR-PIA": { wins: 12, races: 24 },

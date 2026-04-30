@@ -147,7 +147,7 @@ export function SectorTimes() {
           onChange={(e) => setSelectedLap(Number(e.target.value))}
           className="px-3 py-2 rounded-md border bg-background text-sm"
         >
-          {[...new Set(sectorTimes.map(s => s.lap))].sort((a, b) => b - a).slice(0, 20).map(lap => (
+          {Array.from(new Set(sectorTimes.map(s => s.lap))).sort((a, b) => b - a).slice(0, 20).map(lap => (
             <option key={lap} value={lap}>Lap {lap}</option>
           ))}
         </select>

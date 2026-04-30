@@ -6,7 +6,7 @@ import { cn } from "@/lib/utils";
 import {
   Trophy,
   Crown,
-  IdCard,
+  User,
   Users,
   BarChart3,
   Swords,
@@ -38,7 +38,7 @@ const navItems = [
   { href: "/live", label: "Live Timing", icon: Radio },
   { href: "/calendar", label: "Race Calendar", icon: Calendar },
   { href: "/standings", label: "Standings", icon: Trophy },
-  { href: "/drivers", label: "Drivers", icon: IdCard },
+  { href: "/drivers", label: "Drivers", icon: User },
   { href: "/teams", label: "Teams", icon: Users },
   { href: "/driver-stats", label: "Driver Stats", icon: BarChart3 },
   { href: "/head-to-head", label: "Head to Head", icon: Swords },

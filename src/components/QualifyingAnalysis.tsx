@@ -65,7 +65,7 @@ export function QualifyingAnalysis() {
               q1_lap: q.q1_lap || 0,
               q2_lap: q.q2_lap || 0,
               q3_lap: q.q3_lap || 0,
-            })).sort((a, b) => a.position - b.position);
+            })).sort((a: QualifyingResult, b: QualifyingResult) => a.position - b.position);
             
             setResults(transformed);
             setLoading(false);

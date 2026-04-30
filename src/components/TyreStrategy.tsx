@@ -122,7 +122,7 @@ export function TyreStrategy() {
           const data = await response.json();
           if (data.length > 0) {
             // Transform stints data into strategies
-            const drivers = [...new Set(data.map((s: any) => s.driver_number))];
+            const drivers = Array.from(new Set(data.map((s: any) => s.driver_number))) as number[];
             const transformed: DriverStrategy[] = drivers.map((driverNum: number) => {
               const driverStints = data.filter((s: any) => s.driver_number === driverNum);
               return {

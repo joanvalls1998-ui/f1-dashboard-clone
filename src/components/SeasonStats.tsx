@@ -48,7 +48,7 @@ export function SeasonStats() {
   };
 
   const getChartData = () => {
-    const rounds = [...new Set(seasonData.flatMap(d => d.rounds))].sort((a, b) => a - b);
+    const rounds = Array.from(new Set(seasonData.flatMap(d => d.rounds))).sort((a, b) => a - b);
     
     return rounds.map(round => {
       const dataPoint: Record<string, any> = { round };

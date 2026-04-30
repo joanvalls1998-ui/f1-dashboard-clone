@@ -44,7 +44,7 @@ export function DNFTracker() {
     fetchDNF();
   }, []);
 
-  const categories = ["all", ...new Set(dnfData.map(d => d.category))];
+  const categories = ["all", ...Array.from(new Set(dnfData.map(d => d.category)))];
 
   const filteredDNF = dnfData.filter(d => {
     const matchesSearch = search === "" || 
