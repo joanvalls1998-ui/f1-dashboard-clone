@@ -1,4 +1,4 @@
-import { ConstructorStandings } from "@/components/ConstructorStandings";
+import { ConstructorStandingsReal } from "@/components/ConstructorStandingsReal";
 
 export default function ConstructorsPage() {
   return (
@@ -6,10 +6,10 @@ export default function ConstructorsPage() {
       <div>
         <h1 className="text-3xl font-bold mb-2">Constructor Standings</h1>
         <p className="text-muted-foreground">
-          Current Formula 1 constructor championship standings.
+          F1 Constructors Championship standings with detailed team statistics.
         </p>
       </div>
-      <ConstructorStandings />
+      <ConstructorStandingsReal />
     </div>
   );
 }
