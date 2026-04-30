@@ -1,7 +1,7 @@
-import { DriverStandings } from "@/components/DriverStandings";
-import { ConstructorStandings } from "@/components/ConstructorStandings";
+import DriverStandings from "@/components/DriverStandings";
+import ConstructorStandings from "@/components/ConstructorStandings";
 import { RaceCalendar } from "@/components/RaceCalendar";
-import { LastRace } from "@/components/LastRace";
+import LastRace from "@/components/LastRace";
 import { NextRace } from "@/components/NextRace";
 import { PointsChart } from "@/components/PointsChart";
 import { WinsChart } from "@/components/WinsChart";

@@ -1,5 +1,5 @@
-import { ConstructorStandingsReal } from "@/components/ConstructorStandingsReal";
-import { DriverStandings } from "@/components/DriverStandings";
+import ConstructorStandings from "@/components/ConstructorStandings";
+import DriverStandings from "@/components/DriverStandings";
 
 export default function StandingsPage() {
   return (
@@ -11,7 +11,7 @@ export default function StandingsPage() {
         </p>
       </div>
       <DriverStandings />
-      <ConstructorStandingsReal />
+      <ConstructorStandings />
     </div>
   );
 }

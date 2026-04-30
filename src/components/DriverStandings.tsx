@@ -1,144 +1,83 @@
-"use client";
+'use client';
 
-import { useState, useEffect } from "react";
-import { Trophy, TrendingUp } from "lucide-react";
+import { Trophy } from 'lucide-react';
 
 interface DriverStanding {
   position: number;
-  number: number;
-  name: string;
-  code: string;
+  abbreviation: string;
+  fullName: string;
   team: string;
-  teamColor: string;
   points: number;
-  wins: number;
-  podiums: number;
-  fastestLaps: number;
-  country: string;
-  headshot: string;
 }
 
-const mockDrivers2026: DriverStanding[] = [
-  { position: 1, number: 12, name: "Kimi Antonelli", code: "ANT", team: "Mercedes", teamColor: "27f4d2", points: 68, wins: 1, podiums: 3, fastestLaps: 1, country: "ITA", headshot: "" },
-  { position: 2, number: 81, name: "Oscar Piastri", code: "PIA", team: "McLaren", teamColor: "ff8000", points: 61, wins: 0, podiums: 3, fastestLaps: 1, country: "AUS", headshot: "" },
-  { position: 3, number: 16, name: "Charles Leclerc", code: "LEC", team: "Ferrari", teamColor: "e8002d", points: 55, wins: 0, podiums: 3, fastestLaps: 0, country: "MON", headshot: "" },
-  { position: 4, number: 63, name: "George Russell", code: "RUS", team: "Mercedes", teamColor: "27f4d2", points: 42, wins: 0, podiums: 2, fastestLaps: 0, country: "GBR", headshot: "" },
-  { position: 5, number: 1, name: "Max Verstappen", code: "VER", team: "Red Bull Racing", teamColor: "3671c6", points: 38, wins: 0, podiums: 2, fastestLaps: 1, country: "NED", headshot: "" },
-  { position: 6, number: 44, name: "Lewis Hamilton", code: "HAM", team: "Ferrari", teamColor: "e8002d", points: 36, wins: 0, podiums: 2, fastestLaps: 0, country: "GBR", headshot: "" },
-  { position: 7, number: 10, name: "Pierre Gasly", code: "GAS", team: "Alpine", teamColor: "ff87bc", points: 18, wins: 0, podiums: 0, fastestLaps: 0, country: "FRA", headshot: "" },
-  { position: 8, number: 30, name: "Liam Lawson", code: "LAW", team: "Racing Bulls", teamColor: "6692ff", points: 12, wins: 0, podiums: 0, fastestLaps: 0, country: "NZL", headshot: "" },
-  { position: 9, number: 43, name: "Franco Colapinto", code: "COL", team: "Alpine", teamColor: "ff87bc", points: 8, wins: 0, podiums: 0, fastestLaps: 0, country: "ARG", headshot: "" },
-  { position: 10, number: 31, name: "Esteban Ocon", code: "OCO", team: "Haas F1 Team", teamColor: "b6babd", points: 7, wins: 0, podiums: 0, fastestLaps: 0, country: "FRA", headshot: "" },
-  { position: 11, number: 6, name: "Isack Hadjar", code: "HAD", team: "Red Bull Racing", teamColor: "3671c6", points: 6, wins: 0, podiums: 0, fastestLaps: 0, country: "FRA", headshot: "" },
-  { position: 12, number: 27, name: "Nico Hulkenberg", code: "HUL", team: "Audi", teamColor: "cccccc", points: 4, wins: 0, podiums: 0, fastestLaps: 0, country: "GER", headshot: "" },
-  { position: 13, number: 14, name: "Fernando Alonso", code: "ALO", team: "Aston Martin", teamColor: "229971", points: 3, wins: 0, podiums: 0, fastestLaps: 0, country: "ESP", headshot: "" },
-  { position: 14, number: 5, name: "Gabriel Bortoleto", code: "BOR", team: "Audi", teamColor: "cccccc", points: 2, wins: 0, podiums: 0, fastestLaps: 0, country: "BRA", headshot: "" },
-  { position: 15, number: 41, name: "Arvid Lindblad", code: "LIN", team: "Racing Bulls", teamColor: "6692ff", points: 1, wins: 0, podiums: 0, fastestLaps: 0, country: "GBR", headshot: "" },
-  { position: 16, number: 55, name: "Carlos Sainz", code: "SAI", team: "Williams", teamColor: "64c4ff", points: 0, wins: 0, podiums: 0, fastestLaps: 0, country: "ESP", headshot: "" },
-  { position: 17, number: 23, name: "Alexander Albon", code: "ALB", team: "Williams", teamColor: "64c4ff", points: 0, wins: 0, podiums: 0, fastestLaps: 0, country: "THA", headshot: "" },
-  { position: 18, number: 18, name: "Lance Stroll", code: "STR", team: "Aston Martin", teamColor: "229971", points: 0, wins: 0, podiums: 0, fastestLaps: 0, country: "CAN", headshot: "" },
-  { position: 19, number: 77, name: "Valtteri Bottas", code: "BOT", team: "Cadillac", teamColor: "000000", points: 0, wins: 0, podiums: 0, fastestLaps: 0, country: "FIN", headshot: "" },
-  { position: 20, number: 11, name: "Sergio Perez", code: "PER", team: "Cadillac", teamColor: "000000", points: 0, wins: 0, podiums: 0, fastestLaps: 0, country: "MEX", headshot: "" },
-  { position: 21, number: 3, name: "Max Verstappen", code: "VER", team: "Red Bull Racing", teamColor: "3671c6", points: 0, wins: 0, podiums: 0, fastestLaps: 0, country: "NED", headshot: "" },
-  { position: 22, number: 87, name: "Oliver Bearman", code: "BEA", team: "Haas F1 Team", teamColor: "b6babd", points: 0, wins: 0, podiums: 0, fastestLaps: 0, country: "GBR", headshot: "" },
+const driverStandings2026: DriverStanding[] = [
+  { position: 1, abbreviation: 'ANT', fullName: 'Kimi Antonelli', team: 'Mercedes', points: 68 },
+  { position: 2, abbreviation: 'RUS', fullName: 'George Russell', team: 'Mercedes', points: 55 },
+  { position: 3, abbreviation: 'LEC', fullName: 'Charles Leclerc', team: 'Ferrari', points: 42 },
+  { position: 4, abbreviation: 'HAM', fullName: 'Lewis Hamilton', team: 'Ferrari', points: 35 },
+  { position: 5, abbreviation: 'NOR', fullName: 'Lando Norris', team: 'McLaren', points: 20 },
+  { position: 6, abbreviation: 'PIA', fullName: 'Oscar Piastri', team: 'McLaren', points: 18 },
+  { position: 7, abbreviation: 'BEA', fullName: 'Oliver Bearman', team: 'Haas F1 Team', points: 16 },
+  { position: 8, abbreviation: 'GAS', fullName: 'Pierre Gasly', team: 'Alpine', points: 15 },
+  { position: 9, abbreviation: 'VER', fullName: 'Max Verstappen', team: 'Red Bull Racing', points: 12 },
+  { position: 10, abbreviation: 'LAW', fullName: 'Liam Lawson', team: 'Racing Bulls', points: 8 },
+  { position: 11, abbreviation: 'LIN', fullName: 'Arvid Lindblad', team: 'Racing Bulls', points: 4 },
+  { position: 12, abbreviation: 'HAD', fullName: 'Isack Hadjar', team: 'Red Bull Racing', points: 4 },
+  { position: 13, abbreviation: 'BOR', fullName: 'Gabriel Bortoleto', team: 'Audi', points: 2 },
+  { position: 14, abbreviation: 'SAI', fullName: 'Carlos Sainz', team: 'Williams', points: 2 },
+  { position: 15, abbreviation: 'OCO', fullName: 'Esteban Ocon', team: 'Haas F1 Team', points: 1 },
+  { position: 16, abbreviation: 'COL', fullName: 'Franco Colapinto', team: 'Alpine', points: 1 },
+  { position: 17, abbreviation: 'ALB', fullName: 'Alexander Albon', team: 'Williams', points: 0 },
+  { position: 18, abbreviation: 'PER', fullName: 'Sergio Perez', team: 'Cadillac', points: 0 },
+  { position: 19, abbreviation: 'STR', fullName: 'Lance Stroll', team: 'Aston Martin', points: 0 },
+  { position: 20, abbreviation: 'ALO', fullName: 'Fernando Alonso', team: 'Aston Martin', points: 0 },
 ];
 
-type SortKey = 'position' | 'points' | 'wins' | 'podiums' | 'fastestLaps';
+const teamColors: Record<string, string> = {
+  'Mercedes': '#27F4D2',
+  'Ferrari': '#E8002D',
+  'McLaren': '#FF8000',
+  'Red Bull Racing': '#3671C6',
+  'Racing Bulls': '#3671C6',
+  'Haas F1 Team': '#F0F0F0',
+  'Alpine': '#FF87BC',
+  'Audi': '#CC0000',
+  'Williams': '#64C4FF',
+  'Aston Martin': '#229971',
+  'Cadillac': '#C20000',
+};
 
-export function DriverStandings() {
-  const [drivers, setDrivers] = useState<DriverStanding[]>(mockDrivers2026);
-  const [sortKey, setSortKey] = useState<SortKey>('position');
-  const [sortAsc, setSortAsc] = useState(true);
-
-  const sortedDrivers = [...drivers].sort((a, b) => {
-    return sortAsc ? a[sortKey] - b[sortKey] : b[sortKey] - a[sortKey];
-  });
-
-  const handleSort = (key: SortKey) => {
-    if (sortKey === key) {
-      setSortAsc(!sortAsc);
-    } else {
-      setSortKey(key);
-      setSortAsc(false);
-    }
-  };
-
+export default function DriverStandings() {
   return (
-    <div className="space-y-4">
-      <div className="flex items-center gap-2">
+    <div className="bg-[#171717] rounded-xl p-4 sm:p-6">
+      <div className="flex items-center gap-2 mb-4">
         <Trophy className="w-5 h-5 text-yellow-500" />
-        <h2 className="text-lg font-semibold">Driver Standings 2026</h2>
+        <h2 className="text-lg font-semibold text-white">Clasificación Pilotos</h2>
       </div>
-
-      <div className="overflow-x-auto">
-        <table className="w-full">
-          <thead>
-            <tr className="text-left text-xs text-muted-foreground border-b">
-              <th className="pb-2 pr-4">Pos</th>
-              <th className="pb-2 pr-4">Driver</th>
-              <th className="pb-2 pr-4">Team</th>
-              <th 
-                className="pb-2 pr-4 cursor-pointer hover:text-foreground"
-                onClick={() => handleSort('points')}
-              >
-                PTS {sortKey === 'points' && (sortAsc ? '↑' : '↓')}
-              </th>
-              <th 
-                className="pb-2 pr-4 cursor-pointer hover:text-foreground"
-                onClick={() => handleSort('wins')}
-              >
-                W {sortKey === 'wins' && (sortAsc ? '↑' : '↓')}
-              </th>
-              <th 
-                className="pb-2 pr-4 cursor-pointer hover:text-foreground"
-                onClick={() => handleSort('podiums')}
-              >
-                Pod {sortKey === 'podiums' && (sortAsc ? '↑' : '↓')}
-              </th>
-              <th 
-                className="pb-2 cursor-pointer hover:text-foreground"
-                onClick={() => handleSort('fastestLaps')}
-              >
-                FL {sortKey === 'fastestLaps' && (sortAsc ? '↑' : '↓')}
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {sortedDrivers.slice(0, 15).map(driver => (
-              <tr key={driver.number} className="border-b hover:bg-accent/50">
-                <td className="py-3 pr-4">
-                  <span className="font-bold">{driver.position}</span>
-                </td>
-                <td className="py-3 pr-4">
-                  <div className="flex items-center gap-2">
-                    <div 
-                      className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold text-white"
-                      style={{ backgroundColor: `#${driver.teamColor}` }}
-                    >
-                      {driver.code}
-                    </div>
-                    <span className="font-medium">{driver.name}</span>
-                  </div>
-                </td>
-                <td className="py-3 pr-4 text-sm text-muted-foreground">
-                  {driver.team}
-                </td>
-                <td className="py-3 pr-4 font-semibold">
-                  {driver.points}
-                </td>
-                <td className="py-3 pr-4">
-                  {driver.wins}
-                </td>
-                <td className="py-3 pr-4">
-                  {driver.podiums}
-                </td>
-                <td className="py-3">
-                  {driver.fastestLaps}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+      
+      <div className="space-y-1">
+        {driverStandings2026.map((driver) => (
+          <div
+            key={driver.position}
+            className="flex items-center justify-between py-2 px-3 rounded-lg bg-[#1f1f1f] hover:bg-[#2a2a2a] transition-colors"
+          >
+            <div className="flex items-center gap-3">
+              <span className={`w-8 text-center font-bold ${
+                driver.position === 1 ? 'text-yellow-500' :
+                driver.position <= 3 ? 'text-gray-300' :
+                'text-gray-400'
+              }`}>
+                {driver.position}
+              </span>
+              <div className="w-2 h-2 rounded-full" style={{ backgroundColor: teamColors[driver.team] || '#666' }} />
+              <div>
+                <p className="text-white text-sm font-medium">{driver.fullName}</p>
+                <p className="text-gray-500 text-xs">{driver.team}</p>
+              </div>
+            </div>
+            <span className="text-white font-bold">{driver.points} pts</span>
+          </div>
+        ))}
       </div>
     </div>
   );

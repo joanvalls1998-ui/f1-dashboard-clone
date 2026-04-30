@@ -16,8 +16,8 @@ interface Race {
 }
 
 const allRaces: Race[] = [
-  { round: 1, country: "Australia", locality: "Melbourne", officialName: "Australian Grand Prix", date: "2026-03-08", sessionKey: 11234, winner: "Oscar Piastri", winnerTeam: "McLaren" },
-  { round: 2, country: "China", locality: "Shanghai", officialName: "Chinese Grand Prix", date: "2026-03-15", sessionKey: 11245, winner: "Lando Norris", winnerTeam: "McLaren" },
+  { round: 1, country: "Australia", locality: "Melbourne", officialName: "Australian Grand Prix", date: "2026-03-08", sessionKey: 11234, winner: "George Russell", winnerTeam: "Mercedes" },
+  { round: 2, country: "China", locality: "Shanghai", officialName: "Chinese Grand Prix", date: "2026-03-15", sessionKey: 11245, winner: "Kimi Antonelli", winnerTeam: "Mercedes" },
   { round: 3, country: "Japan", locality: "Suzuka", officialName: "Japanese Grand Prix", date: "2026-03-29", sessionKey: 11253, winner: "Kimi Antonelli", winnerTeam: "Mercedes" },
   { round: 4, country: "Bahrain", locality: "Sakhir", officialName: "Bahrain Grand Prix", date: "2026-04-12", sessionKey: 11261, cancelled: true },
   { round: 5, country: "Saudi Arabia", locality: "Jeddah", officialName: "Saudi Arabian Grand Prix", date: "2026-04-19", sessionKey: 11269, cancelled: true },
