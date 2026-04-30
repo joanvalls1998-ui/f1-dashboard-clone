@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Calendar, MapPin, Clock, Search, Filter } from "lucide-react";
+import { Calendar, MapPin, Clock, Search, XCircle } from "lucide-react";
 
 interface Race {
   round: number;
@@ -12,14 +12,15 @@ interface Race {
   sessionKey: number;
   winner?: string;
   winnerTeam?: string;
+  cancelled?: boolean;
 }
 
 const allRaces: Race[] = [
   { round: 1, country: "Australia", locality: "Melbourne", officialName: "Australian Grand Prix", date: "2026-03-08", sessionKey: 11234, winner: "Oscar Piastri", winnerTeam: "McLaren" },
   { round: 2, country: "China", locality: "Shanghai", officialName: "Chinese Grand Prix", date: "2026-03-15", sessionKey: 11245, winner: "Lando Norris", winnerTeam: "McLaren" },
   { round: 3, country: "Japan", locality: "Suzuka", officialName: "Japanese Grand Prix", date: "2026-03-29", sessionKey: 11253, winner: "Kimi Antonelli", winnerTeam: "Mercedes" },
-  { round: 4, country: "Bahrain", locality: "Sakhir", officialName: "Bahrain Grand Prix", date: "2026-04-12", sessionKey: 11261 },
-  { round: 5, country: "Saudi Arabia", locality: "Jeddah", officialName: "Saudi Arabian Grand Prix", date: "2026-04-19", sessionKey: 11269 },
+  { round: 4, country: "Bahrain", locality: "Sakhir", officialName: "Bahrain Grand Prix", date: "2026-04-12", sessionKey: 11261, cancelled: true },
+  { round: 5, country: "Saudi Arabia", locality: "Jeddah", officialName: "Saudi Arabian Grand Prix", date: "2026-04-19", sessionKey: 11269, cancelled: true },
   { round: 6, country: "United States", locality: "Miami", officialName: "Miami Grand Prix", date: "2026-05-03", sessionKey: 11280 },
   { round: 7, country: "Canada", locality: "Montreal", officialName: "Canadian Grand Prix", date: "2026-05-24", sessionKey: 11291 },
   { round: 8, country: "Monaco", locality: "Monaco", officialName: "Monaco Grand Prix", date: "2026-06-07", sessionKey: 11299 },
@@ -46,6 +47,7 @@ export function RaceCalendar() {
   const [search, setSearch] = useState("");
   const [selectedCountry, setSelectedCountry] = useState<string | null>(null);
   const [showPastRaces, setShowPastRaces] = useState(true);
+  const [showCancelled, setShowCancelled] = useState(true);
   const [races, setRaces] = useState<Race[]>(allRaces);
   const [loading, setLoading] = useState(false);
 
@@ -53,12 +55,11 @@ export function RaceCalendar() {
     async function fetchResults() {
       setLoading(true);
       try {
-        // Fetch race results from OpenF1 for completed races
         const updatedRaces = [...allRaces];
         
         for (let i = 0; i < updatedRaces.length; i++) {
           const race = updatedRaces[i];
-          if (new Date(race.date) < new Date()) {
+          if (new Date(race.date) < new Date() && !race.cancelled) {
             try {
               const posRes = await fetch(`https://api.openf1.org/v1/position?session_key=${race.sessionKey}`);
               const drvRes = await fetch(`https://api.openf1.org/v1/drivers?session_key=${race.sessionKey}`);
@@ -68,7 +69,6 @@ export function RaceCalendar() {
                 const drivers = await drvRes.json();
                 
                 if (positions.length > 0 && drivers.length > 0) {
-                  // Get final positions
                   const finalPositions: Record<number, number> = {};
                   for (const p of positions) {
                     const dn = p.driver_number;
@@ -77,7 +77,6 @@ export function RaceCalendar() {
                     }
                   }
                   
-                  // Find winner
                   const winnerNum = Object.entries(finalPositions).sort((a, b) => a[1] - b[1])[0]?.[0];
                   const winner = drivers.find((d: any) => d.driver_number === parseInt(winnerNum));
                   if (winner) {
@@ -125,11 +124,12 @@ export function RaceCalendar() {
     
     const matchesCountry = !selectedCountry || race.country === selectedCountry;
     const matchesPast = !showPastRaces || isRacePast(race.date);
+    const matchesCancelled = showCancelled || !race.cancelled;
     
-    return matchesSearch && matchesCountry && matchesPast;
+    return matchesSearch && matchesCountry && matchesPast && matchesCancelled;
   });
 
-  const nextRace = races.find(r => !isRacePast(r.date));
+  const nextRace = races.find(r => !isRacePast(r.date) && !r.cancelled);
 
   return (
     <div className="space-y-4">
@@ -140,9 +140,9 @@ export function RaceCalendar() {
       </div>
 
       {nextRace && (
-        <div className="rounded-lg border bg-card p-4">
-          <div className="text-sm text-muted-foreground mb-1">Next Race</div>
-          <div className="font-semibold">{nextRace.officialName}</div>
+        <div className="rounded-lg border border-green-500/50 bg-green-500/5 p-4">
+          <div className="text-sm text-green-500 mb-1 font-medium">Next Race</div>
+          <div className="font-semibold text-lg">{nextRace.officialName}</div>
           <div className="text-sm text-muted-foreground">{nextRace.country} • {formatDate(nextRace.date)}</div>
         </div>
       )}
@@ -175,7 +175,15 @@ export function RaceCalendar() {
             checked={showPastRaces}
             onChange={(e) => setShowPastRaces(e.target.checked)}
           />
-          Show past races
+          Past
+        </label>
+        <label className="flex items-center gap-2 text-sm">
+          <input
+            type="checkbox"
+            checked={showCancelled}
+            onChange={(e) => setShowCancelled(e.target.checked)}
+          />
+          Cancelled
         </label>
       </div>
 
@@ -185,24 +193,37 @@ export function RaceCalendar() {
           <div
             key={race.sessionKey}
             className={`rounded-lg border p-4 ${
-              !isRacePast(race.date) ? "border-green-500/50 bg-green-500/5" : ""
+              race.cancelled 
+                ? "border-red-500/30 bg-red-500/5 opacity-60" 
+                : !isRacePast(race.date) 
+                  ? "border-green-500/50 bg-green-500/5" 
+                  : ""
             }`}
           >
             <div className="flex items-start justify-between">
               <div className="flex items-center gap-3">
-                <div className="text-2xl font-bold text-muted-foreground">
+                <div className={`text-2xl font-bold ${
+                  race.cancelled ? "text-red-500/50" : "text-muted-foreground"
+                }`}>
                   {race.round}
                 </div>
                 <div>
-                  <div className="font-semibold">{race.officialName}</div>
+                  <div className={`font-semibold ${race.cancelled ? "line-through text-muted-foreground" : ""}`}>
+                    {race.officialName}
+                  </div>
                   <div className="flex items-center gap-2 text-sm text-muted-foreground">
                     <MapPin className="w-3 h-3" />
                     {race.locality}, {race.country}
+                    {race.cancelled && (
+                      <span className="flex items-center gap-1 text-red-500">
+                        <XCircle className="w-3 h-3" /> Cancelled
+                      </span>
+                    )}
                   </div>
                 </div>
               </div>
               <div className="text-right">
-                <div className="flex items-center gap-1 text-sm">
+                <div className={`flex items-center gap-1 text-sm ${race.cancelled ? "text-red-500/50" : ""}`}>
                   <Clock className="w-3 h-3" />
                   {formatDate(race.date)}
                 </div>
