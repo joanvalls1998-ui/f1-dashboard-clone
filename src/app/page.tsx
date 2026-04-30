@@ -3,6 +3,9 @@ import { ConstructorStandings } from "@/components/ConstructorStandings";
 import { RaceCalendar } from "@/components/RaceCalendar";
 import { LastRace } from "@/components/LastRace";
 import { NextRace } from "@/components/NextRace";
+import { PointsChart } from "@/components/PointsChart";
+import { WinsChart } from "@/components/WinsChart";
+import { BarChart3, TrendingUp } from "lucide-react";
 
 export default function Home() {
   return (
@@ -19,6 +22,27 @@ export default function Home() {
       <div className="grid gap-4 lg:grid-cols-2">
         <LastRace />
         <NextRace />
+      </div>
+
+      {/* Charts section */}
+      <div className="grid gap-4 lg:grid-cols-2">
+        {/* Points distribution chart */}
+        <div className="rounded-lg border bg-card p-6">
+          <div className="flex items-center gap-2 mb-4">
+            <BarChart3 className="w-5 h-5 text-blue-500" />
+            <h2 className="text-lg font-semibold">Points Distribution</h2>
+          </div>
+          <PointsChart />
+        </div>
+
+        {/* Wins pie chart */}
+        <div className="rounded-lg border bg-card p-6">
+          <div className="flex items-center gap-2 mb-4">
+            <TrendingUp className="w-5 h-5 text-green-500" />
+            <h2 className="text-lg font-semibold">Race Wins</h2>
+          </div>
+          <WinsChart />
+        </div>
       </div>
 
       {/* Driver Standings */}
