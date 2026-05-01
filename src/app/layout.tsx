@@ -1,6 +1,6 @@
 "use client";
 
-import type { Metadata } from "next";
+import { useState } from "react";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { Sidebar } from "@/components/Sidebar";
@@ -13,12 +13,14 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const [collapsed, setCollapsed] = useState(false);
+
   return (
     <html lang="en" className="dark">
       <body className={inter.className}>
         <div className="flex">
-          <Sidebar collapsed={false} onToggle={() => {}} />
-          <div className="flex-1 ml-64">
+          <Sidebar collapsed={collapsed} onToggle={() => setCollapsed(!collapsed)} />
+          <div className={`flex-1 transition-all duration-300 ${collapsed ? "ml-16" : "ml-64"}`}>
             <Header />
             <div className="p-6">{children}</div>
           </div>
