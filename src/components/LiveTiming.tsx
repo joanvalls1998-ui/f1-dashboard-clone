@@ -66,11 +66,35 @@ export function LiveTiming() {
   const [currentSession, setCurrentSession] = useState<Session | null>(null);
   const [upcomingSessions, setUpcomingSessions] = useState<Session[]>([]);
   const [showEmbed, setShowEmbed] = useState(false);
+  const [hasF1DashboardLive, setHasF1DashboardLive] = useState(false);
 
   useEffect(() => {
     async function fetchLiveData() {
       try {
-        // First, check for current live session
+        // Check formula1dashboard for active/upcoming sessions
+        let f1DashHasLive = false;
+        try {
+          const f1Res = await fetch(
+            `https://api.formula1dashboard.com/api/v1/sessions?state=upcoming`,
+            { signal: AbortSignal.timeout(6000) }
+          );
+          if (f1Res.ok) {
+            const f1Data = await f1Res.json();
+            const now = new Date();
+            const activeSessions = f1Data.filter((s: any) => {
+              const start = new Date(s.date_start);
+              const end = new Date(s.date_end);
+              return start <= now && end >= now;
+            });
+            if (activeSessions.length > 0) {
+              setCurrentSession(activeSessions[0]);
+              f1DashHasLive = true;
+              setHasF1DashboardLive(true);
+            }
+          }
+        } catch (_) {}
+
+        // First, check for current live session via OpenF1
         const now = new Date().toISOString();
         const sessionsRes = await fetch(
           `https://api.openf1.org/v1/sessions?date_start<=${now}&date_end>=${now}&is_cancelled=false`,
@@ -129,7 +153,9 @@ export function LiveTiming() {
         // Use mock data
         setDrivers(mockLiveDrivers);
         setIsLive(false);
-        setCurrentSession(null);
+        if (!f1DashHasLive) {
+          setCurrentSession(null);
+        }
       } catch (error) {
         console.error("Error fetching live data:", error);
         setDrivers(mockLiveDrivers);
@@ -142,7 +168,7 @@ export function LiveTiming() {
     fetchLiveData();
 
     if (autoRefresh) {
-      const interval = setInterval(fetchLiveData, 5000); // Refresh every 5 seconds
+      const interval = setInterval(fetchLiveData, 15000); // Refresh every 15 seconds
       return () => clearInterval(interval);
     }
   }, [autoRefresh]);
@@ -151,20 +177,20 @@ export function LiveTiming() {
     ? drivers.filter(d => d.position > 0)
     : drivers;
 
-  // Show embedded F1 live timing
-  if (showEmbed && !isLive) {
+  // If user clicked the embed button, show the iframe
+  if (showEmbed) {
     return (
       <div className="space-y-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <Radio className="w-5 h-5 text-gray-500" />
-            <h2 className="text-lg font-semibold">Official Live Timing</h2>
+            <Radio className="w-5 h-5 text-red-500 animate-pulse" />
+            <h2 className="text-lg font-semibold">Live Timing — Formula1Dashboard</h2>
           </div>
           <button
             onClick={() => setShowEmbed(false)}
             className="px-3 py-1.5 text-sm bg-secondary rounded-md hover:bg-secondary/80"
           >
-            ← Back to Mock Data
+            ← Back
           </button>
         </div>
         
@@ -178,7 +204,47 @@ export function LiveTiming() {
         </div>
         
         <p className="text-xs text-muted-foreground text-center">
-          Official F1.com Live Timing. Requires active session for real data.
+          Live timing provided by formula1dashboard.com
+        </p>
+      </div>
+    );
+  }
+
+  // If there's a live session from F1 Dashboard, show the iframe directly
+  if (hasF1DashboardLive && currentSession) {
+    return (
+      <div className="space-y-4">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <Radio className="w-5 h-5 text-red-500 animate-pulse" />
+            <h2 className="text-lg font-semibold">Live Timing — {currentSession.session_name}</h2>
+            <span className="px-2 py-0.5 text-xs font-bold bg-red-500 text-white rounded-full animate-pulse">
+              LIVE NOW
+            </span>
+          </div>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => setShowEmbed(true)}
+              className="p-2 rounded-md border bg-background hover:bg-secondary flex items-center gap-1"
+              title="Open in full screen"
+            >
+              <ExternalLink className="w-4 h-4" />
+              <span className="text-xs hidden md:inline">Full Screen</span>
+            </button>
+          </div>
+        </div>
+
+        <div className="border rounded-lg overflow-hidden">
+          <iframe
+            src="https://formula1dashboard.com/live-timing/"
+            className="w-full h-[600px] md:h-[700px]"
+            title="F1 Live Timing"
+            style={{ border: 'none' }}
+          />
+        </div>
+        
+        <p className="text-xs text-muted-foreground text-center">
+          Live timing provided by formula1dashboard.com — {currentSession.session_name} at {currentSession.circuit_short_name}
         </p>
       </div>
     );
@@ -213,10 +279,10 @@ export function LiveTiming() {
           <button
             onClick={() => setShowEmbed(true)}
             className="p-2 rounded-md border bg-background hover:bg-secondary flex items-center gap-1"
-            title="Open Official F1 Live Timing"
+            title="Open Live Timing Dashboard"
           >
             <ExternalLink className="w-4 h-4" />
-            <span className="text-xs hidden md:inline">F1.com</span>
+            <span className="text-xs hidden md:inline">Live Dashboard</span>
           </button>
           
           <button
@@ -276,7 +342,7 @@ export function LiveTiming() {
         
         {!isLive && (
           <span className="text-xs text-muted-foreground">
-            Showing mock data - No active session
+            Showing mock data — No active session
           </span>
         )}
       </div>
