@@ -1,6 +1,6 @@
 'use client';
 
-import { driverImages, teamColors, teamCarImages, getDriverInitials } from '@/lib/f1-assets';
+import { driverImages, teamColors, getDriverInitials } from '@/lib/f1-assets';
 import Image from 'next/image';
 import { Users, Car, Trophy } from 'lucide-react';
 
@@ -18,41 +18,41 @@ interface Team {
   drivers: Driver[];
 }
 
-// All 20 drivers 2026
+// All 22 drivers 2026 from Ergast API
 const allDrivers2026: Driver[] = [
-  // Mercedes
+  // Mercedes (2 drivers)
   { position: 1, abbreviation: 'ANT', fullName: 'Kimi Antonelli', team: 'Mercedes', points: 68 },
   { position: 2, abbreviation: 'RUS', fullName: 'George Russell', team: 'Mercedes', points: 55 },
-  // Ferrari
+  // Ferrari (2 drivers)
   { position: 3, abbreviation: 'LEC', fullName: 'Charles Leclerc', team: 'Ferrari', points: 42 },
   { position: 4, abbreviation: 'HAM', fullName: 'Lewis Hamilton', team: 'Ferrari', points: 35 },
-  // McLaren
+  // McLaren (2 drivers)
   { position: 5, abbreviation: 'NOR', fullName: 'Lando Norris', team: 'McLaren', points: 20 },
-  { position: 6, abbreviation: 'PIA', fullName: 'Oscar Piastri', team: 'McLaren', points: 18 },
-  // Haas
+  { position: 21, abbreviation: 'PIA', fullName: 'Oscar Piastri', team: 'McLaren', points: 18 },
+  // Haas (2 drivers)
   { position: 7, abbreviation: 'BEA', fullName: 'Oliver Bearman', team: 'Haas F1 Team', points: 16 },
-  { position: 15, abbreviation: 'OCO', fullName: 'Esteban Ocon', team: 'Haas F1 Team', points: 1 },
-  // Alpine
+  { position: 11, abbreviation: 'OCO', fullName: 'Esteban Ocon', team: 'Haas F1 Team', points: 1 },
+  // Alpine (2 drivers)
   { position: 8, abbreviation: 'GAS', fullName: 'Pierre Gasly', team: 'Alpine', points: 15 },
-  { position: 16, abbreviation: 'COL', fullName: 'Franco Colapinto', team: 'Alpine', points: 1 },
-  // Red Bull Racing
-  { position: 9, abbreviation: 'VER', fullName: 'Max Verstappen', team: 'Red Bull Racing', points: 12 },
-  { position: 12, abbreviation: 'HAD', fullName: 'Isack Hadjar', team: 'Red Bull Racing', points: 4 },
-  // Racing Bulls
-  { position: 10, abbreviation: 'LAW', fullName: 'Liam Lawson', team: 'Racing Bulls', points: 8 },
-  { position: 11, abbreviation: 'LIN', fullName: 'Arvid Lindblad', team: 'Racing Bulls', points: 4 },
-  // Audi
-  { position: 13, abbreviation: 'BOR', fullName: 'Gabriel Bortoleto', team: 'Audi', points: 2 },
-  // Williams
-  { position: 14, abbreviation: 'SAI', fullName: 'Carlos Sainz', team: 'Williams', points: 2 },
-  { position: 17, abbreviation: 'ALB', fullName: 'Alexander Albon', team: 'Williams', points: 0 },
-  // Aston Martin
-  { position: 19, abbreviation: 'STR', fullName: 'Lance Stroll', team: 'Aston Martin', points: 0 },
-  { position: 20, abbreviation: 'ALO', fullName: 'Fernando Alonso', team: 'Aston Martin', points: 0 },
-  // Cadillac
-  { position: 18, abbreviation: 'PER', fullName: 'Sergio Perez', team: 'Cadillac', points: 0 },
-  // AlphaTauri (Yuki)
-  { position: 0, abbreviation: 'TSU', fullName: 'Yuki Tsunoda', team: 'RB', points: 0 },
+  { position: 14, abbreviation: 'COL', fullName: 'Franco Colapinto', team: 'Alpine', points: 1 },
+  // Red Bull (2 drivers)
+  { position: 6, abbreviation: 'VER', fullName: 'Max Verstappen', team: 'Red Bull', points: 12 },
+  { position: 20, abbreviation: 'HAD', fullName: 'Isack Hadjar', team: 'Red Bull', points: 4 },
+  // RB F1 Team (2 drivers)
+  { position: 10, abbreviation: 'LIN', fullName: 'Arvid Lindblad', team: 'RB F1 Team', points: 4 },
+  { position: 13, abbreviation: 'LAW', fullName: 'Liam Lawson', team: 'RB F1 Team', points: 8 },
+  // Audi (2 drivers)
+  { position: 9, abbreviation: 'BOR', fullName: 'Gabriel Bortoleto', team: 'Audi', points: 2 },
+  { position: 22, abbreviation: 'HUL', fullName: 'Nico Hülkenberg', team: 'Audi', points: 0 },
+  // Williams (2 drivers)
+  { position: 12, abbreviation: 'ALB', fullName: 'Alexander Albon', team: 'Williams', points: 0 },
+  { position: 15, abbreviation: 'SAI', fullName: 'Carlos Sainz', team: 'Williams', points: 2 },
+  // Aston Martin (2 drivers)
+  { position: 17, abbreviation: 'STR', fullName: 'Lance Stroll', team: 'Aston Martin', points: 0 },
+  { position: 18, abbreviation: 'ALO', fullName: 'Fernando Alonso', team: 'Aston Martin', points: 0 },
+  // Cadillac (2 drivers)
+  { position: 16, abbreviation: 'PER', fullName: 'Sergio Perez', team: 'Cadillac', points: 0 },
+  { position: 19, abbreviation: 'BOT', fullName: 'Valtteri Bottas', team: 'Cadillac', points: 0 },
 ];
 
 // Group by team
@@ -60,15 +60,14 @@ const teams2026: Team[] = [
   { name: 'Mercedes', color: '#27F4D2', drivers: allDrivers2026.filter(d => d.team === 'Mercedes') },
   { name: 'Ferrari', color: '#E8002D', drivers: allDrivers2026.filter(d => d.team === 'Ferrari') },
   { name: 'McLaren', color: '#FF8000', drivers: allDrivers2026.filter(d => d.team === 'McLaren') },
-  { name: 'Red Bull Racing', color: '#3671C6', drivers: allDrivers2026.filter(d => d.team === 'Red Bull Racing') },
-  { name: 'Racing Bulls', color: '#6B3FC6', drivers: allDrivers2026.filter(d => d.team === 'Racing Bulls') },
+  { name: 'Red Bull', color: '#3671C6', drivers: allDrivers2026.filter(d => d.team === 'Red Bull') },
+  { name: 'RB F1 Team', color: '#6B3FC6', drivers: allDrivers2026.filter(d => d.team === 'RB F1 Team') },
   { name: 'Haas F1 Team', color: '#F0F0F0', drivers: allDrivers2026.filter(d => d.team === 'Haas F1 Team') },
   { name: 'Alpine', color: '#FF87BC', drivers: allDrivers2026.filter(d => d.team === 'Alpine') },
   { name: 'Audi', color: '#CC0000', drivers: allDrivers2026.filter(d => d.team === 'Audi') },
   { name: 'Williams', color: '#64C4FF', drivers: allDrivers2026.filter(d => d.team === 'Williams') },
   { name: 'Aston Martin', color: '#229971', drivers: allDrivers2026.filter(d => d.team === 'Aston Martin') },
   { name: 'Cadillac', color: '#C20000', drivers: allDrivers2026.filter(d => d.team === 'Cadillac') },
-  { name: 'RB', color: '#6B3FC6', drivers: allDrivers2026.filter(d => d.team === 'RB') },
 ];
 
 interface DriverAvatarProps {
@@ -126,30 +125,26 @@ interface TeamCardFullProps {
 }
 
 export function TeamCardFull({ team }: TeamCardFullProps) {
-  const carImage = teamCarImages[team.name];
+  const carImage = ""; // Will be populated as we find car images
   
   return (
     <div className="bg-[#1a1a1a] rounded-xl overflow-hidden">
       {/* Header with team color */}
       <div className="h-2 w-full" style={{ backgroundColor: team.color }} />
       
-      {/* Car image */}
+      {/* Car image placeholder */}
       <div className="relative h-32 bg-gradient-to-br from-[#2a2a2a] to-[#1a1a1a] overflow-hidden">
-        {carImage && (
-          <Image
-            src={carImage}
-            alt={`${team.name} F1 car`}
-            fill
-            className="object-cover opacity-60"
-            unoptimized
-          />
-        )}
-        <div className="absolute inset-0 bg-gradient-to-t from-[#1a1a1a] to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#1a1a1a] to-transparent z-10" />
         
         {/* Team badge */}
-        <div className="absolute top-3 left-3 px-3 py-1.5 rounded-lg backdrop-blur-md"
+        <div className="absolute top-3 left-3 px-3 py-1.5 rounded-lg backdrop-blur-md z-20"
              style={{ backgroundColor: team.color + '44' }}>
           <span className="text-white font-bold text-sm">{team.name}</span>
+        </div>
+        
+        {/* Drivers count */}
+        <div className="absolute bottom-3 right-3 z-20">
+          <span className="text-white text-xs font-medium">{team.drivers.length} drivers</span>
         </div>
       </div>
       
@@ -197,9 +192,10 @@ export function AllDriversGrid({ title = "All Drivers 2026" }: AllDriversGridPro
       <div className="flex items-center gap-2 mb-6">
         <Trophy className="w-6 h-6 text-yellow-500" />
         <h2 className="text-2xl font-bold text-white">{title}</h2>
+        <span className="ml-auto text-gray-500 text-sm">22 drivers</span>
       </div>
       
-      <div className="grid grid-cols-4 sm:grid-cols-5 md:grid-cols-10 gap-4">
+      <div className="grid grid-cols-4 sm:grid-cols-5 md:grid-cols-6 lg:grid-cols-11 gap-4">
         {allDrivers2026
           .sort((a, b) => a.position - b.position)
           .map((driver) => (

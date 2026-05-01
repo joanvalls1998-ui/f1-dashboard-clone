@@ -16,7 +16,7 @@ import {
   Target
 } from 'lucide-react';
 
-// Real 2026 data
+// 2026 Season - 22 drivers from Ergast API
 const driverStandings2026 = [
   { position: 1, abbreviation: 'ANT', fullName: 'Kimi Antonelli', team: 'Mercedes', points: 68 },
   { position: 2, abbreviation: 'RUS', fullName: 'George Russell', team: 'Mercedes', points: 55 },
@@ -26,18 +26,20 @@ const driverStandings2026 = [
   { position: 6, abbreviation: 'PIA', fullName: 'Oscar Piastri', team: 'McLaren', points: 18 },
   { position: 7, abbreviation: 'BEA', fullName: 'Oliver Bearman', team: 'Haas F1 Team', points: 16 },
   { position: 8, abbreviation: 'GAS', fullName: 'Pierre Gasly', team: 'Alpine', points: 15 },
-  { position: 9, abbreviation: 'VER', fullName: 'Max Verstappen', team: 'Red Bull Racing', points: 12 },
-  { position: 10, abbreviation: 'LAW', fullName: 'Liam Lawson', team: 'Racing Bulls', points: 8 },
-  { position: 11, abbreviation: 'LIN', fullName: 'Arvid Lindblad', team: 'Racing Bulls', points: 4 },
-  { position: 12, abbreviation: 'HAD', fullName: 'Isack Hadjar', team: 'Red Bull Racing', points: 4 },
+  { position: 9, abbreviation: 'VER', fullName: 'Max Verstappen', team: 'Red Bull', points: 12 },
+  { position: 10, abbreviation: 'LAW', fullName: 'Liam Lawson', team: 'RB F1 Team', points: 8 },
+  { position: 11, abbreviation: 'LIN', fullName: 'Arvid Lindblad', team: 'RB F1 Team', points: 4 },
+  { position: 12, abbreviation: 'HAD', fullName: 'Isack Hadjar', team: 'Red Bull', points: 4 },
   { position: 13, abbreviation: 'BOR', fullName: 'Gabriel Bortoleto', team: 'Audi', points: 2 },
   { position: 14, abbreviation: 'SAI', fullName: 'Carlos Sainz', team: 'Williams', points: 2 },
   { position: 15, abbreviation: 'OCO', fullName: 'Esteban Ocon', team: 'Haas F1 Team', points: 1 },
   { position: 16, abbreviation: 'COL', fullName: 'Franco Colapinto', team: 'Alpine', points: 1 },
   { position: 17, abbreviation: 'ALB', fullName: 'Alexander Albon', team: 'Williams', points: 0 },
-  { position: 18, abbreviation: 'PER', fullName: 'Sergio Perez', team: 'Cadillac', points: 0 },
-  { position: 19, abbreviation: 'STR', fullName: 'Lance Stroll', team: 'Aston Martin', points: 0 },
-  { position: 20, abbreviation: 'ALO', fullName: 'Fernando Alonso', team: 'Aston Martin', points: 0 },
+  { position: 18, abbreviation: 'STR', fullName: 'Lance Stroll', team: 'Aston Martin', points: 0 },
+  { position: 19, abbreviation: 'ALO', fullName: 'Fernando Alonso', team: 'Aston Martin', points: 0 },
+  { position: 20, abbreviation: 'PER', fullName: 'Sergio Perez', team: 'Cadillac', points: 0 },
+  { position: 21, abbreviation: 'BOT', fullName: 'Valtteri Bottas', team: 'Cadillac', points: 0 },
+  { position: 22, abbreviation: 'HUL', fullName: 'Nico Hülkenberg', team: 'Audi', points: 0 },
 ];
 
 const constructorStandings2026 = [
@@ -46,12 +48,12 @@ const constructorStandings2026 = [
   { position: 3, name: 'McLaren', points: 38, wins: 0, drivers: ['Lando Norris', 'Oscar Piastri'], color: '#FF8000' },
   { position: 4, name: 'Haas F1 Team', points: 17, wins: 0, drivers: ['Oliver Bearman', 'Esteban Ocon'], color: '#F0F0F0' },
   { position: 5, name: 'Alpine', points: 16, wins: 0, drivers: ['Pierre Gasly', 'Franco Colapinto'], color: '#FF87BC' },
-  { position: 6, name: 'Red Bull Racing', points: 16, wins: 0, drivers: ['Max Verstappen', 'Isack Hadjar'], color: '#3671C6' },
-  { position: 7, name: 'Racing Bulls', points: 12, wins: 0, drivers: ['Liam Lawson', 'Arvid Lindblad'], color: '#3671C6' },
-  { position: 8, name: 'Audi', points: 2, wins: 0, drivers: ['Gabriel Bortoleto'], color: '#CC0000' },
+  { position: 6, name: 'Red Bull', points: 16, wins: 0, drivers: ['Max Verstappen', 'Isack Hadjar'], color: '#3671C6' },
+  { position: 7, name: 'RB F1 Team', points: 12, wins: 0, drivers: ['Liam Lawson', 'Arvid Lindblad'], color: '#6B3FC6' },
+  { position: 8, name: 'Audi', points: 2, wins: 0, drivers: ['Gabriel Bortoleto', 'Nico Hülkenberg'], color: '#CC0000' },
   { position: 9, name: 'Williams', points: 2, wins: 0, drivers: ['Carlos Sainz', 'Alexander Albon'], color: '#64C4FF' },
   { position: 10, name: 'Aston Martin', points: 0, wins: 0, drivers: ['Lance Stroll', 'Fernando Alonso'], color: '#229971' },
-  { position: 11, name: 'Cadillac', points: 0, wins: 0, drivers: ['Sergio Perez'], color: '#C20000' },
+  { position: 11, name: 'Cadillac', points: 0, wins: 0, drivers: ['Sergio Perez', 'Valtteri Bottas'], color: '#C20000' },
 ];
 
 const races2026 = [

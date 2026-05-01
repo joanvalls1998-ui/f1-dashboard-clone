@@ -48,7 +48,10 @@ export const driverImages: Record<string, string> = {
   BOR: "https://upload.wikimedia.org/wikipedia/commons/thumb/f/fe/Gabriel_Bortoleto_%28cropped%29.jpg/330px-Gabriel_Bortoleto_%28cropped%29.jpg",
   
   // Cadillac (placeholder - PER missing image)
-  PER: "",
+  // Cadillac
+  BOT: "https://upload.wikimedia.org/wikipedia/commons/thumb/9/93/Valtteri_Bottas_at_the_2026_Adelaide_Motorsport_Festival_%28028A7567%29.jpg/330px-Valtteri_Bottas_at_the_2026_Adelaide_Motorsport_Festival_%28028A7567%29.jpg",
+  HUL: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/de/2019_Formula_One_tests_Barcelona%2C_Hulkenberg_%2840287128313%29.jpg/330px-2019_Formula_One_tests_Barcelona%2C_Hulkenberg_%2840287128313%29.jpg",
+  PER: "", // Sergio Perez - to be added
 };
 
 // Circuit images from Wikipedia - 16/22 complete
