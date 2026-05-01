@@ -42,7 +42,9 @@ export function SectorTimes() {
     async function fetchSectorTimes() {
       try {
         // Try OpenF1 API
-        const response = await fetch("https://api.openf1.org/v1/laps?session_key=latest&limit=100");
+        const response = await fetch("https://api.openf1.org/v1/laps?session_key=latest&limit=100", {
+          signal: AbortSignal.timeout(8000)
+        });
         if (response.ok) {
           const data = await response.json();
           // Transform and sort by lap time

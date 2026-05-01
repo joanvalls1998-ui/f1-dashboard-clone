@@ -52,7 +52,8 @@ export function RaceCalendarVisual({ races = [], title = "2026 Calendar" }: Race
           
           // Fetch sessions from OpenF1 to get detailed schedule
           const sessionsRes = await fetch(
-            `https://api.openf1.org/v1/sessions?year=${selectedYear}`
+            `https://api.openf1.org/v1/sessions?year=${selectedYear}`,
+            { signal: AbortSignal.timeout(8000) }
           );
           const sessionsData: Session[] = await sessionsRes.json();
           

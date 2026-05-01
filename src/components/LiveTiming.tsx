@@ -73,7 +73,8 @@ export function LiveTiming() {
         // First, check for current live session
         const now = new Date().toISOString();
         const sessionsRes = await fetch(
-          `https://api.openf1.org/v1/sessions?date_start<=${now}&date_end>=${now}&is_cancelled=false`
+          `https://api.openf1.org/v1/sessions?date_start<=${now}&date_end>=${now}&is_cancelled=false`,
+          { signal: AbortSignal.timeout(8000) }
         );
         const sessionsData = await sessionsRes.json();
         
@@ -83,7 +84,8 @@ export function LiveTiming() {
           // Try to fetch live timing data for this session
           const sessionKey = sessionsData[0].session_key;
           const positionRes = await fetch(
-            `https://api.openf1.org/v1/position?session_key=${sessionKey}`
+            `https://api.openf1.org/v1/position?session_key=${sessionKey}`,
+            { signal: AbortSignal.timeout(8000) }
           );
           
           if (positionRes.ok) {
@@ -118,7 +120,8 @@ export function LiveTiming() {
         
         // No live session found, fetch upcoming sessions
         const upcomingRes = await fetch(
-          `https://api.openf1.org/v1/sessions?date_start>=${now}&is_cancelled=false&limit=5&session_type=Race`
+          `https://api.openf1.org/v1/sessions?date_start>=${now}&is_cancelled=false&limit=5&session_type=Race`,
+          { signal: AbortSignal.timeout(8000) }
         );
         const upcomingData = await upcomingRes.json();
         setUpcomingSessions(upcomingData || []);

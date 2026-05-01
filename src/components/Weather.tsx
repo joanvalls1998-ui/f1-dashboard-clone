@@ -37,7 +37,9 @@ export function Weather() {
   useEffect(() => {
     async function fetchWeather() {
       try {
-        const response = await fetch("https://api.openf1.org/v1/weather?session_key=latest");
+        const response = await fetch("https://api.openf1.org/v1/weather?session_key=latest", {
+          signal: AbortSignal.timeout(8000)
+        });
         if (response.ok) {
           const data = await response.json();
           if (data.length > 0) {

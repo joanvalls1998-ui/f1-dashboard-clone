@@ -20,38 +20,33 @@ export function ConstructorStandingsReal() {
   useEffect(() => {
     async function fetchTeams() {
       try {
-        // Fetch latest session to get current teams
-        const response = await fetch("https://api.openf1.org/v1/teams?session_key=latest");
-        const data = await response.json();
+        // Use Ergast API - OpenF1 doesn't have a teams endpoint
+        const response = await fetch(
+          "https://api.jolpi.ca/ergast/f1/2026/constructorstandings.json",
+          { signal: AbortSignal.timeout(8000) }
+        );
+        const json = await response.json();
+        const constructors = json.MRData.ConstructorTable.Constructors;
         
-        // Map OpenF1 data to our format with mock 2024 stats
-        const mappedTeams: Team[] = (data as any[]).map((team: any) => ({
-          name: team.name || "Unknown Team",
-          teamColor: team.colour || team.team_colour || "666666",
-          points: team.points || 0,
-          wins: team.wins || 0,
-          podiums: team.podiums || 0,
-          poles: team.poles || 0,
-          fastestLaps: team.fastest_laps || 0,
-        })).sort((a, b) => b.points - a.points);
-        
-        // If no real data, use mock data
-        if (mappedTeams.length === 0 || mappedTeams[0].points === 0) {
-          setTeams([
-            { name: "Red Bull Racing", teamColor: "3671c6", points: 671, wins: 19, podiums: 32, poles: 13, fastestLaps: 22 },
-            { name: "McLaren", teamColor: "ff8000", points: 646, wins: 4, podiums: 29, poles: 8, fastestLaps: 9 },
-            { name: "Ferrari", teamColor: "e8002d", points: 588, wins: 3, podiums: 28, poles: 8, fastestLaps: 6 },
-            { name: "Mercedes", teamColor: "27f4d2", points: 136, wins: 0, podiums: 12, poles: 1, fastestLaps: 4 },
-            { name: "Aston Martin", teamColor: "229971", points: 86, wins: 0, podiums: 6, poles: 0, fastestLaps: 2 },
-            { name: "Alpine", teamColor: "ff87bc", points: 65, wins: 0, podiums: 2, poles: 0, fastestLaps: 1 },
-            { name: "RB", teamColor: "6692ff", points: 44, wins: 0, podiums: 0, poles: 0, fastestLaps: 1 },
-            { name: "Williams", teamColor: "64c4ff", points: 27, wins: 0, podiums: 1, poles: 0, fastestLaps: 0 },
-            { name: "Kick Sauber", teamColor: "52e252", points: 4, wins: 0, podiums: 0, poles: 0, fastestLaps: 0 },
-            { name: "Haas F1 Team", teamColor: "b6babd", points: 0, wins: 0, podiums: 0, poles: 0, fastestLaps: 0 },
-          ]);
-        } else {
-          setTeams(mappedTeams);
-        }
+        const mappedTeams: Team[] = (constructors as any[]).map((c: any, i: number) => ({
+          name: c.name,
+          teamColor: c.constructorId === "red_bull" ? "3671c6" :
+                     c.constructorId === "mclaren" ? "ff8000" :
+                     c.constructorId === "ferrari" ? "e8002d" :
+                     c.constructorId === "mercedes" ? "27f4d2" :
+                     c.constructorId === "aston_martin" ? "229971" :
+                     c.constructorId === "alpine" ? "ff87bc" :
+                     c.constructorId === "rb" ? "6692ff" :
+                     c.constructorId === "williams" ? "64c4ff" :
+                     c.constructorId === "sauber" ? "52e252" :
+                     c.constructorId === "haas" ? "b6babd" : "666666",
+          points: 0,
+          wins: 0,
+          podiums: 0,
+          poles: 0,
+          fastestLaps: 0,
+        }));
+        setTeams(mappedTeams);
         setLoading(false);
       } catch (error) {
         console.error("Error fetching teams:", error);

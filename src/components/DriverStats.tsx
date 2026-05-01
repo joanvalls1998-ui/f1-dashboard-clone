@@ -33,7 +33,9 @@ export function DriverStats() {
   useEffect(() => {
     async function fetchDrivers() {
       try {
-        const response = await fetch("https://api.openf1.org/v1/drivers?session_key=latest");
+        const response = await fetch("https://api.openf1.org/v1/drivers?session_key=latest", {
+          signal: AbortSignal.timeout(8000)
+        });
         const data = await response.json();
         
         // Filter unique drivers and map to our interface

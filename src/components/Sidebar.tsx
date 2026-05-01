@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
@@ -17,8 +16,6 @@ import {
   Bomb,
   Dna,
   ScrollText,
-  ChevronLeft,
-  ChevronRight,
   Calendar,
   Home,
   Radio,
@@ -140,11 +137,7 @@ export function Sidebar({ collapsed, onToggle }: SidebarProps) {
           onClick={onToggle}
           className="flex items-center justify-center w-full mt-2 p-2 rounded-md text-sidebar-foreground hover:bg-sidebar-accent transition-colors"
         >
-          {collapsed ? (
-            <ChevronRight className="w-5 h-5" />
-          ) : (
-            <ChevronLeft className="w-5 h-5" />
-          )}
+          <span className="text-xs">{collapsed ? "→" : "←"}</span>
         </button>
       </div>
     </aside>
