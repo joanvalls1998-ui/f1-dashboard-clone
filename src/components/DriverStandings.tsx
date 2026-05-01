@@ -1,6 +1,8 @@
 'use client';
 
-import { Trophy } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { DriverStandingsVisual } from './DriverCard';
+import { driverImages, teamColors } from '@/lib/f1-assets';
 
 interface DriverStanding {
   position: number;
@@ -10,6 +12,7 @@ interface DriverStanding {
   points: number;
 }
 
+// Real 2026 data from FastF1 + Jolpica
 const driverStandings2026: DriverStanding[] = [
   { position: 1, abbreviation: 'ANT', fullName: 'Kimi Antonelli', team: 'Mercedes', points: 68 },
   { position: 2, abbreviation: 'RUS', fullName: 'George Russell', team: 'Mercedes', points: 55 },
@@ -33,52 +36,66 @@ const driverStandings2026: DriverStanding[] = [
   { position: 20, abbreviation: 'ALO', fullName: 'Fernando Alonso', team: 'Aston Martin', points: 0 },
 ];
 
-const teamColors: Record<string, string> = {
-  'Mercedes': '#27F4D2',
-  'Ferrari': '#E8002D',
-  'McLaren': '#FF8000',
-  'Red Bull Racing': '#3671C6',
-  'Racing Bulls': '#3671C6',
-  'Haas F1 Team': '#F0F0F0',
-  'Alpine': '#FF87BC',
-  'Audi': '#CC0000',
-  'Williams': '#64C4FF',
-  'Aston Martin': '#229971',
-  'Cadillac': '#C20000',
-};
-
 export default function DriverStandings() {
+  const [drivers, setDrivers] = useState<DriverStanding[]>(driverStandings2026);
+
   return (
-    <div className="bg-[#171717] rounded-xl p-4 sm:p-6">
-      <div className="flex items-center gap-2 mb-4">
-        <Trophy className="w-5 h-5 text-yellow-500" />
-        <h2 className="text-lg font-semibold text-white">Clasificación Pilotos</h2>
-      </div>
-      
-      <div className="space-y-1">
-        {driverStandings2026.map((driver) => (
-          <div
-            key={driver.position}
-            className="flex items-center justify-between py-2 px-3 rounded-lg bg-[#1f1f1f] hover:bg-[#2a2a2a] transition-colors"
-          >
-            <div className="flex items-center gap-3">
-              <span className={`w-8 text-center font-bold ${
-                driver.position === 1 ? 'text-yellow-500' :
-                driver.position <= 3 ? 'text-gray-300' :
-                'text-gray-400'
-              }`}>
-                {driver.position}
-              </span>
-              <div className="w-2 h-2 rounded-full" style={{ backgroundColor: teamColors[driver.team] || '#666' }} />
-              <div>
-                <p className="text-white text-sm font-medium">{driver.fullName}</p>
-                <p className="text-gray-500 text-xs">{driver.team}</p>
+    <div className="space-y-4">
+      {/* Leader highlight */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+        {drivers.slice(0, 3).map((driver) => {
+          const color = teamColors[driver.team] || '#666';
+          const image = driverImages[driver.abbreviation];
+          return (
+            <div key={driver.position} className="relative">
+              <div 
+                className="bg-[#1a1a1a] rounded-xl overflow-hidden"
+                style={{ 
+                  borderTop: `4px solid ${driver.position === 1 ? '#FFD700' : driver.position === 2 ? '#C0C0C0' : '#CD7F32'}`
+                }}
+              >
+                {/* Image banner */}
+                <div className="h-24 bg-gradient-to-br from-[#2a2a2a] to-[#1a1a1a] relative overflow-hidden">
+                  {image && (
+                    <img 
+                      src={image} 
+                      alt={driver.fullName}
+                      className="w-full h-full object-cover opacity-60"
+                    />
+                  )}
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#1a1a1a] to-transparent" />
+                  {/* Position badge */}
+                  <div className="absolute top-3 right-3 w-10 h-10 rounded-full flex items-center justify-center text-xl font-black"
+                       style={{ 
+                         backgroundColor: driver.position === 1 ? '#FFD700' : driver.position === 2 ? '#C0C0C0' : '#CD7F32',
+                         color: driver.position === 2 ? '#333' : '#fff'
+                       }}>
+                    {driver.position}
+                  </div>
+                </div>
+                
+                {/* Content */}
+                <div className="p-4">
+                  <div className="flex items-center gap-2 mb-2">
+                    <div className="w-3 h-3 rounded-full" style={{ backgroundColor: color }} />
+                    <span className="text-xs text-gray-500 uppercase tracking-wider">{driver.team}</span>
+                  </div>
+                  <h3 className="text-white font-bold text-lg">{driver.fullName}</h3>
+                  <div className="flex items-center justify-between mt-3">
+                    <span className="text-3xl font-black" style={{ color }}>
+                      {driver.points}
+                    </span>
+                    <span className="text-xs text-gray-500 uppercase">pts</span>
+                  </div>
+                </div>
               </div>
             </div>
-            <span className="text-white font-bold">{driver.points} pts</span>
-          </div>
-        ))}
+          );
+        })}
       </div>
+
+      {/* Full standings list */}
+      <DriverStandingsVisual drivers={drivers} />
     </div>
   );
 }
