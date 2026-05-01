@@ -27,11 +27,20 @@ import {
   TrendingUp,
   AlertTriangle,
   BarChart,
+  Zap,
+  Star,
+  Settings,
 } from "lucide-react";
 
 const navItems = [
   { href: "/", label: "Home", icon: Home },
   { href: "/live", label: "Live Timing", icon: Radio },
+  { href: "/predictions", label: "Predicción", icon: Zap },
+  { href: "/favorito", label: "Favorito", icon: Star },
+  { href: "/home-intel", label: "Home Intel", icon: Home },
+  { href: "/news", label: "News", icon: ScrollText },
+  { href: "/engineer", label: "Ingeniero", icon: Settings },
+  { href: "/race-mode", label: "Modo Carrera", icon: Flag },
   { href: "/calendar", label: "Race Calendar", icon: Calendar },
   { href: "/standings", label: "Standings", icon: Trophy },
   { href: "/drivers", label: "Drivers", icon: User },
