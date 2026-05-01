@@ -22,11 +22,32 @@ export default function DriversPage() {
 
   useEffect(() => {
     async function loadDrivers() {
-      const data = await fetchDriverStandings(2026);
-      // Sort by position
-      const sorted = [...data].sort((a, b) => a.position - b.position);
-      setDrivers(sorted);
-      setLoading(false);
+      try {
+        const response = await fetch(
+          `https://api.jolpi.ca/ergast/f1/2026/driverstandings.json`,
+          { signal: AbortSignal.timeout(10000) }
+        );
+        if (!response.ok) throw new Error('API error');
+        const data = await response.json();
+        const standings = data.MRData.StandingsTable.StandingsLists[0].DriverStandings;
+        const sorted = standings
+          .map((item: any) => ({
+            position: parseInt(item.position),
+            abbreviation: item.Driver.code,
+            fullName: `${item.Driver.givenName} ${item.Driver.familyName}`,
+            team: item.Constructors[0].name,
+            points: parseInt(item.points),
+            driverId: item.Driver.driverId,
+            number: item.Driver.permanentNumber || item.Driver.code,
+            nationality: item.Driver.nationality,
+          }))
+          .sort((a: Driver, b: Driver) => a.position - b.position);
+        setDrivers(sorted);
+      } catch (e) {
+        console.error('Failed to load drivers:', e);
+      } finally {
+        setLoading(false);
+      }
     }
     loadDrivers();
   }, []);

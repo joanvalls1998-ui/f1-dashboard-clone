@@ -33,30 +33,26 @@ export function DriverStats() {
   useEffect(() => {
     async function fetchDrivers() {
       try {
-        const response = await fetch("https://api.openf1.org/v1/drivers?session_key=latest", {
-          signal: AbortSignal.timeout(8000)
-        });
+        const response = await fetch(
+          "https://api.jolpi.ca/ergast/f1/2026/driverstandings.json",
+          { signal: AbortSignal.timeout(10000) }
+        );
         const data = await response.json();
-        
-        // Filter unique drivers and map to our interface
-        const uniqueDrivers = data.reduce((acc: Driver[], driver: any) => {
-          if (!acc.find(d => d.driver_number === driver.driver_number)) {
-            acc.push({
-              driver_number: driver.driver_number,
-              team_name: driver.team_name || "Unknown",
-              team_color: driver.team_colour || "666666",
-              first_name: driver.first_name,
-              last_name: driver.last_name,
-              country: driver.country_code || "XX",
-              headshot_url: driver.headshot_url || "",
-            });
-          }
-          return acc;
-        }, []);
-        
-        setDrivers(uniqueDrivers);
+        const standings = data.MRData.StandingsTable.StandingsLists[0].DriverStandings;
+
+        const uniqueDrivers = standings.map((item: any) => ({
+          driver_number: parseInt(item.Driver.permanentNumber) || 0,
+          team_name: item.Constructors[0].name,
+          team_color: "666666",
+          first_name: item.Driver.givenName,
+          last_name: item.Driver.familyName,
+          country: item.Driver.nationality || "XX",
+          headshot_url: "",
+        }));
+
+        setDrivers(uniqueDrivers as Driver[]);
         if (uniqueDrivers.length > 0) {
-          setSelectedDriver(uniqueDrivers[0]);
+          setSelectedDriver(uniqueDrivers[0] as Driver);
         }
         setLoading(false);
       } catch (error) {
@@ -64,7 +60,7 @@ export function DriverStats() {
         setLoading(false);
       }
     }
-    
+
     fetchDrivers();
   }, []);
 
