@@ -15,6 +15,21 @@ interface Favorite {
   image?: string;
 }
 
+// Colors
+const TEAM_COLORS: Record<string, string> = {
+  mercedes: '#27f4d2',
+  ferrari: '#ff1800',
+  mclaren: '#ff8700',
+  redbull: '#3671c6',
+  haas: '#c92d28',
+  rb: '#203f94',
+  alpine: '#ff87bc',
+  audi: '#e11a2b',
+  williams: '#64c4ff',
+  cadillac: '#c80029',
+  aston: '#0072ff'
+};
+
 interface WeekendContext {
   raceName: string;
   phase: 'previa' | 'sprint' | 'carrera';
@@ -515,7 +530,7 @@ export function FavoritoDashboard() {
           <div className="flex items-start justify-between mb-4">
             <div>
               <div className="flex items-center gap-3 mb-2">
-                <div className={`w-3 h-3 rounded-full bg-[#229971]`} />
+                <div className="w-3 h-3 rounded-full" style={{ backgroundColor: TEAM_COLORS[favorite.colorClass] || '#666' }} />
                 <h2 className="text-xl font-bold text-white">{favorite.name}</h2>
                 <SignalBadge signal={snapshot.signal} />
               </div>
@@ -541,7 +556,7 @@ export function FavoritoDashboard() {
                       favorite.name === driver.name ? 'bg-[#2a2a2a]' : ''
                     }`}
                   >
-                    <div className={`w-2 h-2 rounded-full bg-[#${driver.colorClass === 'aston' ? '229971' : driver.colorClass === 'ferrari' ? 'E8002D' : '666666'}]`} />
+                    <div className="w-2 h-2 rounded-full" style={{ backgroundColor: TEAM_COLORS[driver.colorClass] || '#666666' }} />
                     <span className="text-white text-sm">{driver.name}</span>
                     <span className="text-gray-500 text-xs ml-auto">{driver.team}</span>
                   </button>
