@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Radio, Clock, Gauge, RefreshCw, ExternalLink, Calendar } from "lucide-react";
+import { Radio, Gauge, RefreshCw, ExternalLink, Calendar } from "lucide-react";
 
 interface LiveDriver {
   driver_number: number;
@@ -33,6 +33,20 @@ interface Session {
   is_cancelled: boolean;
 }
 
+interface F1DashboardSession {
+  session_key: number;
+  session_name: string;
+  session_type: string;
+  date_start: string;
+  date_end: string;
+  year: number;
+  grand_prix: {
+    city: string;
+    country: string;
+    circuit_track: string;
+  };
+}
+
 const TYRE_COLORS: Record<string, string> = {
   "SOFT": "#ff3333",
   "MEDIUM": "#ffff33",
@@ -56,6 +70,27 @@ const mockLiveDrivers: LiveDriver[] = [
   { driver_number: 30, last_name: "LAW", team_name: "RB F1 Team", team_color: "6b3fc6", position: 10, gap_to_leader: "+30.123", interval: "+4.445", current_lap: 39, current_lap_time: "1:33.890", speed: 276, sector_1_time: "28.012", sector_2_time: "32.945", sector_3_time: "31.933", pit_lap: 17, tyre: "HARD" },
 ];
 
+function isSessionActive(session: F1DashboardSession): boolean {
+  const now = new Date();
+  const start = new Date(session.date_start);
+  const end = new Date(session.date_end);
+  return now >= start && now <= end;
+}
+
+function f1DashboardToSession(fd: F1DashboardSession): Session {
+  return {
+    session_key: fd.session_key,
+    session_type: fd.session_type,
+    session_name: fd.session_name,
+    date_start: fd.date_start,
+    date_end: fd.date_end,
+    circuit_short_name: fd.grand_prix.city,
+    country_name: fd.grand_prix.country,
+    location: fd.grand_prix.city,
+    is_cancelled: false,
+  };
+}
+
 export function LiveTiming() {
   const [drivers, setDrivers] = useState<LiveDriver[]>([]);
   const [loading, setLoading] = useState(true);
@@ -66,101 +101,112 @@ export function LiveTiming() {
   const [currentSession, setCurrentSession] = useState<Session | null>(null);
   const [upcomingSessions, setUpcomingSessions] = useState<Session[]>([]);
   const [showEmbed, setShowEmbed] = useState(false);
-  const [hasF1DashboardLive, setHasF1DashboardLive] = useState(false);
 
   useEffect(() => {
     async function fetchLiveData() {
+      // Step 1: Check formula1dashboard for active sessions (primary source)
+      let activeFromF1D: F1DashboardSession | null = null;
       try {
-        // Check formula1dashboard for active/upcoming sessions
-        let f1DashHasLive = false;
-        try {
-          const f1Res = await fetch(
-            `https://api.formula1dashboard.com/api/v1/sessions?state=upcoming`,
-            { signal: AbortSignal.timeout(6000) }
-          );
-          if (f1Res.ok) {
-            const f1Data = await f1Res.json();
-            const now = new Date();
-            const activeSessions = f1Data.filter((s: any) => {
-              const start = new Date(s.date_start);
-              const end = new Date(s.date_end);
-              return start <= now && end >= now;
-            });
-            if (activeSessions.length > 0) {
-              setCurrentSession(activeSessions[0]);
-              f1DashHasLive = true;
-              setHasF1DashboardLive(true);
-            }
+        const f1Res = await fetch(
+          `https://api.formula1dashboard.com/api/v1/sessions?state=upcoming`,
+          { signal: AbortSignal.timeout(6000) }
+        );
+        if (f1Res.ok) {
+          const f1Data = await f1Res.json() as F1DashboardSession[];
+          const active = f1Data.find(s => isSessionActive(s));
+          if (active) {
+            activeFromF1D = active;
+            setCurrentSession(f1DashboardToSession(active));
           }
-        } catch (_) {}
+        }
+      } catch (e) {
+        // F1 Dashboard check failed, continue anyway
+        console.warn("F1 Dashboard check failed:", e);
+      }
 
-        // First, check for current live session via OpenF1
+      // Step 2: Try OpenF1 for live timing data (graceful degradation)
+      // We don't let OpenF1 failures break the whole component
+      try {
         const now = new Date().toISOString();
         const sessionsRes = await fetch(
           `https://api.openf1.org/v1/sessions?date_start<=${now}&date_end>=${now}&is_cancelled=false`,
-          { signal: AbortSignal.timeout(8000) }
+          { signal: AbortSignal.timeout(6000) }
         );
-        const sessionsData = await sessionsRes.json();
         
-        if (sessionsData && sessionsData.length > 0) {
-          setCurrentSession(sessionsData[0]);
-          
-          // Try to fetch live timing data for this session
-          const sessionKey = sessionsData[0].session_key;
-          const positionRes = await fetch(
-            `https://api.openf1.org/v1/position?session_key=${sessionKey}`,
-            { signal: AbortSignal.timeout(8000) }
-          );
-          
-          if (positionRes.ok) {
-            const positionData = await positionRes.json();
-            if (positionData && positionData.length > 0) {
-              const transformedDrivers: LiveDriver[] = positionData.map((d: any) => ({
-                driver_number: d.driver_number,
-                last_name: d.last_name || `DRV${d.driver_number}`,
-                team_name: d.team_name || "Unknown",
-                team_color: d.team_colour || "666666",
-                position: d.position || 0,
-                gap_to_leader: d.gap_to_leader || "--",
-                interval: d.interval || "--",
-                current_lap: d.current_lap || 0,
-                current_lap_time: d.current_lap_time || "--:--.---",
-                speed: d.speed || 0,
-                sector_1_time: d.sector_1_time || "--",
-                sector_2_time: d.sector_2_time || "--",
-                sector_3_time: d.sector_3_time || "--",
-                pit_lap: d.pit_lap || 0,
-                tyre: d.tyre_compound || "UNKNOWN"
-              }));
-              
-              setDrivers(transformedDrivers.sort((a, b) => a.position - b.position));
-              setIsLive(true);
-              setLoading(false);
-              setLastUpdate(new Date());
-              return;
+        if (sessionsRes.ok) {
+          const sessionsData = await sessionsRes.json();
+          if (sessionsData && sessionsData.length > 0) {
+            const sessionKey = sessionsData[0].session_key;
+            const positionRes = await fetch(
+              `https://api.openf1.org/v1/position?session_key=${sessionKey}`,
+              { signal: AbortSignal.timeout(6000) }
+            );
+            
+            if (positionRes.ok) {
+              const positionData = await positionRes.json();
+              if (positionData && positionData.length > 0) {
+                const transformedDrivers: LiveDriver[] = positionData.map((d: any) => ({
+                  driver_number: d.driver_number,
+                  last_name: d.last_name || `DRV${d.driver_number}`,
+                  team_name: d.team_name || "Unknown",
+                  team_color: d.team_colour || "666666",
+                  position: d.position || 0,
+                  gap_to_leader: d.gap_to_leader || "--",
+                  interval: d.interval || "--",
+                  current_lap: d.current_lap || 0,
+                  current_lap_time: d.current_lap_time || "--:--.---",
+                  speed: d.speed || 0,
+                  sector_1_time: d.sector_1_time || "--",
+                  sector_2_time: d.sector_2_time || "--",
+                  sector_3_time: d.sector_3_time || "--",
+                  pit_lap: d.pit_lap || 0,
+                  tyre: d.tyre_compound || "UNKNOWN"
+                }));
+                
+                setDrivers(transformedDrivers.sort((a, b) => a.position - b.position));
+                setIsLive(true);
+                setLoading(false);
+                setLastUpdate(new Date());
+                return;
+              }
             }
           }
         }
-        
-        // No live session found, fetch upcoming sessions
-        const upcomingRes = await fetch(
-          `https://api.openf1.org/v1/sessions?date_start>=${now}&is_cancelled=false&limit=5&session_type=Race`,
-          { signal: AbortSignal.timeout(8000) }
-        );
-        const upcomingData = await upcomingRes.json();
-        setUpcomingSessions(upcomingData || []);
-        
-        // Use mock data
-        setDrivers(mockLiveDrivers);
-        setIsLive(false);
-        if (!f1DashHasLive) {
-          setCurrentSession(null);
-        }
-      } catch (error) {
-        console.error("Error fetching live data:", error);
-        setDrivers(mockLiveDrivers);
-        setIsLive(false);
+      } catch (e) {
+        // OpenF1 failed — not critical, we have F1 Dashboard fallback
+        console.warn("OpenF1 check failed:", e);
       }
+
+      // Step 3: If F1 Dashboard found an active session, show iframe (even without OpenF1 data)
+      if (activeFromF1D) {
+        setIsLive(true);
+        setDrivers(mockLiveDrivers); // keep mock for the table display
+        setLoading(false);
+        setLastUpdate(new Date());
+        return;
+      }
+
+      // Step 4: No live session — fetch upcoming from F1 Dashboard
+      try {
+        const f1Upcoming = await fetch(
+          `https://api.formula1dashboard.com/api/v1/sessions?state=upcoming`,
+          { signal: AbortSignal.timeout(6000) }
+        );
+        if (f1Upcoming.ok) {
+          const f1Data = await f1Upcoming.json() as F1DashboardSession[];
+          const now = new Date();
+          const upcoming = f1Data
+            .filter(s => new Date(s.date_start) > now)
+            .sort((a, b) => new Date(a.date_start).getTime() - new Date(b.date_start).getTime())
+            .slice(0, 5)
+            .map(f1DashboardToSession);
+          setUpcomingSessions(upcoming);
+        }
+      } catch (_) {}
+
+      // Fallback: mock data
+      setDrivers(mockLiveDrivers);
+      setIsLive(false);
       setLastUpdate(new Date());
       setLoading(false);
     }
@@ -168,7 +214,7 @@ export function LiveTiming() {
     fetchLiveData();
 
     if (autoRefresh) {
-      const interval = setInterval(fetchLiveData, 15000); // Refresh every 15 seconds
+      const interval = setInterval(fetchLiveData, 15000);
       return () => clearInterval(interval);
     }
   }, [autoRefresh]);
@@ -177,41 +223,8 @@ export function LiveTiming() {
     ? drivers.filter(d => d.position > 0)
     : drivers;
 
-  // If user clicked the embed button, show the iframe
-  if (showEmbed) {
-    return (
-      <div className="space-y-4">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <Radio className="w-5 h-5 text-red-500 animate-pulse" />
-            <h2 className="text-lg font-semibold">Live Timing — Formula1Dashboard</h2>
-          </div>
-          <button
-            onClick={() => setShowEmbed(false)}
-            className="px-3 py-1.5 text-sm bg-secondary rounded-md hover:bg-secondary/80"
-          >
-            ← Back
-          </button>
-        </div>
-        
-        <div className="border rounded-lg overflow-hidden">
-          <iframe
-            src="https://formula1dashboard.com/live-timing/"
-            className="w-full h-[600px] md:h-[700px]"
-            title="F1 Live Timing"
-            style={{ border: 'none' }}
-          />
-        </div>
-        
-        <p className="text-xs text-muted-foreground text-center">
-          Live timing provided by formula1dashboard.com
-        </p>
-      </div>
-    );
-  }
-
-  // If there's a live session from F1 Dashboard, show the iframe directly
-  if (hasF1DashboardLive && currentSession) {
+  // Show iframe for live session (from F1 Dashboard or OpenF1)
+  if (isLive && currentSession) {
     return (
       <div className="space-y-4">
         <div className="flex items-center justify-between">
@@ -224,12 +237,12 @@ export function LiveTiming() {
           </div>
           <div className="flex items-center gap-2">
             <button
-              onClick={() => setShowEmbed(true)}
+              onClick={() => window.open("https://formula1dashboard.com/live-timing/", "_blank")}
               className="p-2 rounded-md border bg-background hover:bg-secondary flex items-center gap-1"
-              title="Open in full screen"
+              title="Open in new tab"
             >
               <ExternalLink className="w-4 h-4" />
-              <span className="text-xs hidden md:inline">Full Screen</span>
+              <span className="text-xs hidden md:inline">Open Live</span>
             </button>
           </div>
         </div>
@@ -244,29 +257,23 @@ export function LiveTiming() {
         </div>
         
         <p className="text-xs text-muted-foreground text-center">
-          Live timing provided by formula1dashboard.com — {currentSession.session_name} at {currentSession.circuit_short_name}
+          Live timing via formula1dashboard.com — {currentSession.session_name} at {currentSession.circuit_short_name}
         </p>
       </div>
     );
   }
 
+  // No live session
   return (
     <div className="space-y-4">
       {/* Header */}
       <div className="flex items-center justify-between flex-wrap gap-3">
         <div className="flex items-center gap-2">
-          <Radio className={`w-5 h-5 ${isLive ? "text-red-500 animate-pulse" : "text-gray-500"}`} />
+          <Radio className="w-5 h-5 text-gray-500" />
           <h2 className="text-lg font-semibold">Live Timing</h2>
-          {isLive && currentSession && (
-            <span className="px-2 py-0.5 text-xs font-bold bg-red-500 text-white rounded-full">
-              LIVE - {currentSession.circuit_short_name}
-            </span>
-          )}
-          {!isLive && (
-            <span className="px-2 py-0.5 text-xs font-medium bg-gray-500 text-white rounded-full">
-              NO LIVE SESSION
-            </span>
-          )}
+          <span className="px-2 py-0.5 text-xs font-medium bg-gray-500 text-white rounded-full">
+            NO LIVE SESSION
+          </span>
         </div>
 
         <div className="flex items-center gap-2">
@@ -277,7 +284,7 @@ export function LiveTiming() {
           )}
           
           <button
-            onClick={() => setShowEmbed(true)}
+            onClick={() => window.open("https://formula1dashboard.com/live-timing/", "_blank")}
             className="p-2 rounded-md border bg-background hover:bg-secondary flex items-center gap-1"
             title="Open Live Timing Dashboard"
           >
@@ -295,8 +302,8 @@ export function LiveTiming() {
         </div>
       </div>
 
-      {/* Current/Upcoming Session Info */}
-      {!isLive && upcomingSessions.length > 0 && (
+      {/* Upcoming Sessions */}
+      {upcomingSessions.length > 0 && (
         <div className="bg-card border rounded-lg p-4">
           <h3 className="text-sm font-medium mb-3 flex items-center gap-2">
             <Calendar className="w-4 h-4" />
@@ -340,21 +347,18 @@ export function LiveTiming() {
           Show only active drivers
         </label>
         
-        {!isLive && (
-          <span className="text-xs text-muted-foreground">
-            Showing mock data — No active session
-          </span>
-        )}
+        <span className="text-xs text-muted-foreground">
+          Showing mock data — No active session
+        </span>
       </div>
 
-      {/* Live grid */}
+      {/* Mock data table */}
       {loading ? (
         <div className="flex items-center justify-center py-12">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
         </div>
       ) : (
         <div className="space-y-2">
-          {/* Table header */}
           <div className="grid grid-cols-12 gap-2 px-3 py-2 text-xs font-medium text-muted-foreground">
             <div className="col-span-1">POS</div>
             <div className="col-span-2">DRIVER</div>
@@ -366,13 +370,11 @@ export function LiveTiming() {
             <div className="col-span-2">SPEED</div>
           </div>
 
-          {/* Driver rows */}
           {filteredDrivers.map((driver) => (
             <div
               key={driver.driver_number}
               className="grid grid-cols-12 gap-2 px-3 py-3 rounded-lg border bg-card hover:bg-muted/50 transition-colors"
             >
-              {/* Position */}
               <div className="col-span-1 flex items-center">
                 <span className={`font-bold text-lg ${
                   driver.position === 1 ? "text-yellow-500" :
@@ -384,7 +386,6 @@ export function LiveTiming() {
                 </span>
               </div>
 
-              {/* Driver */}
               <div className="col-span-2 flex items-center gap-2">
                 <div
                   className="w-2 h-8 rounded-full"
@@ -396,7 +397,6 @@ export function LiveTiming() {
                 </div>
               </div>
 
-              {/* Lap */}
               <div className="col-span-1 flex items-center">
                 <div className="text-center">
                   <div className="font-medium">{driver.current_lap}</div>
@@ -404,7 +404,6 @@ export function LiveTiming() {
                 </div>
               </div>
 
-              {/* Time / Gap */}
               <div className="col-span-2 flex items-center">
                 <div>
                   <div className="font-mono text-sm">{driver.current_lap_time}</div>
@@ -414,7 +413,6 @@ export function LiveTiming() {
                 </div>
               </div>
 
-              {/* Tyre */}
               <div className="col-span-1 flex items-center">
                 <div
                   className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold border-2"
@@ -428,7 +426,6 @@ export function LiveTiming() {
                 </div>
               </div>
 
-              {/* Sectors */}
               <div className="col-span-2 hidden md:flex items-center gap-1 text-xs">
                 <span className="px-1.5 py-0.5 bg-green-500/20 text-green-500 rounded font-mono">
                   {driver.sector_1_time}
@@ -441,7 +438,6 @@ export function LiveTiming() {
                 </span>
               </div>
 
-              {/* Pit */}
               <div className="col-span-1 hidden md:flex items-center">
                 {driver.pit_lap > 0 ? (
                   <span className="text-xs px-2 py-0.5 bg-orange-500/20 text-orange-500 rounded">
@@ -452,7 +448,6 @@ export function LiveTiming() {
                 )}
               </div>
 
-              {/* Speed */}
               <div className="col-span-2 flex items-center">
                 <div className="flex items-center gap-1">
                   <Gauge className="w-3 h-3 text-muted-foreground" />
