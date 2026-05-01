@@ -2,7 +2,8 @@
 
 import { useEffect, useState } from "react";
 import { Trophy, Loader2 } from "lucide-react";
-import { fetchConstructorStandings, fetchDriverStandings, getTeamColor } from "@/lib/api";
+import { fetchConstructorStandings, fetchDriverStandings } from "@/lib/api";
+import { getTeamColor } from "@/lib/f1-assets";
 
 interface ConstructorStanding {
   position: number;
@@ -30,7 +31,7 @@ export default function ConstructorStandings() {
           ...c,
           drivers: driversData
             .filter((d) => d.team === c.name)
-            .map((d) => d.fullName.split(" ").pop() || d.fullName),
+            .map((d) => d.fullName?.split(" ").pop() || d.fullName),
           color: getTeamColor(c.name)
         }));
 
@@ -84,7 +85,7 @@ export default function ConstructorStandings() {
               />
               <div>
                 <p className="text-white text-sm font-medium">{team.name}</p>
-                <p className="text-gray-500 text-xs">{team.drivers.join(", ")}</p>
+                <p className="text-gray-500 text-xs">{(team.drivers || []).join(", ") || "N/A"}</p>
               </div>
             </div>
             <div className="text-right">

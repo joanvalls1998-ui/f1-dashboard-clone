@@ -61,6 +61,7 @@ export function SpeedHistogram() {
         <select
           value={selectedDriver}
           onChange={(e) => setSelectedDriver(e.target.value)}
+          aria-label="Filter speed data by driver"
           className="px-3 py-2 rounded-md border bg-background text-sm"
         >
           <option value="all">All Drivers</option>

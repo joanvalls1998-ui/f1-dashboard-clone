@@ -167,7 +167,7 @@ export function RaceHistory() {
                   <div className="flex items-center gap-1">
                     <div
                       className="w-2 h-4 rounded"
-                      style={{ backgroundColor: `#${record.team_color}` }}
+                      style={{ backgroundColor: record.team_color.startsWith('#') ? record.team_color : `#${record.team_color}` }}
                     />
                     <span className="text-xs font-medium truncate">
                       {record.driver_name}
@@ -238,7 +238,7 @@ export function RaceHistory() {
             <div className="flex items-center gap-2 mb-2">
               <div
                 className="w-3 h-8 rounded"
-                style={{ backgroundColor: `#${record.team_color}` }}
+                style={{ backgroundColor: record.team_color.startsWith('#') ? record.team_color : `#${record.team_color}` }}
               />
               <div>
                 <div className="font-bold">#{record.driver_number} {record.driver_name}</div>

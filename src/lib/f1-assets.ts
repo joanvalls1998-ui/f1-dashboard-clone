@@ -80,6 +80,7 @@ export const circuitImages: Record<string, string> = {
 };
 
 // Team colors matching F1 official
+// Includes all team name variants to handle API responses
 export const teamColors: Record<string, string> = {
   Mercedes: "#27F4D2",
   Ferrari: "#E8002D",
@@ -90,10 +91,13 @@ export const teamColors: Record<string, string> = {
   "RB F1 Team": "#6B3FC6",
   "Haas F1 Team": "#F0F0F0",
   Alpine: "#FF87BC",
+  "Alpine F1 Team": "#FF87BC",
   Audi: "#CC0000",
   Williams: "#64C4FF",
   "Aston Martin": "#229971",
   Cadillac: "#C20000",
+  "Cadillac F1 Team": "#C20000",
+  "Kick Sauber": "#00FF00",
 };
 
 // Get team color by team name

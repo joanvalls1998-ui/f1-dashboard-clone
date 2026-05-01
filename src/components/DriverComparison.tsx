@@ -157,7 +157,7 @@ export function DriverComparison() {
             <Tooltip 
               contentStyle={{ backgroundColor: "hsl(var(--card))", border: "1px solid hsl(var(--border))" }}
               labelFormatter={(label) => `Lap ${label}`}
-              formatter={(value: any) => [`${(value / 1000).toFixed(3)}s`, ""]}
+              formatter={(value: any) => [`${Number(value).toFixed(3)}s`, ""]}
             />
             <Legend />
             {selectedDrivers.map(driverName => {
@@ -209,7 +209,7 @@ export function DriverComparison() {
                   const time = (lap as any)[timeKey];
                   return (
                     <td key={driverName} className="p-3 text-center font-mono">
-                      {time ? `${(time / 1000).toFixed(3)}s` : "-"}
+                      {time ? `${Number(time).toFixed(3)}s` : "-"}
                     </td>
                   );
                 })}

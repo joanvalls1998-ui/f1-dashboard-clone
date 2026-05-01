@@ -79,6 +79,7 @@ export function TrackMap({ raceKey }: TrackMapProps) {
             setSelectedRace(race || null);
             setImageError(false);
           }}
+          aria-label="Select race to view track map"
           className="px-3 py-2 rounded-md border bg-background text-sm"
         >
           <option value="">Select a race</option>

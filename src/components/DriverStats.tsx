@@ -138,7 +138,7 @@ export function DriverStats() {
             <div className="flex items-center gap-2">
               <div
                 className="w-3 h-3 rounded-full"
-                style={{ backgroundColor: `#${driver.team_color}` }}
+                style={{ backgroundColor: `#${driver.team_color.replace('#', '')}` }}
               />
               <span className="font-bold">#{driver.driver_number}</span>
             </div>
@@ -157,7 +157,7 @@ export function DriverStats() {
           <div className="rounded-lg border bg-card overflow-hidden">
             <div
               className="p-4"
-              style={{ backgroundColor: `#${selectedDriver.team_color}` }}
+              style={{ backgroundColor: `#${selectedDriver.team_color.replace('#', '')}` }}
             >
               <div className="flex items-center gap-4">
                 {selectedDriver.headshot_url ? (

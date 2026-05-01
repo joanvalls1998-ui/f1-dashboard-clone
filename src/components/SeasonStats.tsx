@@ -3,7 +3,8 @@
 import { useState, useEffect } from "react";
 import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, Legend } from "recharts";
 import { TrendingUp, Trophy, Target, Timer } from "lucide-react";
-import { fetchDriverStandings, getTeamColor } from "@/lib/api";
+import { fetchDriverStandings } from "@/lib/api";
+import { getTeamColor } from "@/lib/f1-assets";
 
 interface DriverStanding {
   position: number;

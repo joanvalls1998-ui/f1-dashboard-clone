@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { AlertTriangle, Search } from "lucide-react";
+import { getTeamColor } from "@/lib/f1-assets";
 
 interface DNFRecord {
   driver_number: number;
@@ -47,11 +48,11 @@ export function DNFTracker() {
             const lap = r.laps ? parseInt(r.laps) : 0;
 
             return {
-              driver_number: parseInt(r.Driver.permanentNumber || r.Driver.code),
+              driver_number: parseInt(r.Driver.permanentNumber) || parseInt(r.Driver.code) || 0,
               driver_name: r.Driver.code,
               team_name: r.Constructor.name,
-              team_color: getTeamColorRaw(r.Constructor.name),
-              position: parseInt(r.position),
+              team_color: getTeamColor(r.Constructor.name),
+              position: parseInt(r.position) || 0,
               lap,
               reason,
               category,
@@ -90,29 +91,6 @@ export function DNFTracker() {
       return "RETIRED";
     }
     return "OTHER";
-  }
-
-  function getTeamColorRaw(teamName: string): string {
-    const colors: Record<string, string> = {
-      'Mercedes': '27F4D2',
-      'Ferrari': 'E8002D',
-      'McLaren': 'FF8000',
-      'Red Bull Racing': '3671C6',
-      'Red Bull': '3671C6',
-      'Racing Bulls': '6B3FC6',
-      'RB F1 Team': '6B3FC6',
-      'Aston Martin': '229971',
-      'Alpine F1 Team': 'FF87BC',
-      'Alpine': 'FF87BC',
-      'Haas F1 Team': 'F0F0F0',
-      'Williams': '64C4FF',
-      'Audi': 'CC0000',
-      'Cadillac F1 Team': 'C20000',
-      'Cadillac': 'C20000',
-      'Kick Sauber': '00FF00',
-    };
-
-    return colors[teamName] || '666666';
   }
 
   const categories = ["all", ...Array.from(new Set(dnfData.map(d => d.category)))];
@@ -220,7 +198,7 @@ export function DNFTracker() {
               <div className="flex items-center gap-3">
                 <div
                   className="w-2 h-10 rounded"
-                  style={{ backgroundColor: `#${dnf.team_color}` }}
+                  style={{ backgroundColor: dnf.team_color }}
                 />
                 <div>
                   <div className="font-bold">#{dnf.driver_number} {dnf.driver_name}</div>

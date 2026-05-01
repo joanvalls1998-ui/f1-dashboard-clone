@@ -101,7 +101,7 @@ export function SeasonHistory() {
       'France': '🇫🇷',
       'Portugal': '🇵🇹',
       'Turkey': '🇹🇷',
-      'Russia': '🇷🇺',
+      // Russia removed (banned from F1)
       'Poland': '🇵🇱',
       'Switzerland': '🇨🇭',
       'Sweden': '🇸🇪',

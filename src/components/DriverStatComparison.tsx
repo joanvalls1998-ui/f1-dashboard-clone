@@ -1,7 +1,8 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { fetchDriverStandings, getTeamColor, Driver } from "@/lib/api";
+import { fetchDriverStandings, Driver } from "@/lib/api";
+import { getTeamColor } from "@/lib/f1-assets";
 import { driverImages } from "@/lib/f1-assets";
 import { ChevronDown } from "lucide-react";
 

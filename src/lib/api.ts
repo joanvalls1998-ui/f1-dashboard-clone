@@ -1,6 +1,8 @@
 // F1 Data API Service - Uses Jolpica (Ergast fork) and OpenF1
 // Base URLs: https://api.jolpi.ca/ergast/f1 | https://api.openf1.org/v1
 
+import { getTeamColor } from './f1-assets';
+
 const ERGAST_BASE = 'https://api.jolpi.ca/ergast/f1';
 const OPENF1_BASE = 'https://api.openf1.org/v1';
 
@@ -187,28 +189,4 @@ export async function getUpcomingSessions(limit: number = 5): Promise<Session[]>
     console.error('Error fetching upcoming sessions:', error);
     return [];
   }
-}
-
-// Team colors
-export function getTeamColor(teamName: string): string {
-  const colors: Record<string, string> = {
-    'Mercedes': '#27F4D2',
-    'Ferrari': '#E8002D',
-    'McLaren': '#FF8000',
-    'Red Bull Racing': '#3671C6',
-    'Red Bull': '#3671C6',
-    'Racing Bulls': '#6B3FC6',
-    'RB F1 Team': '#6B3FC6',
-    'Aston Martin': '#229971',
-    'Alpine F1 Team': '#FF87BC',
-    'Alpine': '#FF87BC',
-    'Haas F1 Team': '#F0F0F0',
-    'Williams': '#64C4FF',
-    'Audi': '#CC0000',
-    'Cadillac F1 Team': '#C20000',
-    'Cadillac': '#C20000',
-    'Kick Sauber': '#00FF00',
-  };
-  
-  return colors[teamName] || '#666666';
 }

@@ -15,7 +15,10 @@ const data = [
 
 export function WinsChart() {
   return (
-    <div className="h-[300px] w-full">
+    <div className="relative h-[300px] w-full">
+      <div className="absolute top-2 right-2 z-10 px-2 py-1 text-xs font-bold bg-yellow-500/20 text-yellow-600 dark:text-yellow-400 rounded">
+        Demo Data
+      </div>
       <ResponsiveContainer width="100%" height="100%">
         <PieChart>
           <Pie

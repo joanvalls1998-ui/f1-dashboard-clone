@@ -247,6 +247,7 @@ export function Consistency() {
         <select
           value={sortBy}
           onChange={(e) => setSortBy(e.target.value as typeof sortBy)}
+          aria-label="Sort consistency metrics by"
           className="px-2 py-1 rounded border bg-background text-sm"
         >
           <option value="lap">Lap Time Std Dev</option>

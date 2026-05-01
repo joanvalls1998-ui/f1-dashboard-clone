@@ -77,6 +77,7 @@ export function RaceCalendar() {
             placeholder="Search by country, city or race name..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
+            aria-label="Search races by country, city or race name"
             className="w-full bg-[#171717] text-white pl-10 pr-4 py-2 rounded-lg border border-gray-800 focus:outline-none focus:border-blue-500"
           />
           {search && (

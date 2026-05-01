@@ -28,24 +28,43 @@ export function ConstructorStandingsReal() {
         const json = await response.json();
         const constructors = json.MRData.ConstructorTable.Constructors;
         
-        const mappedTeams: Team[] = (constructors as any[]).map((c: any, i: number) => ({
-          name: c.name,
-          teamColor: c.constructorId === "red_bull" ? "3671c6" :
-                     c.constructorId === "mclaren" ? "ff8000" :
-                     c.constructorId === "ferrari" ? "e8002d" :
-                     c.constructorId === "mercedes" ? "27f4d2" :
-                     c.constructorId === "aston_martin" ? "229971" :
-                     c.constructorId === "alpine" ? "ff87bc" :
-                     c.constructorId === "rb" ? "6692ff" :
-                     c.constructorId === "williams" ? "64c4ff" :
-                     c.constructorId === "sauber" ? "52e252" :
-                     c.constructorId === "haas" ? "b6babd" : "666666",
-          points: 0,
-          wins: 0,
-          podiums: 0,
-          poles: 0,
-          fastestLaps: 0,
-        }));
+        // Fetch constructor standings to get points and wins
+        const standingsResponse = await fetch(
+          "https://api.jolpi.ca/ergast/f1/2026/constructorstandings.json",
+          { signal: AbortSignal.timeout(8000) }
+        );
+        const standingsJson = await standingsResponse.json();
+        const constructorStandings = standingsJson.MRData.StandingsTable.StandingsLists[0]?.ConstructorStandings || [];
+        
+        const standingsMap: Record<string, { points: number; wins: number }> = {};
+        constructorStandings.forEach((cs: any) => {
+          standingsMap[cs.Constructor.constructorId] = {
+            points: parseInt(cs.points) || 0,
+            wins: parseInt(cs.wins) || 0,
+          };
+        });
+
+        const mappedTeams: Team[] = (constructors as any[]).map((c: any, i: number) => {
+          const stats = standingsMap[c.constructorId] || { points: 0, wins: 0 };
+          return {
+            name: c.name,
+            teamColor: c.constructorId === "red_bull" ? "3671c6" :
+                       c.constructorId === "mclaren" ? "ff8000" :
+                       c.constructorId === "ferrari" ? "e8002d" :
+                       c.constructorId === "mercedes" ? "27f4d2" :
+                       c.constructorId === "aston_martin" ? "229971" :
+                       c.constructorId === "alpine" ? "ff87bc" :
+                       c.constructorId === "rb" ? "6692ff" :
+                       c.constructorId === "williams" ? "64c4ff" :
+                       c.constructorId === "sauber" ? "52e252" :
+                       c.constructorId === "haas" ? "b6babd" : "666666",
+            points: stats.points,
+            wins: stats.wins,
+            podiums: 0,
+            poles: 0,
+            fastestLaps: 0,
+          };
+        });
         setTeams(mappedTeams);
         setLoading(false);
       } catch (error) {
@@ -101,7 +120,7 @@ export function ConstructorStandingsReal() {
                   <div className="flex items-center gap-2">
                     <div
                       className="w-3 h-3 rounded-full"
-                      style={{ backgroundColor: `#${team.teamColor}` }}
+                      style={{ backgroundColor: `#${team.teamColor.replace('#', '')}` }}
                     />
                     <span className="font-medium">{team.name}</span>
                   </div>

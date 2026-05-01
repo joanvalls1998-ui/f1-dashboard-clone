@@ -2,8 +2,8 @@
 
 import { useEffect, useState } from "react";
 import { Users, Loader2 } from "lucide-react";
-import { fetchConstructorStandings, fetchDriverStandings, getTeamColor } from "@/lib/api";
-import { driverImages, teamLogos } from "@/lib/f1-assets";
+import { fetchConstructorStandings, fetchDriverStandings } from "@/lib/api";
+import { driverImages, teamLogos, getTeamColor } from "@/lib/f1-assets";
 
 interface Team {
   name: string;

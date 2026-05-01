@@ -3,12 +3,12 @@
 import { Calendar, MapPin, Clock } from "lucide-react";
 
 const nextEvent = {
-  name: "2025 Season Preview",
+  name: "2026 Season Preview",
   type: "Testing",
   country: "Bahrain",
   locality: "Sakhir",
   circuit: "Bahrain International Circuit",
-  date: "February 26, 2025",
+  date: "February 26, 2026",
   daysUntil: 301,
 };
 

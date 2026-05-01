@@ -35,8 +35,16 @@ export function HeadToHead() {
   const [driver1Code, setDriver1Code] = useState("VER");
   const [driver2Code, setDriver2Code] = useState("NOR");
 
-  const driver1 = drivers.find(d => d.code === driver1Code)!;
-  const driver2 = drivers.find(d => d.code === driver2Code)!;
+  const driver1 = drivers.find(d => d.code === driver1Code);
+  const driver2 = drivers.find(d => d.code === driver2Code);
+
+  if (!driver1 || !driver2) {
+    return (
+      <div className="flex items-center justify-center py-12 text-muted-foreground">
+        Driver data not available
+      </div>
+    );
+  }
 
   const comparisonKey = [driver1Code, driver2Code].sort().join("-");
   const data = comparisonData[comparisonKey] || { wins: 0, races: 0 };

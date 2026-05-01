@@ -2,8 +2,8 @@
 
 import { useEffect, useState } from 'react';
 
-import { driverImages, teamColors, getDriverInitials } from '@/lib/f1-assets';
-import { fetchDriverStandings, fetchConstructorStandings, fetchRaceCalendar, getTeamColor } from '@/lib/api';
+import { driverImages, teamColors, getDriverInitials, getTeamColor } from '@/lib/f1-assets';
+import { fetchDriverStandings, fetchConstructorStandings, fetchRaceCalendar } from '@/lib/api';
 import { ConstructorStandingsVisual } from '@/components/TeamCard';
 import { RaceCalendarVisual } from '@/components/CircuitCard';
 import { TeamGallery, AllDriversGrid } from '@/components/TeamGallery';
