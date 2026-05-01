@@ -109,9 +109,9 @@ export async function fetchRaceCalendar(year: number = 2026): Promise<Race[]> {
       name: race.raceName.replace(' Grand Prix', ' GP'),
       country: race.Circuit.Location.country,
       city: race.Circuit.Location.locality,
-      date: new Date(race.date).toLocaleDateString('en-GB', { day: '2-digit', month: 'short' }),
       circuit: race.Circuit.circuitName,
-      status: 'upcoming' as const,
+      date: new Date(race.date).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }),
+      status: new Date(race.date) < new Date() ? 'completed' as const : 'upcoming' as const,
     }));
   } catch (error) {
     console.error('Error fetching race calendar:', error);
