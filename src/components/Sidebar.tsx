@@ -1,12 +1,11 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
-import { useSidebar } from "@/lib/sidebar-context";
 import {
   Trophy,
-  Crown,
   User,
   Users,
   BarChart3,
@@ -64,9 +63,13 @@ const navItems = [
   { href: "/consistency", label: "Consistency", icon: Activity },
 ];
 
-export function Sidebar() {
+interface SidebarProps {
+  collapsed: boolean;
+  onToggle: () => void;
+}
+
+export function Sidebar({ collapsed, onToggle }: SidebarProps) {
   const pathname = usePathname();
-  const { collapsed, setCollapsed } = useSidebar();
 
   return (
     <aside
@@ -134,7 +137,7 @@ export function Sidebar() {
 
         {/* Collapse button */}
         <button
-          onClick={() => setCollapsed(!collapsed)}
+          onClick={onToggle}
           className="flex items-center justify-center w-full mt-2 p-2 rounded-md text-sidebar-foreground hover:bg-sidebar-accent transition-colors"
         >
           {collapsed ? (
