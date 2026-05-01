@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
+import { useSidebar } from "@/lib/sidebar-context";
 import {
   Trophy,
   Crown,
@@ -31,7 +32,6 @@ import {
   AlertTriangle,
   BarChart,
 } from "lucide-react";
-import { useState } from "react";
 
 const navItems = [
   { href: "/", label: "Home", icon: Home },
@@ -66,7 +66,7 @@ const navItems = [
 
 export function Sidebar() {
   const pathname = usePathname();
-  const [collapsed, setCollapsed] = useState(false);
+  const { collapsed, setCollapsed } = useSidebar();
 
   return (
     <aside
