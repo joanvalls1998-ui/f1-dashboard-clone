@@ -1,71 +1,98 @@
-'use client';
+"use client";
 
-import { Trophy } from 'lucide-react';
+import { useEffect, useState } from "react";
+import { Trophy, Loader2 } from "lucide-react";
+import { fetchConstructorStandings, fetchDriverStandings, getTeamColor } from "@/lib/api";
 
 interface ConstructorStanding {
   position: number;
   name: string;
-  drivers: string;
+  drivers: string[];
   points: number;
+  wins: number;
+  color: string;
 }
 
-const constructorStandings2026: ConstructorStanding[] = [
-  { position: 1, name: 'Mercedes', drivers: 'Antonelli, Russell', points: 123 },
-  { position: 2, name: 'Ferrari', drivers: 'Leclerc, Hamilton', points: 77 },
-  { position: 3, name: 'McLaren', drivers: 'Norris, Piastri', points: 38 },
-  { position: 4, name: 'Haas F1 Team', drivers: 'Bearman, Ocon', points: 17 },
-  { position: 5, name: 'Alpine', drivers: 'Gasly, Colapinto', points: 16 },
-  { position: 6, name: 'Red Bull Racing', drivers: 'Verstappen, Hadjar', points: 16 },
-  { position: 7, name: 'Racing Bulls', drivers: 'Lawson, Lindblad', points: 12 },
-  { position: 8, name: 'Audi', drivers: 'Bortoleto, Hulkenberg', points: 2 },
-  { position: 9, name: 'Williams', drivers: 'Sainz, Albon', points: 2 },
-  { position: 10, name: 'Aston Martin', drivers: 'Alonso, Stroll', points: 0 },
-  { position: 11, name: 'Cadillac', drivers: 'Perez, Bottas', points: 0 },
-];
-
-const teamColors: Record<string, string> = {
-  'Mercedes': '#27F4D2',
-  'Ferrari': '#E8002D',
-  'McLaren': '#FF8000',
-  'Red Bull Racing': '#3671C6',
-  'Racing Bulls': '#3671C6',
-  'Haas F1 Team': '#F0F0F0',
-  'Alpine': '#FF87BC',
-  'Audi': '#CC0000',
-  'Williams': '#64C4FF',
-  'Aston Martin': '#229971',
-  'Cadillac': '#C20000',
-};
-
 export default function ConstructorStandings() {
+  const [constructors, setConstructors] = useState<ConstructorStanding[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function loadData() {
+      try {
+        const [constructorsData, driversData] = await Promise.all([
+          fetchConstructorStandings(2026),
+          fetchDriverStandings(2026)
+        ]);
+
+        // Match drivers to constructors
+        const constructorsWithDrivers = constructorsData.map((c) => ({
+          ...c,
+          drivers: driversData
+            .filter((d) => d.team === c.name)
+            .map((d) => d.fullName.split(" ").pop() || d.fullName),
+          color: getTeamColor(c.name)
+        }));
+
+        setConstructors(constructorsWithDrivers);
+      } catch (error) {
+        console.error("Error loading constructor standings:", error);
+      }
+      setLoading(false);
+    }
+    loadData();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="bg-[#171717] rounded-xl p-4 sm:p-6">
+        <div className="flex items-center justify-center py-12">
+          <Loader2 className="w-8 h-8 text-white animate-spin" />
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="bg-[#171717] rounded-xl p-4 sm:p-6">
       <div className="flex items-center gap-2 mb-4">
         <Trophy className="w-5 h-5 text-yellow-500" />
-        <h2 className="text-lg font-semibold text-white">Clasificación Constructores</h2>
+        <h2 className="text-lg font-semibold text-white">Constructor Championships</h2>
       </div>
-      
+
       <div className="space-y-1">
-        {constructorStandings2026.map((team) => (
+        {constructors.map((team) => (
           <div
             key={team.position}
             className="flex items-center justify-between py-3 px-3 rounded-lg bg-[#1f1f1f] hover:bg-[#2a2a2a] transition-colors"
           >
             <div className="flex items-center gap-3">
-              <span className={`w-8 text-center font-bold ${
-                team.position === 1 ? 'text-yellow-500' :
-                team.position <= 3 ? 'text-gray-300' :
-                'text-gray-400'
-              }`}>
+              <span
+                className={`w-8 text-center font-bold ${
+                  team.position === 1
+                    ? "text-yellow-500"
+                    : team.position <= 3
+                    ? "text-gray-300"
+                    : "text-gray-400"
+                }`}
+              >
                 {team.position}
               </span>
-              <div className="w-3 h-3 rounded-sm" style={{ backgroundColor: teamColors[team.name] || '#666' }} />
+              <div
+                className="w-3 h-3 rounded-sm"
+                style={{ backgroundColor: team.color || "#666" }}
+              />
               <div>
                 <p className="text-white text-sm font-medium">{team.name}</p>
-                <p className="text-gray-500 text-xs">{team.drivers}</p>
+                <p className="text-gray-500 text-xs">{team.drivers.join(", ")}</p>
               </div>
             </div>
-            <span className="text-white font-bold">{team.points} pts</span>
+            <div className="text-right">
+              <span className="text-white font-bold">{team.points} pts</span>
+              {team.wins > 0 && (
+                <span className="ml-2 text-xs text-yellow-500">({team.wins}W)</span>
+              )}
+            </div>
           </div>
         ))}
       </div>

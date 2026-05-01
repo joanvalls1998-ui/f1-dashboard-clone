@@ -85,7 +85,9 @@ export const teamColors: Record<string, string> = {
   Ferrari: "#E8002D",
   McLaren: "#FF8000",
   "Red Bull Racing": "#3671C6",
+  "Red Bull": "#3671C6",
   "Racing Bulls": "#6B3FC6",
+  "RB F1 Team": "#6B3FC6",
   "Haas F1 Team": "#F0F0F0",
   Alpine: "#FF87BC",
   Audi: "#CC0000",
@@ -93,6 +95,11 @@ export const teamColors: Record<string, string> = {
   "Aston Martin": "#229971",
   Cadillac: "#C20000",
 };
+
+// Get team color by team name
+export function getTeamColor(teamName: string): string {
+  return teamColors[teamName] || "#666666";
+}
 
 // Team logos (placeholder URLs - would need real team logo URLs)
 export const teamLogos: Record<string, string> = {
