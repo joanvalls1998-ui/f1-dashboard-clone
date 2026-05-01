@@ -1,36 +1,62 @@
 // F1 Driver, Team and Circuit image assets
 // Images sourced from Wikipedia Commons (free, attribution required)
 
-// Driver images from Wikipedia
+// Driver images from Wikipedia - 18/20 complete
 export const driverImages: Record<string, string> = {
+  // Mercedes
   ANT: "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f3/Kimi_Antonelli_at_the_2025_US_Grand_Prix_in_Austin%2C_TX_%28cropped%29.jpg/330px-Kimi_Antonelli_at_the_2025_US_Grand_Prix_in_Austin%2C_TX_%28cropped%29.jpg",
   RUS: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7f/KingsLeonSilverstne040724_%2828_of_112%29_%2853838006028%29_%28cropped%29.jpg/330px-KingsLeonSilverstne040724_%2828_of_112%29_%2853838006028%29_%28cropped%29.jpg",
+  
+  // Ferrari
   LEC: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7b/2024-08-25_Motorsport%2C_Formel_1%2C_Gro%C3%9Fer_Preis_der_Niederlande_2024_STP_3978_by_Stepro_%28cropped2%29.jpg/330px-2024-08-25_Motorsport%2C_Formel_1%2C_Gro%C3%9Fer_Preis_der_Niederlande_2024_STP_3978_by_Stepro_%28cropped2%29.jpg",
   HAM: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d3/Prime_Minister_Keir_Starmer_meets_Sir_Lewis_Hamilton_%2854566928382%29_%28cropped%29.jpg/330px-Prime_Minister_Keir_Starmer_meets_Sir_Lewis_Hamilton_%2854566928382%29_%28cropped%29.jpg",
+  
+  // McLaren
   NOR: "https://upload.wikimedia.org/wikipedia/commons/thumb/9/90/2024-08-25_Motorsport%2C_Formel_1%2C_Gro%C3%9Fer_Preis_der_Niederlande_2024_STP_3968_by_Stepro_%28cropped2%29.jpg/330px-2024-08-25_Motorsport%2C_Formel_1%2C_Gro%C3%9Fer_Preis_der_Niederlande_2024_STP_3968_by_Stepro_%28cropped2%29.jpg",
   PIA: "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e5/2026_Chinese_GP_-_Oscar_Piastri_%28cropped%29_%28cropped%29.jpg/330px-2026_Chinese_GP_-_Oscar_Piastri_%28cropped%29_%28cropped%29.jpg",
+  
+  // Red Bull Racing
   VER: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/52/2024-08-25_Motorsport%2C_Formel_1%2C_Gro%C3%9Fer_Preis_der_Niederlande_2024_STP_3973_by_Stepro_%28medium_crop%29.jpg/330px-2024-08-25_Motorsport%2C_Formel_1%2C_Gro%C3%9Fer_Preis_der_Niederlande_2024_STP_3973_by_Stepro_%28medium_crop%29.jpg",
-  TSU: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/2019_Japanese_GP,_Tsunoda_%2849594299303%29.jpg/330px-2019_Japanese_GP,_Tsunoda_%2849594299303%29.jpg",
-  ALB: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Alex_Albon_%28cropped%29.jpg/330px-Alex_Albon_%28cropped%29.jpg",
+  HAD: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/75/Isack_Hadjar_at_the_Melbourne_Walk_during_the_2026_Australian_Grand_Prix_%28028A8753%29_%28cropped%29.jpg/330px-Isack_Hadjar_at_the_Melbourne_Walk_during_the_2026_Australian_Grand_Prix_%28028A8753%29_%28cropped%29.jpg",
+  
+  // Racing Bulls
+  LAW: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Liam_Lawson_%282026_Australian_Grand_Prix%29.jpg/330px-Liam_Lawson_%282026_Australian_Grand_Prix%29.jpg",
+  LIN: "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0c/Arvid_Lindblad_at_the_Red_Bull_Fan_Zone_%E2%80%93_Crown_Riverwalk%2C_Melbourne_%28028A7869%29_%28cropped%29.jpg/330px-Arvid_Lindblad_at_the_Red_Bull_Fan_Zone_%E2%80%93_Crown_Riverwalk%2C_Melbourne_%28028A7869%29_%28cropped%29.jpg",
+  
+  // Ferrari (additional)
   SAI: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/ce/Formula1Gabelhofen2022_%2804%29_%28cropped2%29.jpg/330px-Formula1Gabelhofen2022_%2804%29_%28cropped2%29.jpg",
+  
+  // Aston Martin
   ALO: "https://upload.wikimedia.org/wikipedia/commons/thumb/9/97/Alonso-68_%2824710447098%29.jpg/330px-Alonso-68_%2824710447098%29.jpg",
   STR: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/2025_Japan_GP_-_Aston_Martin_-_Lance_Stroll_-_Fanzone_Stage_%28cropped%29.jpg/330px-2025_Japan_GP_-_Aston_Martin_-_Lance_Stroll_-_Fanzone_Stage_%28cropped%29.jpg",
+  
+  // Alpine
   GAS: "https://upload.wikimedia.org/wikipedia/commons/thumb/f/fd/2022_French_Grand_Prix_%2852279065728%29_%28midcrop%29.png/330px-2022_French_Grand_Prix_%2852279065728%29_%28midcrop%29.png",
   OCO: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2e/Esteban_Ocon_2024_Suzuka_%28cropped%29.jpg/330px-Esteban_Ocon_2024_Suzuka_%28cropped%29.jpg",
+  COL: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/Franco_Colapinto_2024_%28cropped%29.jpg/330px-Franco_Colapinto_2024_%28cropped%29.jpg",
+  
+  // Haas
   BEA: "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9a/2025_Japan_GP_-_Haas_-_Oliver_Bearman_-_Thursday_%28cropped%29.jpg/330px-2025_Japan_GP_-_Haas_-_Oliver_Bearman_-_Thursday_%28cropped%29.jpg",
-  HAD: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/75/Isack_Hadjar_at_the_Melbourne_Walk_during_the_2026_Australian_Grand_Prix_%28028A8753%29_%28cropped%29.jpg/330px-Isack_Hadjar_at_the_Melbourne_Walk_during_the_2026_Australian_Grand_Prix_%28028A8753%29_%28cropped%29.jpg",
-  PER: "", // Sergio Perez - image TBD
-  LAW: "", // Liam Lawson - image TBD
-  LIN: "", // Arvid Lindblad - image TBD
-  BOR: "", // Gabriel Bortoleto - image TBD
+  
+  // Williams
+  ALB: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Alex_Albon_%28cropped%29.jpg/330px-Alex_Albon_%28cropped%29.jpg",
+  
+  // AlphaTauri / RB
+  TSU: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/2019_Japanese_GP,_Tsunoda_%2849594299303%29.jpg/330px-2019_Japanese_GP,_Tsunoda_%2849594299303%29.jpg",
+  
+  // Audi
+  BOR: "https://upload.wikimedia.org/wikipedia/commons/thumb/f/fe/Gabriel_Bortoleto_%28cropped%29.jpg/330px-Gabriel_Bortoleto_%28cropped%29.jpg",
+  
+  // Cadillac (placeholder - PER missing image)
+  PER: "",
 };
 
-// Circuit images from Wikipedia
+// Circuit images from Wikipedia - 16/22 complete
 export const circuitImages: Record<string, string> = {
   Australia: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1c/Albert_Park_Circuit_2023.svg/500px-Albert_Park_Circuit_2023.svg.png",
   China: "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e5/Shanghai_International_Circuit_2004.svg/500px-Shanghai_International_Circuit_2004.svg.png",
-  Japan: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5a/Suzuka_Circuit_2022.svg/500px-Suzuka_Circuit_2022.svg.png",
-  Bahrain: "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0e/Bahrain_International_Circuit_2020.svg/500px-Bahrain_International_Circuit_2020.svg.png",
+  Japan: "https://upload.wikimedia.org/wikipedia/commons/thumb/e/ec/Suzuka_circuit_map--2005.svg/500px-Suzuka_circuit_map--2005.svg.png",
+  Bahrain: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/29/Bahrain_International_Circuit--Grand_Prix_Layout.svg/500px-Bahrain_International_Circuit--Grand_Prix_Layout.svg.png",
   "Saudi Arabia": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4c/Jeddah_Street_Circuit_2021.svg/500px-Jeddah_Street_Circuit_2021.svg.png",
   Miami: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/49/Hard_Rock_Stadium_Circuit_2022.svg/500px-Hard_Rock_Stadium_Circuit_2022.svg.png",
   Monaco: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/36/Monte_Carlo_Formula_1_track_map.svg/500px-Monte_Carlo_Formula_1_track_map.svg.png",
@@ -48,7 +74,7 @@ export const circuitImages: Record<string, string> = {
   Brazil: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5d/Interlagos_2022.svg/500px-Interlagos_2022.svg.png",
   "Las Vegas": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/43/2023_Las_Vegas_street_circuit.svg/500px-2023_Las_Vegas_street_circuit.svg.png",
   Qatar: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Lusail_International_Circuit_%28F1%29.svg/500px-Lusail_International_Circuit_%28F1%29.svg.png",
-  "Abu Dhabi": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/26/Yas_Marina_Circuit_2021.svg/500px-Yas_Marina_Circuit_2021.svg.png",
+  "Abu Dhabi": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b0/Yas_Marina_Circuit.png/500px-Yas_Marina_Circuit.png",
 };
 
 // Team colors matching F1 official
@@ -57,7 +83,7 @@ export const teamColors: Record<string, string> = {
   Ferrari: "#E8002D",
   McLaren: "#FF8000",
   "Red Bull Racing": "#3671C6",
-  "Racing Bulls": "#3671C6",
+  "Racing Bulls": "#6B3FC6",
   "Haas F1 Team": "#F0F0F0",
   Alpine: "#FF87BC",
   Audi: "#CC0000",
@@ -79,6 +105,7 @@ export const teamLogos: Record<string, string> = {
   Williams: "https://www.formula1.com/themes/fom-2018/assets/images/teams/williams.svg",
   "Aston Martin": "https://www.formula1.com/themes/fom-2018/assets/images/teams/aston-martin.svg",
   Cadillac: "https://www.formula1.com/themes/fom-2018/assets/images/teams/cadillac.svg",
+  RB: "https://www.formula1.com/themes/fom-2018/assets/images/teams/alpha-tauri.svg",
 };
 
 // Country flags (for nationalities)
@@ -108,12 +135,25 @@ export const countryFlags: Record<string, string> = {
   Danish: "🇩🇰",
   Swedish: "🇸🇪",
   Irish: "🇮🇪",
-  Swiss: "🇨🇭�",
+  Swiss: "🇨🇭",
   UAE: "🇦🇪",
   Portuguese: "🇵🇹",
   NewZealand: "🇳🇿",
   Colombian: "🇨🇴",
   Venezuelan: "🇻🇪",
+};
+export const teamCarImages: Record<string, string> = {
+  Mercedes: "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0e/Mercedes_AMG_F1_W15_Edinburgo.jpg/960px-Mercedes_AMG_F1_W15_Edinburgo.jpg",
+  Ferrari: "https://upload.wikimedia.org/wikipedia/commons/thumb/9/99/Carlos_Sainz_Chinese_GP_2024.jpg/960px-Carlos_Sainz_Chinese_GP_2024.jpg",
+  McLaren: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2b/FIA_F1_Austria_2023_Nr._4_%282%29.jpg/960px-FIA_F1_Austria_2023_Nr._4_%282%29.jpg",
+  "Red Bull Racing": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/Max_Verstappen_2024_%28cropped%29.jpg/960px-Max_Verstappen_2024_%28cropped%29.jpg",
+  "Racing Bulls": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6f/FIA_F1_Austria_2023_Nr._21_%282%29.jpg/960px-FIA_F1_Austria_2023_Nr._21_%282%29.jpg",
+  "Haas F1 Team": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/78/2022_British_Grand_Prix_%2852381409242%29.jpg/960px-2022_British_Grand_Prix_%2852381409242%29.jpg",
+  Alpine: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/40/2024_Spanish_Grand_Prix_%2853811182883%29.jpg/960px-2024_Spanish_Grand_Prix_%2853811182883%29.jpg",
+  Audi: "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0e/Audi_F1_Logo_2024.png/600px-Audi_F1_Logo_2024.png",
+  Williams: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c4/FIA_F1_Austria_2023_Nr._23_%282%29.jpg/960px-FIA_F1_Austria_2023_Nr._23_%282%29.jpg",
+  "Aston Martin": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/2025_Japan_GP_-_Aston_Martin_-_Lance_Stroll_-_Fanzone_Stage_%28cropped%29.jpg/960px-2025_Japan_GP_-_Aston_Martin_-_Lance_Stroll_-_Fanzone_Stage_%28cropped%29.jpg",
+  Cadillac: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/85/Cadillac_2026_F1.jpg/960px-Cadillac_2026_F1.jpg",
 };
 
 // Get driver initials for placeholder
@@ -123,4 +163,22 @@ export function getDriverInitials(name: string): string {
     return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
   }
   return name.substring(0, 2).toUpperCase();
+}
+
+// Get team short name
+export function getTeamShortName(team: string): string {
+  const shortNames: Record<string, string> = {
+    Mercedes: "MER",
+    Ferrari: "FER",
+    McLaren: "MCL",
+    "Red Bull Racing": "RBR",
+    "Racing Bulls": "RB",
+    "Haas F1 Team": "HAA",
+    Alpine: "ALP",
+    Audi: "AUD",
+    Williams: "WIL",
+    "Aston Martin": "AMR",
+    Cadillac: "CAD",
+  };
+  return shortNames[team] || team.substring(0, 3).toUpperCase();
 }

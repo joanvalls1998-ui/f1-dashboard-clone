@@ -2,8 +2,10 @@
 
 import { useEffect, useState } from 'react';
 
+import { driverImages, teamColors, getDriverInitials } from '@/lib/f1-assets';
 import { ConstructorStandingsVisual } from '@/components/TeamCard';
 import { RaceCalendarVisual } from '@/components/CircuitCard';
+import { TeamGallery, AllDriversGrid } from '@/components/TeamGallery';
 import { 
   Trophy, 
   Users, 
@@ -86,7 +88,7 @@ const quickStats = [
 ];
 
 export default function HomePage() {
-  const [activeTab, setActiveTab] = useState<'standings' | 'calendar'>('standings');
+  const [activeTab, setActiveTab] = useState<'standings' | 'calendar' | 'teams'>('standings');
 
   return (
     <div className="min-h-screen bg-[#0a0a0a]">
@@ -161,6 +163,19 @@ export default function HomePage() {
               Calendar
             </span>
           </button>
+          <button
+            onClick={() => setActiveTab('teams')}
+            className={`px-4 py-3 text-sm font-medium border-b-2 transition-colors ${
+              activeTab === 'teams'
+                ? 'border-red-500 text-white'
+                : 'border-transparent text-gray-500 hover:text-white'
+            }`}
+          >
+            <span className="flex items-center gap-2">
+              <Users className="w-4 h-4" />
+              Teams
+            </span>
+          </button>
         </div>
       </div>
 
@@ -219,6 +234,12 @@ export default function HomePage() {
           </div>
         ) : (
           <RaceCalendarVisual races={races2026} />
+        )}
+        {activeTab === 'teams' && (
+          <div className="space-y-6">
+            <AllDriversGrid />
+            <TeamGallery />
+          </div>
         )}
       </div>
     </div>
