@@ -15,17 +15,27 @@ interface IntervalData {
   current_lap: number;
 }
 
+// Format gap/interval safely - removes bad signs like "+-"
+function formatGap(gap: string | undefined): string {
+  if (!gap || gap === '--' || gap === 'N/A') return '--';
+  const cleaned = gap.replace(/^[+-]+/, '').replace(/[+-]+$/, '');
+  if (cleaned === '0.000' || cleaned === '0' || cleaned === '0.0') return '—';
+  const num = parseFloat(cleaned);
+  if (isNaN(num) || num === 0) return '—';
+  return `+${num.toFixed(3)}`;
+}
+
 const mockIntervals: IntervalData[] = [
-  { driver_number: 1, driver_name: "VER", team_name: "Red Bull Racing", team_color: "3671c6", position: 1, gap_to_leader: "--", interval_to_ahead: "--", last_lap_time: "1:32.456", current_lap: 42 },
-  { driver_number: 16, driver_name: "LEC", team_name: "Ferrari", team_color: "e8002d", position: 2, gap_to_leader: "+2.847", interval_to_ahead: "+2.847", last_lap_time: "1:32.123", current_lap: 42 },
-  { driver_number: 55, driver_name: "NOR", team_name: "McLaren", team_color: "ff8000", position: 3, gap_to_leader: "+5.123", interval_to_ahead: "+2.276", last_lap_time: "1:32.234", current_lap: 42 },
-  { driver_number: 11, driver_name: "PER", team_name: "Red Bull Racing", team_color: "3671c6", position: 4, gap_to_leader: "+8.456", interval_to_ahead: "+3.333", last_lap_time: "1:32.345", current_lap: 41 },
-  { driver_number: 44, driver_name: "HAM", team_name: "Mercedes", team_color: "27f4d2", position: 5, gap_to_leader: "+12.234", interval_to_ahead: "+3.778", last_lap_time: "1:32.456", current_lap: 41 },
-  { driver_number: 14, driver_name: "ALO", team_name: "Aston Martin", team_color: "229971", position: 6, gap_to_leader: "+15.678", interval_to_ahead: "+3.444", last_lap_time: "1:32.567", current_lap: 41 },
-  { driver_number: 63, driver_name: "RUS", team_name: "Mercedes", team_color: "27f4d2", position: 7, gap_to_leader: "+18.901", interval_to_ahead: "+3.223", last_lap_time: "1:32.678", current_lap: 40 },
-  { driver_number: 81, driver_name: "PIA", team_name: "McLaren", team_color: "ff8000", position: 8, gap_to_leader: "+22.345", interval_to_ahead: "+3.444", last_lap_time: "1:32.789", current_lap: 40 },
-  { driver_number: 18, driver_name: "STR", team_name: "Aston Martin", team_color: "229971", position: 9, gap_to_leader: "+25.678", interval_to_ahead: "+3.333", last_lap_time: "1:32.890", current_lap: 40 },
-  { driver_number: 27, driver_name: "HUL", team_name: "Haas F1 Team", team_color: "b6babd", position: 10, gap_to_leader: "+30.123", interval_to_ahead: "+4.445", last_lap_time: "1:33.001", current_lap: 39 },
+  { driver_number: 1, driver_name: "ANT", team_name: "Mercedes", team_color: "27f4d2", position: 1, gap_to_leader: "--", interval_to_ahead: "--", last_lap_time: "1:28.103", current_lap: 52 },
+  { driver_number: 81, driver_name: "PIA", team_name: "McLaren", team_color: "ff8000", position: 2, gap_to_leader: "+13.722", interval_to_ahead: "+13.722", last_lap_time: "1:28.456", current_lap: 52 },
+  { driver_number: 16, driver_name: "LEC", team_name: "Ferrari", team_color: "e8002d", position: 3, gap_to_leader: "+15.270", interval_to_ahead: "+1.548", last_lap_time: "1:28.234", current_lap: 52 },
+  { driver_number: 63, driver_name: "RUS", team_name: "Mercedes", team_color: "27f4d2", position: 4, gap_to_leader: "+15.754", interval_to_ahead: "+0.484", last_lap_time: "1:28.567", current_lap: 52 },
+  { driver_number: 55, driver_name: "NOR", team_name: "McLaren", team_color: "ff8000", position: 5, gap_to_leader: "+23.479", interval_to_ahead: "+7.725", last_lap_time: "1:28.890", current_lap: 51 },
+  { driver_number: 44, driver_name: "HAM", team_name: "Ferrari", team_color: "e8002d", position: 6, gap_to_leader: "+35.123", interval_to_ahead: "+11.644", last_lap_time: "1:29.012", current_lap: 51 },
+  { driver_number: 12, driver_name: "NOR", team_name: "McLaren", team_color: "ff8000", position: 7, gap_to_leader: "+45.678", interval_to_ahead: "+10.555", last_lap_time: "1:29.234", current_lap: 51 },
+  { driver_number: 11, driver_name: "VER", team_name: "Red Bull Racing", team_color: "3671c6", position: 8, gap_to_leader: "+58.901", interval_to_ahead: "+13.223", last_lap_time: "1:29.456", current_lap: 50 },
+  { driver_number: 14, driver_name: "ALO", team_name: "Aston Martin", team_color: "229971", position: 9, gap_to_leader: "+72.345", interval_to_ahead: "+13.444", last_lap_time: "1:29.678", current_lap: 50 },
+  { driver_number: 87, driver_name: "HAD", team_name: "RB F1 Team", team_color: "6b3fc6", position: 10, gap_to_leader: "+89.678", interval_to_ahead: "+17.333", last_lap_time: "1:29.890", current_lap: 49 },
 ];
 
 export function Intervals() {
@@ -47,12 +57,12 @@ export function Intervals() {
               team_name: d.team_name || "Unknown",
               team_color: d.team_colour || "666666",
               position: d.position || 0,
-              gap_to_leader: d.gap_to_leader || "--",
-              interval_to_ahead: d.interval || "--",
-              last_lap_time: d.current_lap_time || "--:--.---",
+              gap_to_leader: formatGap(d.gap_to_leader),
+              interval_to_ahead: formatGap(d.interval),
+              last_lap_time: d.current_lap_time || "--:--.--",
               current_lap: d.current_lap || 0,
             })).sort((a: IntervalData, b: IntervalData) => a.position - b.position);
-            
+
             setIntervals(transformed);
             setLoading(false);
             return;
@@ -79,17 +89,17 @@ export function Intervals() {
     })
     .sort((a, b) => {
       if (sortBy === "interval") {
-        const aVal = a.gap_to_leader === "--" ? 0 : parseFloat(a.gap_to_leader.replace("+", ""));
-        const bVal = b.gap_to_leader === "--" ? 0 : parseFloat(b.gap_to_leader.replace("+", ""));
-        return aVal - bVal;
+        const aGap = parseFloat(a.gap_to_leader.replace("+", "")) || 999;
+        const bGap = parseFloat(b.gap_to_leader.replace("+", "")) || 999;
+        return aGap - bGap;
       }
       return a.position - b.position;
     });
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center py-12">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+      <div className="flex items-center justify-center h-64">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-cyan-500" />
       </div>
     );
   }
@@ -139,7 +149,7 @@ export function Intervals() {
             </tr>
           </thead>
           <tbody>
-            {filteredIntervals.map((interval, index) => (
+            {filteredIntervals.map((interval) => (
               <tr key={interval.driver_number} className="border-t hover:bg-muted/50">
                 <td className="p-3">
                   <span className={`font-bold text-lg ${
@@ -184,16 +194,16 @@ export function Intervals() {
         </table>
       </div>
 
-      {/* Interval visualization */}
+      {/* Gap visualization */}
       <div className="rounded-lg border bg-card p-4">
         <h3 className="text-sm font-medium mb-4">Gap to Leader (seconds)</h3>
         <div className="space-y-2">
           {filteredIntervals.slice(0, 10).map((interval) => {
-            const gap = interval.gap_to_leader === "--" ? 0 : 
+            const gap = interval.gap_to_leader === "--" ? 0 :
               parseFloat(interval.gap_to_leader.replace("+", ""));
             const maxGap = 30;
             const widthPercent = Math.min((gap / maxGap) * 100, 100);
-            
+
             return (
               <div key={interval.driver_number} className="flex items-center gap-2">
                 <div className="w-16 text-xs font-medium truncate">
@@ -202,7 +212,7 @@ export function Intervals() {
                 <div className="flex-1 h-6 bg-muted rounded overflow-hidden">
                   <div
                     className="h-full rounded flex items-center justify-end pr-2 text-xs font-bold"
-                    style={{ 
+                    style={{
                       width: `${Math.max(widthPercent, interval.position === 1 ? 5 : 0)}%`,
                       backgroundColor: `#${interval.team_color}`,
                       color: interval.team_color === "ffffff" || interval.team_color === "27f4d2" ? "#000" : "#fff"

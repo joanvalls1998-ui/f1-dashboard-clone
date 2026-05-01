@@ -53,10 +53,10 @@ export const driverImages: Record<string, string> = {
   PER: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a0/2021_US_GP_driver_parade_%28cropped2%29.jpg/330px-2021_US_GP_driver_parade_%28cropped2%29.jpg",
 };
 
-// Circuit images from Wikipedia - 16/22 complete
+// Circuit images from Wikipedia - verified working URLs
 export const circuitImages: Record<string, string> = {
-  Australia: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1c/Albert_Park_Circuit_2023.svg/500px-Albert_Park_Circuit_2023.svg.png",
-  China: "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e5/Shanghai_International_Circuit_2004.svg/500px-Shanghai_International_Circuit_2004.svg.png",
+  Australia: "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0a/Albert_Park_Circuit_2021.svg/500px-Albert_Park_Circuit_2021.svg.png",
+  China: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/14/Shanghai_International_Racing_Circuit_track_map.svg/500px-Shanghai_International_Racing_Circuit_track_map.svg.png",
   Japan: "https://upload.wikimedia.org/wikipedia/commons/thumb/e/ec/Suzuka_circuit_map--2005.svg/500px-Suzuka_circuit_map--2005.svg.png",
   Bahrain: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/29/Bahrain_International_Circuit--Grand_Prix_Layout.svg/500px-Bahrain_International_Circuit--Grand_Prix_Layout.svg.png",
   "Saudi Arabia": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4c/Jeddah_Street_Circuit_2021.svg/500px-Jeddah_Street_Circuit_2021.svg.png",
@@ -65,17 +65,17 @@ export const circuitImages: Record<string, string> = {
   Spain: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/25/Madring_%282026%29.svg/500px-Madring_%282026%29.svg.png",
   Canada: "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f9/%C3%8Ele_Notre-Dame_%28Circuit_Gilles_Villeneuve%29.svg/500px-%C3%8Ele_Notre-Dame_%28Circuit_Gilles_Villeneuve%29.svg.png",
   Austria: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/Spielberg_bare_map_numbers_contextless_2021_corner_names.svg/500px-Spielberg_bare_map_numbers_contextless_2021_corner_names.svg.png",
-  Britain: "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0d/Silverstone_Circuit_2021.svg/500px-Silverstone_Circuit_2021.svg.png",
-  Belgium: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/26/Circuit_de_Spa-Francorchamps.svg/500px-Circuit_de_Spa-Francorchamps.svg.png",
+  Britain: "https://upload.wikimedia.org/wikipedia/commons/thumb/b/bd/Silverstone_Circuit_2020.png/500px-Silverstone_Circuit_2020.png",
+  Belgium: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/54/Spa-Francorchamps_of_Belgium.svg/500px-Spa-Francorchamps_of_Belgium.svg.png",
   Netherlands: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/78/Zandvoort_Circuit.png/500px-Zandvoort_Circuit.png",
   Italy: "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/Monza_Circuit_2022.svg/500px-Monza_Circuit_2022.svg.png",
-  Azerbaijan: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6c/Baku_City_Circuit_2023.svg/500px-Baku_City_Circuit_2023.svg.png",
+  Azerbaijan: "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f1/Baku_Formula_One_circuit_map.svg/500px-Baku_Formula_One_circuit_map.svg.png",
   Singapore: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8b/Marina_Bay_circuit_2023.svg/500px-Marina_Bay_circuit_2023.svg.png",
-  "United States": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/54/Circuit_of_the_Americas_2022.svg/500px-Circuit_of_the_Americas_2022.svg.png",
-  Mexico: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3f/Aut%C3%B3dromo_Hermanos_Rodr%C3%ADguez_2023.svg/500px-Aut%C3%B3dromo_Hermanos_Rodr%C3%ADguez_2023.svg.png",
-  Brazil: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5d/Interlagos_2022.svg/500px-Interlagos_2022.svg.png",
+  "United States": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a5/Austin_circuit.svg/500px-Austin_circuit.svg.png",
+  Mexico: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/36/Aut%C3%B3dromo_Hermanos_Rodr%C3%ADguez_2015.svg/500px-Aut%C3%B3dromo_Hermanos_Rodr%C3%ADguez_2015.svg.png",
+  Brazil: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/cf/Aut%C3%B3dromo_Jos%C3%A9_Carlos_Pace_%28AKA_Interlagos%29_track_map.svg/500px-Aut%C3%B3dromo_Jos%C3%A9_Carlos_Pace_%28AKA_Interlagos%29_track_map.svg.png",
   "Las Vegas": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/43/2023_Las_Vegas_street_circuit.svg/500px-2023_Las_Vegas_street_circuit.svg.png",
-  Qatar: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Lusail_International_Circuit_%28F1%29.svg/500px-Lusail_International_Circuit_%28F1%29.svg.png",
+  Qatar: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c7/Lusail_International_Circuit_2023.svg/500px-Lusail_International_Circuit_2023.svg.png",
   "Abu Dhabi": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b0/Yas_Marina_Circuit.png/500px-Yas_Marina_Circuit.png",
 };
 

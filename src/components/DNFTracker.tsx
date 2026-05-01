@@ -23,7 +23,7 @@ export function DNFTracker() {
   useEffect(() => {
     async function fetchDNF() {
       try {
-        const response = await fetch("https://api.jolpi.ca/ergast/f1/current/last/results.json");
+        const response = await fetch("https://api.jolpi.ca/ergast/f1/2026/last/results.json", { signal: AbortSignal.timeout(8000) });
         const data = await response.json();
 
         if (!data.MRData.RaceTable.Races || data.MRData.RaceTable.Races.length === 0) {

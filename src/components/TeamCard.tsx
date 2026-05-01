@@ -111,7 +111,7 @@ interface ConstructorStandingsVisualProps {
   title?: string;
 }
 
-export function ConstructorStandingsVisual({ teams, title = "Clasificación Constructores" }: ConstructorStandingsVisualProps) {
+export function ConstructorStandingsVisual({ teams, title = "Constructor Standings" }: ConstructorStandingsVisualProps) {
   const totalPoints = teams.reduce((sum, t) => sum + t.points, 0);
   const totalWins = teams.reduce((sum, t) => sum + t.wins, 0);
 

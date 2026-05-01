@@ -132,7 +132,7 @@ interface DriverStandingsVisualProps {
   title?: string;
 }
 
-export function DriverStandingsVisual({ drivers, title = "Clasificación Pilotos" }: DriverStandingsVisualProps) {
+export function DriverStandingsVisual({ drivers, title = "Driver Standings" }: DriverStandingsVisualProps) {
   return (
     <div className="bg-[#171717] rounded-xl p-4 sm:p-6">
       <h2 className="text-xl font-bold text-white mb-4 flex items-center gap-2">

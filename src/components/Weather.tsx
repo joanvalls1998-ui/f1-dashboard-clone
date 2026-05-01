@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Cloud, Droplets, Wind, Thermometer, RefreshCw } from "lucide-react";
+import { Cloud, Droplets, Wind, Thermometer, RefreshCw, Sun, CloudRain } from "lucide-react";
 
 interface WeatherData {
   air_temperature: number;
@@ -14,62 +14,113 @@ interface WeatherData {
   track_temperature_change: string;
   air_temperature_change: string;
   wind_speed_change: string;
+  conditions: "sunny" | "cloudy" | "rainy";
+  session_key?: number;
+  circuit?: string;
 }
 
-const mockWeather: WeatherData = {
-  air_temperature: 28.5,
-  track_temperature: 42.3,
-  humidity: 45,
-  pressure: 1013.25,
-  wind_speed: 12.3,
-  wind_direction: 180,
+// Japan GP 2026 (Suzuka) mock weather data
+const mockJapanWeather: WeatherData = {
+  air_temperature: 19.4,
+  track_temperature: 37.0,
+  humidity: 46.1,
+  pressure: 1012.1,
+  wind_speed: 3.1,
+  wind_direction: 115,
   rainfall: 0,
   track_temperature_change: "steady",
   air_temperature_change: "rising",
   wind_speed_change: "steady",
+  conditions: "sunny",
+  session_key: 11253,
+  circuit: "Suzuka"
 };
 
 export function Weather() {
   const [weather, setWeather] = useState<WeatherData | null>(null);
   const [loading, setLoading] = useState(true);
   const [lastUpdate, setLastUpdate] = useState<Date | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     async function fetchWeather() {
+      setError(null);
       try {
-        const response = await fetch("https://api.openf1.org/v1/weather?session_key=latest", {
-          signal: AbortSignal.timeout(8000)
-        });
+        // Try fetching latest race session to get session_key
+        let sessionKey = "latest";
+        
+        // First try to get the most recent race session
+        try {
+          const sessionsRes = await fetch(
+            "https://api.openf1.org/v1/sessions?year=2026&session_type=Race",
+            { signal: AbortSignal.timeout(8000) }
+          );
+          if (sessionsRes.ok) {
+            const sessions = await sessionsRes.json();
+            // Find the most recent completed race (Japan GP was March 29, 2026)
+            const now = new Date();
+            const completedRaces = sessions.filter((s: any) => 
+              new Date(s.date_end) < now && !s.is_cancelled
+            );
+            if (completedRaces.length > 0) {
+              // Get the last completed race
+              sessionKey = completedRaces[completedRaces.length - 1].session_key.toString();
+            }
+          }
+        } catch {
+          // Use session_key=latest as fallback
+        }
+
+        const response = await fetch(
+          `https://api.openf1.org/v1/weather?session_key=${sessionKey}`,
+          { signal: AbortSignal.timeout(8000) }
+        );
+
         if (response.ok) {
           const data = await response.json();
-          if (data.length > 0) {
+          if (data && data.length > 0) {
+            const w = data[0];
+            // Determine conditions based on rainfall and cloud cover
+            let conditions: "sunny" | "cloudy" | "rainy" = "sunny";
+            if (w.rainfall > 0) {
+              conditions = "rainy";
+            } else if (w.humidity > 70 || w.pressure < 1000) {
+              conditions = "cloudy";
+            }
+
             setWeather({
-              air_temperature: data[0].air_temperature || 0,
-              track_temperature: data[0].track_temperature || 0,
-              humidity: data[0].humidity || 0,
-              pressure: data[0].pressure || 0,
-              wind_speed: data[0].wind_speed || 0,
-              wind_direction: data[0].wind_direction || 0,
-              rainfall: data[0].rainfall || 0,
-              track_temperature_change: data[0].track_temperature_change || "steady",
-              air_temperature_change: data[0].air_temperature_change || "steady",
-              wind_speed_change: data[0].wind_speed_change || "steady",
+              air_temperature: w.air_temperature ?? 0,
+              track_temperature: w.track_temperature ?? 0,
+              humidity: w.humidity ?? 0,
+              pressure: w.pressure ?? 0,
+              wind_speed: w.wind_speed ?? 0,
+              wind_direction: w.wind_direction ?? 0,
+              rainfall: w.rainfall ?? 0,
+              track_temperature_change: w.track_temperature_change ?? "steady",
+              air_temperature_change: w.air_temperature_change ?? "steady",
+              wind_speed_change: w.wind_speed_change ?? "steady",
+              conditions,
+              session_key: w.session_key,
+              circuit: w.circuit_short_name || w.location
             });
             setLastUpdate(new Date());
             setLoading(false);
             return;
           }
         }
-      } catch (error) {
-        console.error("Error fetching weather:", error);
+      } catch (err) {
+        console.error("Error fetching weather:", err);
+        setError("Using cached data");
       }
-      setWeather(mockWeather);
+
+      // Fallback to mock Japan GP data
+      setWeather(mockJapanWeather);
       setLastUpdate(new Date());
       setLoading(false);
     }
 
     fetchWeather();
-    const interval = setInterval(fetchWeather, 10000);
+    const interval = setInterval(fetchWeather, 30000); // Refresh every 30 seconds
     return () => clearInterval(interval);
   }, []);
 
@@ -84,6 +135,22 @@ export function Weather() {
       case "rising": return "↑";
       case "falling": return "↓";
       default: return "→";
+    }
+  };
+
+  const getConditionIcon = (conditions: string) => {
+    switch (conditions) {
+      case "rainy": return <CloudRain className="w-8 h-8 text-blue-500" />;
+      case "cloudy": return <Cloud className="w-8 h-8 text-gray-400" />;
+      default: return <Sun className="w-8 h-8 text-yellow-500" />;
+    }
+  };
+
+  const getConditionLabel = (conditions: string) => {
+    switch (conditions) {
+      case "rainy": return "Rainy";
+      case "cloudy": return "Cloudy";
+      default: return "Sunny";
     }
   };
 
@@ -102,12 +169,18 @@ export function Weather() {
         <div className="flex items-center gap-2">
           <Cloud className="w-5 h-5 text-blue-500" />
           <h2 className="text-lg font-semibold">Weather Conditions</h2>
+          {weather?.circuit && (
+            <span className="text-sm text-muted-foreground ml-2">— {weather.circuit}</span>
+          )}
         </div>
-        {lastUpdate && (
-          <span className="text-xs text-muted-foreground">
-            Updated: {lastUpdate.toLocaleTimeString()}
-          </span>
-        )}
+        <div className="flex items-center gap-2">
+          {error && <span className="text-xs text-amber-500">{error}</span>}
+          {lastUpdate && (
+            <span className="text-xs text-muted-foreground">
+              Updated: {lastUpdate.toLocaleTimeString()}
+            </span>
+          )}
+        </div>
       </div>
 
       {weather && (
@@ -156,17 +229,19 @@ export function Weather() {
               <div className="text-xs text-muted-foreground">Relative humidity</div>
             </div>
 
-            {/* Rainfall */}
-            <div className="p-4 rounded-lg border bg-card">
-              <div className="flex items-center gap-2 mb-2">
-                <Droplets className={`w-5 h-5 ${weather.rainfall > 0 ? "text-blue-500" : "text-gray-400"}`} />
-                <span className="text-sm text-muted-foreground">Rainfall</span>
+            {/* Conditions */}
+            <div className="p-4 rounded-lg border bg-card flex flex-col items-center justify-center">
+              <div className={`w-16 h-16 rounded-full flex items-center justify-center ${
+                weather.conditions === "rainy" 
+                  ? "bg-blue-500/20" 
+                  : weather.conditions === "cloudy"
+                  ? "bg-gray-500/20"
+                  : "bg-yellow-500/20"
+              }`}>
+                {getConditionIcon(weather.conditions)}
               </div>
-              <div className="text-3xl font-bold">
-                {weather.rainfall > 0 ? `${weather.rainfall}mm` : "Dry"}
-              </div>
-              <div className="text-xs text-muted-foreground">
-                {weather.rainfall > 0 ? "Track wet" : "No rain"}
+              <div className="mt-2 text-sm font-medium">
+                {getConditionLabel(weather.conditions)}
               </div>
             </div>
           </div>
@@ -203,21 +278,17 @@ export function Weather() {
               <div className="text-xs text-muted-foreground">hPa</div>
             </div>
 
-            {/* Conditions */}
-            <div className="p-4 rounded-lg border bg-card flex flex-col items-center justify-center">
-              <div className={`w-16 h-16 rounded-full flex items-center justify-center ${
-                weather.rainfall > 0 
-                  ? "bg-blue-500/20" 
-                  : "bg-yellow-500/20"
-              }`}>
-                {weather.rainfall > 0 ? (
-                  <Droplets className="w-8 h-8 text-blue-500" />
-                ) : (
-                  <Cloud className="w-8 h-8 text-yellow-500" />
-                )}
+            {/* Rainfall */}
+            <div className="p-4 rounded-lg border bg-card">
+              <div className="flex items-center gap-2 mb-2">
+                <Droplets className={`w-5 h-5 ${weather.rainfall > 0 ? "text-blue-500" : "text-gray-400"}`} />
+                <span className="text-sm text-muted-foreground">Rainfall</span>
               </div>
-              <div className="mt-2 text-sm font-medium">
-                {weather.rainfall > 0 ? "WET TRACK" : "DRY TRACK"}
+              <div className="text-3xl font-bold">
+                {weather.rainfall > 0 ? `${weather.rainfall}mm` : "Dry"}
+              </div>
+              <div className="text-xs text-muted-foreground">
+                {weather.rainfall > 0 ? "Track wet" : "No rain"}
               </div>
             </div>
           </div>
