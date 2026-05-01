@@ -170,7 +170,7 @@ export function LiveTiming() {
         
         <div className="border rounded-lg overflow-hidden">
           <iframe
-            src="https://www.formula1.com/en/live-timing.html"
+            src="https://formula1dashboard.com/live-timing/"
             className="w-full h-[600px] md:h-[700px]"
             title="F1 Live Timing"
             style={{ border: 'none' }}
