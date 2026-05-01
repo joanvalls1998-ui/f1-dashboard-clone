@@ -30,7 +30,7 @@ export function LiveTiming() {
       <div className="border rounded-lg overflow-hidden">
         <iframe
           key={iframeKey}
-          src="https://formula1dashboard.com/live-timing/"
+          src="https://app.formula1dashboard.com/live-timing/"
           className="w-full h-[700px] md:h-[800px]"
           title="F1 Live Timing"
           style={{ border: 'none' }}
