@@ -1,4 +1,4 @@
-import { DriverComparison } from "@/components/DriverComparison";
+import { DriverStatComparison } from "@/components/DriverStatComparison";
 
 export default function DriverComparisonPage() {
   return (
@@ -6,10 +6,10 @@ export default function DriverComparisonPage() {
       <div>
         <h1 className="text-3xl font-bold mb-2">Driver Comparison</h1>
         <p className="text-muted-foreground">
-          Compare lap times between drivers.
+          Compare drivers by their stats, photos, and championship positions.
         </p>
       </div>
-      <DriverComparison />
+      <DriverStatComparison />
     </div>
   );
 }

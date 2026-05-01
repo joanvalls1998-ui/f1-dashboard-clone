@@ -4,9 +4,9 @@ export default function SeasonStatsPage() {
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="text-3xl font-bold mb-2">Season Stats</h1>
+        <h1 className="text-3xl font-bold mb-2">Season Statistics</h1>
         <p className="text-muted-foreground">
-          Championship standings progression.
+          Season leaders in wins, podiums, and fastest laps. Points progression chart for selected drivers.
         </p>
       </div>
       <SeasonStats />

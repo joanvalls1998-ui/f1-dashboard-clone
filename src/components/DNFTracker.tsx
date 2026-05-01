@@ -14,13 +14,6 @@ interface DNFRecord {
   category: string;
 }
 
-const mockDNF: DNFRecord[] = [
-  { driver_number: 4, driver_name: "MAG", team_name: "Haas F1 Team", team_color: "b6babd", position: 17, lap: 28, reason: "Power Unit", category: "MECHANICAL" },
-  { driver_number: 20, driver_name: "MAG", team_name: "Haas F1 Team", team_color: "b6babd", position: 18, lap: 35, reason: "Brakes", category: "MECHANICAL" },
-  { driver_number: 22, driver_name: "TSU", team_name: "RB", team_color: "6692ff", position: 19, lap: 42, reason: "Gearbox", category: "MECHANICAL" },
-  { driver_number: 6, driver_name: "SAR", team_name: "Williams", team_color: "64c4ff", position: 20, lap: 15, reason: "Collision", category: "ACCIDENT" },
-];
-
 export function DNFTracker() {
   const [dnfData, setDnfData] = useState<DNFRecord[]>([]);
   const [loading, setLoading] = useState(true);
@@ -30,24 +23,102 @@ export function DNFTracker() {
   useEffect(() => {
     async function fetchDNF() {
       try {
-        // OpenF1 doesn't have specific DNF data, would need to cross-reference
-        // For now use mock data
-        setDnfData(mockDNF);
-        setLoading(false);
+        const response = await fetch("https://api.jolpi.ca/ergast/f1/current/last/results.json");
+        const data = await response.json();
+
+        if (!data.MRData.RaceTable.Races || data.MRData.RaceTable.Races.length === 0) {
+          setDnfData([]);
+          setLoading(false);
+          return;
+        }
+
+        const race = data.MRData.RaceTable.Races[0];
+        const results = race.Results;
+
+        // Filter for non-finishers (status != 'Finished')
+        const dnfs = results
+          .filter((r: any) => r.status !== "Finished")
+          .map((r: any) => {
+            // Categorize the DNF reason
+            const reason = r.status;
+            const category = categorizeDNF(reason);
+
+            // Determine the lap when DNF occurred (some APIs don't provide this cleanly)
+            const lap = r.laps ? parseInt(r.laps) : 0;
+
+            return {
+              driver_number: parseInt(r.Driver.permanentNumber || r.Driver.code),
+              driver_name: r.Driver.code,
+              team_name: r.Constructor.name,
+              team_color: getTeamColorRaw(r.Constructor.name),
+              position: parseInt(r.position),
+              lap,
+              reason,
+              category,
+            };
+          });
+
+        setDnfData(dnfs);
       } catch (error) {
         console.error("Error fetching DNF data:", error);
-        setDnfData(mockDNF);
-        setLoading(false);
+        setDnfData([]);
       }
+      setLoading(false);
     }
 
     fetchDNF();
   }, []);
 
+  function categorizeDNF(reason: string): string {
+    const lower = reason.toLowerCase();
+    if (lower.includes("accident") || lower.includes("collision") || lower.includes("crash")) {
+      return "ACCIDENT";
+    }
+    if (lower.includes("engine") || lower.includes("power unit") || lower.includes("pu") || lower.includes("mechanical") || lower.includes("gearbox") || lower.includes("transmission") || lower.includes("hydraulics") || lower.includes("brakes") || lower.includes("suspension") || lower.includes("steering") || lower.includes("throttle") || lower.includes("clerance") || lower.includes("mgu-h") || lower.includes("mgu-k") || lower.includes("ers") || lower.includes("turbo") || lower.includes("exhaust") || lower.includes("fuel") || lower.includes("oil") || lower.includes("water") || lower.includes("overheating")) {
+      return "MECHANICAL";
+    }
+    if (lower.includes("driver") || lower.includes("pilot") || lower.includes("error") || lower.includes("mistake") || lower.includes("spin") || lower.includes("locked") || lower.includes("off track")) {
+      return "DRIVER_ERROR";
+    }
+    if (lower.includes("weather") || lower.includes("rain") || lower.includes("wet") || lower.includes("storm") || lower.includes("lightning")) {
+      return "WEATHER";
+    }
+    if (lower.includes("penalty") || lower.includes("disqualified") || lower.includes("dsq") || lower.includes("excluded")) {
+      return "PENALTY";
+    }
+    if (lower.includes("retired") || lower.includes("dnf") || lower.includes("did not finish") || lower.includes("withdrawn") || lower.includes("withdrew")) {
+      return "RETIRED";
+    }
+    return "OTHER";
+  }
+
+  function getTeamColorRaw(teamName: string): string {
+    const colors: Record<string, string> = {
+      'Mercedes': '27F4D2',
+      'Ferrari': 'E8002D',
+      'McLaren': 'FF8000',
+      'Red Bull Racing': '3671C6',
+      'Red Bull': '3671C6',
+      'Racing Bulls': '6B3FC6',
+      'RB F1 Team': '6B3FC6',
+      'Aston Martin': '229971',
+      'Alpine F1 Team': 'FF87BC',
+      'Alpine': 'FF87BC',
+      'Haas F1 Team': 'F0F0F0',
+      'Williams': '64C4FF',
+      'Audi': 'CC0000',
+      'Cadillac F1 Team': 'C20000',
+      'Cadillac': 'C20000',
+      'Kick Sauber': '00FF00',
+    };
+
+    return colors[teamName] || '666666';
+  }
+
   const categories = ["all", ...Array.from(new Set(dnfData.map(d => d.category)))];
 
   const filteredDNF = dnfData.filter(d => {
-    const matchesSearch = search === "" || 
+    const matchesSearch = search === "" ||
       d.driver_name.toLowerCase().includes(search.toLowerCase()) ||
       d.team_name.toLowerCase().includes(search.toLowerCase()) ||
       d.reason.toLowerCase().includes(search.toLowerCase());
@@ -61,6 +132,8 @@ export function DNFTracker() {
       case "ACCIDENT": return "text-red-500 bg-red-500/10";
       case "DRIVER_ERROR": return "text-yellow-500 bg-yellow-500/10";
       case "WEATHER": return "text-blue-500 bg-blue-500/10";
+      case "PENALTY": return "text-purple-500 bg-purple-500/10";
+      case "RETIRED": return "text-gray-500 bg-gray-500/10";
       default: return "text-gray-500 bg-gray-500/10";
     }
   };
@@ -158,7 +231,7 @@ export function DNFTracker() {
               <div className="flex items-center gap-4">
                 <div className="text-center">
                   <div className="text-lg font-bold text-red-500">DNF</div>
-                  <div className="text-xs text-muted-foreground">Lap {dnf.lap}</div>
+                  <div className="text-xs text-muted-foreground">Lap {dnf.lap || "?"}</div>
                 </div>
                 <div className={`px-3 py-1 rounded text-xs font-bold ${getCategoryColor(dnf.category)}`}>
                   {dnf.category}
@@ -176,7 +249,7 @@ export function DNFTracker() {
 
       {filteredDNF.length === 0 && !loading && (
         <div className="text-center py-8 text-muted-foreground">
-          No retirements data available.
+          No retirements in the last race. All drivers finished!
         </div>
       )}
     </div>
