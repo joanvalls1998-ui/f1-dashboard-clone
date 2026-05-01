@@ -42,16 +42,15 @@ export const driverImages: Record<string, string> = {
   ALB: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Alex_Albon_%28cropped%29.jpg/330px-Alex_Albon_%28cropped%29.jpg",
   
   // AlphaTauri / RB
-  TSU: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/2019_Japanese_GP,_Tsunoda_%2849594299303%29.jpg/330px-2019_Japanese_GP,_Tsunoda_%2849594299303%29.jpg",
+  TSU: "https://upload.wikimedia.org/wikipedia/commons/thumb/0/04/Yuki_Tsunoda_at_the_2026_Australian_Grand_Prix_%28028A8096%29.jpg/330px-Yuki_Tsunoda_at_the_2026_Australian_Grand_Prix_%28028A8096%29.jpg",
   
   // Audi
   BOR: "https://upload.wikimedia.org/wikipedia/commons/thumb/f/fe/Gabriel_Bortoleto_%28cropped%29.jpg/330px-Gabriel_Bortoleto_%28cropped%29.jpg",
   
-  // Cadillac (placeholder - PER missing image)
   // Cadillac
   BOT: "https://upload.wikimedia.org/wikipedia/commons/thumb/9/93/Valtteri_Bottas_at_the_2026_Adelaide_Motorsport_Festival_%28028A7567%29.jpg/330px-Valtteri_Bottas_at_the_2026_Adelaide_Motorsport_Festival_%28028A7567%29.jpg",
   HUL: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/de/2019_Formula_One_tests_Barcelona%2C_Hulkenberg_%2840287128313%29.jpg/330px-2019_Formula_One_tests_Barcelona%2C_Hulkenberg_%2840287128313%29.jpg",
-  PER: "", // Sergio Perez - to be added
+  PER: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a0/2021_US_GP_driver_parade_%28cropped2%29.jpg/330px-2021_US_GP_driver_parade_%28cropped2%29.jpg",
 };
 
 // Circuit images from Wikipedia - 16/22 complete
