@@ -1,7 +1,8 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Flag, Search } from "lucide-react";
+import { Flag, Search, AlertCircle } from "lucide-react";
+import { getTeamColor } from "@/lib/f1-assets";
 
 const ERGAST_BASE = "https://api.jolpi.ca/ergast/f1";
 
@@ -15,21 +16,6 @@ interface QualifyingResult {
   q2_time: string | null;
   q3_time: string | null;
 }
-
-// Team color mapping for Ergast data
-const teamColors: Record<string, string> = {
-  mercedes: "27f4d2",
-  red_bull: "3671c6",
-  ferrari: "e8002d",
-  mclaren: "ff8000",
-  aston_martin: "229971",
-  alpine: "ff87bc",
-  audi: "52e252",
-  haas: "b6babd",
-  williams: "64c4ff",
-  rb: "6692ff",
-  cadillac: "FFA7A7",
-};
 
 // Fallback 2026 mock qualifying data (no live session)
 const mockQualifyingResults: QualifyingResult[] = [
@@ -145,11 +131,6 @@ export function QualifyingAnalysis() {
     return `+${(diff / 1000).toFixed(3)}`;
   };
 
-  const getTeamColor = (teamName: string): string => {
-    const normalized = teamName.toLowerCase().replace(/[^a-z]/g, "_");
-    return teamColors[normalized] || "666666";
-  };
-
   const q1Count = filteredResults.filter(r => r.q1_time !== null).length;
   const q2Count = filteredResults.filter(r => r.q2_time !== null).length;
   const q3Count = filteredResults.filter(r => r.q3_time !== null).length;
@@ -189,21 +170,22 @@ export function QualifyingAnalysis() {
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           className="w-full pl-9 pr-3 py-2 rounded-md border bg-background text-sm"
+          aria-label="Search drivers"
         />
       </div>
 
       {/* All Q times table */}
-      <div className="rounded-lg border bg-card overflow-hidden">
+      <div className="rounded-lg border bg-card overflow-hidden" role="region" aria-label="Qualifying results table">
         <div className="overflow-x-auto">
-          <table className="w-full">
+          <table className="w-full" aria-label="Qualifying times by session">
             <thead className="bg-muted">
               <tr>
-                <th className="text-left p-3 font-medium">Pos</th>
-                <th className="text-left p-3 font-medium">Driver</th>
-                <th className="text-left p-3 font-medium hidden md:table-cell">Team</th>
-                <th className="text-center p-3 font-medium">Q1</th>
-                <th className="text-center p-3 font-medium">Q2</th>
-                <th className="text-center p-3 font-medium">Q3</th>
+                <th scope="col" className="text-left p-3 font-medium">Pos</th>
+                <th scope="col" className="text-left p-3 font-medium">Driver</th>
+                <th scope="col" className="text-left p-3 font-medium hidden md:table-cell">Team</th>
+                <th scope="col" className="text-center p-3 font-medium">Q1</th>
+                <th scope="col" className="text-center p-3 font-medium">Q2</th>
+                <th scope="col" className="text-center p-3 font-medium">Q3</th>
               </tr>
             </thead>
             <tbody>
@@ -228,7 +210,7 @@ export function QualifyingAnalysis() {
                       <div className="flex items-center gap-2">
                         <div
                           className="w-2 h-6 rounded-full flex-shrink-0"
-                          style={{ backgroundColor: `#${getTeamColor(result.team_name)}` }}
+                          style={{ backgroundColor: getTeamColor(result.team_name) }}
                         />
                         <div>
                           <div className="font-medium">{result.driver_code}</div>
@@ -314,8 +296,9 @@ export function QualifyingAnalysis() {
       </div>
 
       {filteredResults.length === 0 && !loading && (
-        <div className="text-center py-8 text-muted-foreground">
-          No qualifying data found.
+        <div className="text-center py-8 text-muted-foreground flex flex-col items-center gap-2" role="status" aria-live="polite">
+          <AlertCircle className="w-8 h-8" />
+          <p>No qualifying data found.</p>
         </div>
       )}
     </div>

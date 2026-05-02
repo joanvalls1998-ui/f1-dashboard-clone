@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { Radio, Clock, Gauge, Activity, Zap, Fuel, CircleDot, Play, Pause, Loader2, ChevronDown, Car } from 'lucide-react';
 import { drivers2026, teams2026 } from '@/lib/rc-data/grid';
+import { TEAM_COLORS_BY_KEY } from '@/lib/team-colors';
 
 // Types
 interface Session {
@@ -53,20 +54,6 @@ const COMPOUND_COLORS: Record<string, string> = {
   HARD: '#ffffff',
   INTER: '#33ff33',
   WET: '#3399ff'
-};
-
-const TEAM_COLORS: Record<string, string> = {
-  mercedes: '#27f4d2',
-  ferrari: '#ff1800',
-  mclaren: '#ff8700',
-  redbull: '#3671c6',
-  haas: '#c92d28',
-  rb: '#203f94',
-  alpine: '#ff87bc',
-  audi: '#e11a2b',
-  williams: '#64c4ff',
-  cadillac: '#c80029',
-  aston: '#0072ff'
 };
 
 const SESSION_TYPES = [
@@ -665,7 +652,7 @@ export function EngineerDashboard() {
 
   // Get driver and team color
   const driver = drivers2026.find(d => d.name === selectedDriverName);
-  const teamColor = driver ? TEAM_COLORS[driver.colorClass] || '#888' : '#888';
+  const teamColor = driver ? TEAM_COLORS_BY_KEY[driver.colorClass] || '#888' : '#888';
 
   // Load data when driver or session type changes
   useEffect(() => {
@@ -786,7 +773,7 @@ export function EngineerDashboard() {
           {showDriverPicker && (
             <div className="absolute top-full left-0 mt-1 bg-[#1a1a1a] border border-[#333] rounded-lg shadow-xl z-50 w-64 max-h-80 overflow-y-auto">
               {drivers2026.map(d => {
-                const tc = TEAM_COLORS[d.colorClass] || '#888';
+                const tc = TEAM_COLORS_BY_KEY[d.colorClass] || '#888';
                 return (
                   <button
                     key={d.name}

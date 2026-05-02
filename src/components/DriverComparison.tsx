@@ -26,13 +26,27 @@ const mockComparisonData: LapComparison[] = [
 
 const drivers = [
   { name: "VER", color: "3671c6", team: "Red Bull Racing" },
-  { name: "NOR", color: "ff8000", team: "McLaren" },
-  { name: "LEC", color: "e8002d", team: "Ferrari" },
-  { name: "PER", color: "3671c6", team: "Red Bull Racing" },
-  { name: "HAM", color: "27f4d2", team: "Mercedes" },
-  { name: "ALO", color: "229971", team: "Aston Martin" },
+  { name: "NOR", color: "ff8700", team: "McLaren" },
+  { name: "LEC", color: "ff1800", team: "Ferrari" },
+  { name: "HAM", color: "ff1800", team: "Ferrari" },
+  { name: "PIA", color: "ff8700", team: "McLaren" },
   { name: "RUS", color: "27f4d2", team: "Mercedes" },
-  { name: "PIA", color: "ff8000", team: "McLaren" },
+  { name: "ANT", color: "27f4d2", team: "Mercedes" },
+  { name: "HAD", color: "3671c6", team: "Red Bull Racing" },
+  { name: "ALO", color: "0072ff", team: "Aston Martin" },
+  { name: "STR", color: "0072ff", team: "Aston Martin" },
+  { name: "GAS", color: "ff87bc", team: "Alpine" },
+  { name: "OCO", color: "b6babd", team: "Haas F1 Team" },
+  { name: "BEA", color: "b6babd", team: "Haas F1 Team" },
+  { name: "SAI", color: "64c4ff", team: "Williams" },
+  { name: "ALB", color: "64c4ff", team: "Williams" },
+  { name: "PER", color: "c80029", team: "Cadillac" },
+  { name: "BOT", color: "c80029", team: "Cadillac" },
+  { name: "HUL", color: "c80029", team: "Audi" },
+  { name: "BOR", color: "c80029", team: "Audi" },
+  { name: "LAW", color: "203f94", team: "RB F1 Team" },
+  { name: "LIN", color: "203f94", team: "RB F1 Team" },
+  { name: "COL", color: "ff87bc", team: "Alpine" },
 ];
 
 export function DriverComparison() {

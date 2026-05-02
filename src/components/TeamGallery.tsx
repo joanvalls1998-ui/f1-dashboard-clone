@@ -55,19 +55,19 @@ const allDrivers2026: Driver[] = [
   { position: 19, abbreviation: 'BOT', fullName: 'Valtteri Bottas', team: 'Cadillac', points: 0 },
 ];
 
-// Group by team
+// Group by team - 2026 colors standardized
 const teams2026: Team[] = [
-  { name: 'Mercedes', color: '#27F4D2', drivers: allDrivers2026.filter(d => d.team === 'Mercedes') },
-  { name: 'Ferrari', color: '#E8002D', drivers: allDrivers2026.filter(d => d.team === 'Ferrari') },
-  { name: 'McLaren', color: '#FF8000', drivers: allDrivers2026.filter(d => d.team === 'McLaren') },
-  { name: 'Red Bull', color: '#3671C6', drivers: allDrivers2026.filter(d => d.team === 'Red Bull') },
-  { name: 'RB F1 Team', color: '#6B3FC6', drivers: allDrivers2026.filter(d => d.team === 'RB F1 Team') },
-  { name: 'Haas F1 Team', color: '#F0F0F0', drivers: allDrivers2026.filter(d => d.team === 'Haas F1 Team') },
-  { name: 'Alpine', color: '#FF87BC', drivers: allDrivers2026.filter(d => d.team === 'Alpine') },
-  { name: 'Audi', color: '#CC0000', drivers: allDrivers2026.filter(d => d.team === 'Audi') },
-  { name: 'Williams', color: '#64C4FF', drivers: allDrivers2026.filter(d => d.team === 'Williams') },
-  { name: 'Aston Martin', color: '#229971', drivers: allDrivers2026.filter(d => d.team === 'Aston Martin') },
-  { name: 'Cadillac', color: '#C20000', drivers: allDrivers2026.filter(d => d.team === 'Cadillac') },
+  { name: 'Mercedes', color: '#27f4d2', drivers: allDrivers2026.filter(d => d.team === 'Mercedes') },
+  { name: 'Ferrari', color: '#ff1800', drivers: allDrivers2026.filter(d => d.team === 'Ferrari') },
+  { name: 'McLaren', color: '#ff8700', drivers: allDrivers2026.filter(d => d.team === 'McLaren') },
+  { name: 'Red Bull Racing', color: '#3671c6', drivers: allDrivers2026.filter(d => d.team === 'Red Bull') },
+  { name: 'RB F1 Team', color: '#203f94', drivers: allDrivers2026.filter(d => d.team === 'RB F1 Team') },
+  { name: 'Haas F1 Team', color: '#b6babd', drivers: allDrivers2026.filter(d => d.team === 'Haas F1 Team') },
+  { name: 'Alpine', color: '#ff87bc', drivers: allDrivers2026.filter(d => d.team === 'Alpine') },
+  { name: 'Audi', color: '#c80029', drivers: allDrivers2026.filter(d => d.team === 'Audi') },
+  { name: 'Williams', color: '#64c4ff', drivers: allDrivers2026.filter(d => d.team === 'Williams') },
+  { name: 'Aston Martin', color: '#0072ff', drivers: allDrivers2026.filter(d => d.team === 'Aston Martin') },
+  { name: 'Cadillac', color: '#c80029', drivers: allDrivers2026.filter(d => d.team === 'Cadillac') },
 ];
 
 interface DriverAvatarProps {

@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { Flag, Target, TrendingUp, AlertTriangle, Zap, Clock, Shield, Loader2 } from 'lucide-react';
+import { getTeamColor } from '@/lib/team-colors';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -136,21 +137,6 @@ function sameDriverName(a: string, b: string): boolean {
   const aa = a.toLowerCase().trim();
   const bb = b.toLowerCase().trim();
   return aa === bb || aa.includes(bb) || bb.includes(aa);
-}
-
-function getTeamColorHex(team: string): string {
-  if (team.includes("Aston")) return '#0072ff';
-  if (team.includes("Mercedes")) return '#27f4d2';
-  if (team.includes("Ferrari")) return '#ff1800';
-  if (team.includes("McLaren")) return '#ff8700';
-  if (team.includes("Red Bull")) return '#3671c6';
-  if (team.includes("Alpine")) return '#ff87bc';
-  if (team.includes("Williams")) return '#64c4ff';
-  if (team.includes("Audi")) return '#e11a2b';
-  if (team.includes("Cadillac")) return '#c80029';
-  if (team.includes("Haas")) return '#c92d28';
-  if (team.includes("Racing Bulls")) return '#203f94';
-  return '#666666';
 }
 
 function getTeamData(teamName: string): TeamData {
@@ -622,7 +608,7 @@ export default function RaceMode({
                 <div key={`${driver.name}-${driver.position}`} className="flex items-center justify-between py-2 border-b border-[#222] last:border-0">
                   <div className="flex items-center gap-3">
                     <span className="text-gray-500 text-sm w-5 text-center">{driver.position}</span>
-                    <div className="w-1 h-6 rounded-full" style={{ backgroundColor: getTeamColorHex(driver.team) }} />
+                    <div className="w-1 h-6 rounded-full" style={{ backgroundColor: getTeamColor(driver.team) }} />
                     <div>
                       <p className="text-white text-sm">{driver.name}</p>
                       <p className="text-gray-500 text-xs">{driver.team}</p>

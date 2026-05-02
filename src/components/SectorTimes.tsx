@@ -1,7 +1,8 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Clock, TrendingUp, Search } from "lucide-react";
+import { Clock, Search, AlertCircle } from "lucide-react";
+import { getTeamColor } from "@/lib/f1-assets";
 
 interface SectorTime {
   driver_number: number;
@@ -17,7 +18,6 @@ interface SectorTime {
   is_personal_best: boolean;
 }
 
-// Mock data for sector times
 const mockSectorTimes: SectorTime[] = [
   { driver_number: 1, driver_name: "VER", team_name: "Red Bull Racing", team_color: "3671c6", lap: 42, sector_1_time: 28.123, sector_2_time: 32.456, sector_3_time: 31.877, lap_time: 92.456, tyre: "MEDIUM", is_personal_best: true },
   { driver_number: 16, driver_name: "LEC", team_name: "Ferrari", team_color: "e8002d", lap: 42, sector_1_time: 28.234, sector_2_time: 32.567, sector_3_time: 31.877, lap_time: 92.678, tyre: "MEDIUM", is_personal_best: true },
@@ -41,38 +41,59 @@ export function SectorTimes() {
   useEffect(() => {
     async function fetchSectorTimes() {
       try {
-        // Try OpenF1 API
-        const response = await fetch("https://api.openf1.org/v1/laps?session_key=latest&limit=100", {
-          signal: AbortSignal.timeout(8000)
-        });
+        // Try Ergast for race laps (most reliable historical source)
+        const response = await fetch(
+          "https://api.jolpi.ca/ergast/f1/2026/3/laps.json?limit=2000",
+          { signal: AbortSignal.timeout(8000) }
+        );
         if (response.ok) {
           const data = await response.json();
-          // Transform and sort by lap time
-          const transformed = (data as any[]).map((lap: any) => ({
-            driver_number: lap.driver_number,
-            driver_name: lap.driver_code || `DRV${lap.driver_number}`,
-            team_name: lap.team_name || "Unknown",
-            team_color: lap.team_colour || "666666",
-            lap: lap.lap_number,
-            sector_1_time: lap.s1 || 0,
-            sector_2_time: lap.s2 || 0,
-            sector_3_time: lap.s3 || 0,
-            lap_time: lap.lap_time || 0,
-            tyre: lap.tyre_compound || "UNKNOWN",
-            is_personal_best: lap.is_personal_best || false,
-          })).filter((l: SectorTime) => l.lap_time > 0);
-          
-          if (transformed.length > 0) {
-            setSectorTimes(transformed.sort((a, b) => a.lap_time - b.lap_time));
-            setSelectedLap(transformed[0]?.lap || 42);
-            setLoading(false);
-            return;
+          const race = data.MRData?.RaceTable?.Races?.[0];
+          if (race?.LapTable?.[0]?.Timings) {
+            const timings = race.LapTable[0].Timings;
+            const driverLaps: Record<string, any[]> = {};
+            timings.forEach((t: any) => {
+              if (!driverLaps[t.driverId]) driverLaps[t.driverId] = [];
+              driverLaps[t.driverId].push(t);
+            });
+
+            const transformed: SectorTime[] = Object.entries(driverLaps)
+              .filter(([, laps]) => laps.some((l: any) => l.number === "42"))
+              .map(([driverId, laps]) => {
+                const lap42 = laps.find((l: any) => l.number === "42");
+                const bestLap = laps.reduce((best: any, curr: any) => {
+                  const b = parseFloat(best.time);
+                  const c = parseFloat(curr.time);
+                  return c < b ? curr : best;
+                });
+                return {
+                  driver_number: parseInt(driverId) || 0,
+                  driver_name: driverId.slice(0, 3).toUpperCase(),
+                  team_name: "Unknown",
+                  team_color: "666666",
+                  lap: parseInt(lap42?.number || "42"),
+                  sector_1_time: 0,
+                  sector_2_time: 0,
+                  sector_3_time: 0,
+                  lap_time: parseFloat(lap42?.time || "0"),
+                  tyre: "UNKNOWN",
+                  is_personal_best: lap42?.time === bestLap?.time,
+                };
+              })
+              .filter((l: SectorTime) => l.lap_time > 0)
+              .sort((a, b) => a.lap_time - b.lap_time);
+
+            if (transformed.length > 0) {
+              setSectorTimes(transformed);
+              setSelectedLap(transformed[0]?.lap || 42);
+              setLoading(false);
+              return;
+            }
           }
         }
       } catch (error) {
         console.error("Error fetching sector times:", error);
       }
-      // Use mock data
       setSectorTimes(mockSectorTimes);
       setLoading(false);
     }
@@ -82,7 +103,7 @@ export function SectorTimes() {
 
   const filteredDrivers = sectorTimes
     .filter(s => {
-      const matchesSearch = search === "" || 
+      const matchesSearch = search === "" ||
         s.driver_name.toLowerCase().includes(search.toLowerCase()) ||
         s.driver_number.toString().includes(search);
       const matchesLap = s.lap === selectedLap;
@@ -97,10 +118,14 @@ export function SectorTimes() {
       }
     });
 
-  const bestS1 = Math.min(...filteredDrivers.map(s => s.sector_1_time).filter(t => t > 0));
-  const bestS2 = Math.min(...filteredDrivers.map(s => s.sector_2_time).filter(t => t > 0));
-  const bestS3 = Math.min(...filteredDrivers.map(s => s.sector_3_time).filter(t => t > 0));
-  const bestLap = Math.min(...filteredDrivers.map(s => s.lap_time).filter(t => t > 0));
+  const validS1 = filteredDrivers.map(s => s.sector_1_time).filter(t => t > 0);
+  const validS2 = filteredDrivers.map(s => s.sector_2_time).filter(t => t > 0);
+  const validS3 = filteredDrivers.map(s => s.sector_3_time).filter(t => t > 0);
+  const validLap = filteredDrivers.map(s => s.lap_time).filter(t => t > 0);
+  const bestS1 = validS1.length > 0 ? Math.min(...validS1) : 0;
+  const bestS2 = validS2.length > 0 ? Math.min(...validS2) : 0;
+  const bestS3 = validS3.length > 0 ? Math.min(...validS3) : 0;
+  const bestLap = validLap.length > 0 ? Math.min(...validLap) : 0;
 
   const formatTime = (time: number): string => {
     if (time === 0) return "--";
@@ -130,6 +155,7 @@ export function SectorTimes() {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             className="w-full pl-9 pr-3 py-2 rounded-md border bg-background text-sm"
+            aria-label="Search drivers"
           />
         </div>
 
@@ -137,6 +163,7 @@ export function SectorTimes() {
           value={sortBy}
           onChange={(e) => setSortBy(e.target.value as typeof sortBy)}
           className="px-3 py-2 rounded-md border bg-background text-sm"
+          aria-label="Sort by sector"
         >
           <option value="lap_time">Sort by Lap Time</option>
           <option value="sector_1">Sort by S1</option>
@@ -148,6 +175,7 @@ export function SectorTimes() {
           value={selectedLap}
           onChange={(e) => setSelectedLap(Number(e.target.value))}
           className="px-3 py-2 rounded-md border bg-background text-sm"
+          aria-label="Select lap"
         >
           {Array.from(new Set(sectorTimes.map(s => s.lap))).sort((a, b) => b - a).slice(0, 20).map(lap => (
             <option key={lap} value={lap}>Lap {lap}</option>
@@ -159,104 +187,108 @@ export function SectorTimes() {
       <div className="grid grid-cols-4 gap-2">
         <div className="p-3 rounded-lg bg-green-500/10 border border-green-500/30 text-center">
           <div className="text-xs text-muted-foreground">Best S1</div>
-          <div className="text-lg font-bold text-green-500">{bestS1.toFixed(3)}</div>
+          <div className="text-lg font-bold text-green-500">{formatTime(bestS1)}</div>
         </div>
         <div className="p-3 rounded-lg bg-green-500/10 border border-green-500/30 text-center">
           <div className="text-xs text-muted-foreground">Best S2</div>
-          <div className="text-lg font-bold text-green-500">{bestS2.toFixed(3)}</div>
+          <div className="text-lg font-bold text-green-500">{formatTime(bestS2)}</div>
         </div>
         <div className="p-3 rounded-lg bg-green-500/10 border border-green-500/30 text-center">
           <div className="text-xs text-muted-foreground">Best S3</div>
-          <div className="text-lg font-bold text-green-500">{bestS3.toFixed(3)}</div>
+          <div className="text-lg font-bold text-green-500">{formatTime(bestS3)}</div>
         </div>
         <div className="p-3 rounded-lg bg-yellow-500/10 border border-yellow-500/30 text-center">
           <div className="text-xs text-muted-foreground">Best Lap</div>
-          <div className="text-lg font-bold text-yellow-500">{bestLap.toFixed(3)}</div>
+          <div className="text-lg font-bold text-yellow-500">{formatTime(bestLap)}</div>
         </div>
       </div>
 
       {/* Table */}
       {loading ? (
-        <div className="flex items-center justify-center py-12">
+        <div className="flex items-center justify-center py-12" role="status" aria-label="Loading">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
         </div>
       ) : (
-        <div className="rounded-lg border bg-card overflow-hidden">
-          <table className="w-full">
-            <thead className="bg-muted">
-              <tr>
-                <th className="text-left p-3 font-medium">Pos</th>
-                <th className="text-left p-3 font-medium">Driver</th>
-                <th className="text-center p-3 font-medium">Tyre</th>
-                <th className="text-center p-3 font-medium">S1</th>
-                <th className="text-center p-3 font-medium">S2</th>
-                <th className="text-center p-3 font-medium">S3</th>
-                <th className="text-center p-3 font-medium">Lap Time</th>
-                <th className="text-center p-3 font-medium">Gap</th>
-              </tr>
-            </thead>
-            <tbody>
-              {filteredDrivers.slice(0, 20).map((sector, index) => (
-                <tr key={`${sector.driver_number}-${sector.lap}`} className="border-t hover:bg-muted/50">
-                  <td className="p-3">
-                    <span className={`font-bold ${
-                      index === 0 ? "text-yellow-500" :
-                      index === 1 ? "text-gray-400" :
-                      index === 2 ? "text-amber-600" : ""
-                    }`}>
-                      {index + 1}
-                    </span>
-                  </td>
-                  <td className="p-3">
-                    <div className="flex items-center gap-2">
-                      <div
-                        className="w-2 h-6 rounded-full"
-                        style={{ backgroundColor: `#${sector.team_color}` }}
-                      />
-                      <div>
-                        <div className="font-medium">#{sector.driver_number} {sector.driver_name}</div>
-                        <div className="text-xs text-muted-foreground">{sector.team_name}</div>
-                      </div>
-                    </div>
-                  </td>
-                  <td className="p-3 text-center">
-                    <span className="px-2 py-1 rounded text-xs font-bold bg-muted">
-                      {sector.tyre}
-                    </span>
-                  </td>
-                  <td className={`p-3 text-center font-mono ${
-                    sector.sector_1_time === bestS1 ? "text-green-500 font-bold" : ""
-                  }`}>
-                    {formatTime(sector.sector_1_time)}
-                  </td>
-                  <td className={`p-3 text-center font-mono ${
-                    sector.sector_2_time === bestS2 ? "text-green-500 font-bold" : ""
-                  }`}>
-                    {formatTime(sector.sector_2_time)}
-                  </td>
-                  <td className={`p-3 text-center font-mono ${
-                    sector.sector_3_time === bestS3 ? "text-green-500 font-bold" : ""
-                  }`}>
-                    {formatTime(sector.sector_3_time)}
-                  </td>
-                  <td className={`p-3 text-center font-mono font-bold ${
-                    sector.lap_time === bestLap ? "text-yellow-500" : ""
-                  }`}>
-                    {formatTime(sector.lap_time)}
-                  </td>
-                  <td className="p-3 text-center text-muted-foreground">
-                    {getGap(sector.lap_time)}
-                  </td>
+        <div className="rounded-lg border bg-card overflow-hidden" role="region" aria-label="Sector times table">
+          <div className="overflow-x-auto">
+            <table className="w-full" aria-label="Sector times by driver">
+              <thead className="bg-muted">
+                <tr>
+                  <th scope="col" className="text-left p-3 font-medium">Pos</th>
+                  <th scope="col" className="text-left p-3 font-medium">Driver</th>
+                  <th scope="col" className="text-center p-3 font-medium">Tyre</th>
+                  <th scope="col" className="text-center p-3 font-medium">S1</th>
+                  <th scope="col" className="text-center p-3 font-medium">S2</th>
+                  <th scope="col" className="text-center p-3 font-medium">S3</th>
+                  <th scope="col" className="text-center p-3 font-medium">Lap Time</th>
+                  <th scope="col" className="text-center p-3 font-medium">Gap</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {filteredDrivers.slice(0, 20).map((sector, index) => (
+                  <tr key={`${sector.driver_number}-${sector.lap}`} className="border-t hover:bg-muted/50">
+                    <td className="p-3">
+                      <span className={`font-bold ${
+                        index === 0 ? "text-yellow-500" :
+                        index === 1 ? "text-gray-400" :
+                        index === 2 ? "text-amber-600" : ""
+                      }`}>
+                        {index + 1}
+                      </span>
+                    </td>
+                    <td className="p-3">
+                      <div className="flex items-center gap-2">
+                        <div
+                          className="w-2 h-6 rounded-full"
+                          style={{ backgroundColor: getTeamColor(sector.team_name) }}
+                          aria-hidden="true"
+                        />
+                        <div>
+                          <div className="font-medium">#{sector.driver_number} {sector.driver_name}</div>
+                          <div className="text-xs text-muted-foreground">{sector.team_name}</div>
+                        </div>
+                      </div>
+                    </td>
+                    <td className="p-3 text-center">
+                      <span className="px-2 py-1 rounded text-xs font-bold bg-muted">
+                        {sector.tyre}
+                      </span>
+                    </td>
+                    <td className={`p-3 text-center font-mono ${
+                      sector.sector_1_time === bestS1 && bestS1 > 0 ? "text-green-500 font-bold" : ""
+                    }`}>
+                      {formatTime(sector.sector_1_time)}
+                    </td>
+                    <td className={`p-3 text-center font-mono ${
+                      sector.sector_2_time === bestS2 && bestS2 > 0 ? "text-green-500 font-bold" : ""
+                    }`}>
+                      {formatTime(sector.sector_2_time)}
+                    </td>
+                    <td className={`p-3 text-center font-mono ${
+                      sector.sector_3_time === bestS3 && bestS3 > 0 ? "text-green-500 font-bold" : ""
+                    }`}>
+                      {formatTime(sector.sector_3_time)}
+                    </td>
+                    <td className={`p-3 text-center font-mono font-bold ${
+                      sector.lap_time === bestLap && bestLap > 0 ? "text-yellow-500" : ""
+                    }`}>
+                      {formatTime(sector.lap_time)}
+                    </td>
+                    <td className="p-3 text-center text-muted-foreground">
+                      {getGap(sector.lap_time)}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       )}
 
       {filteredDrivers.length === 0 && !loading && (
-        <div className="text-center py-8 text-muted-foreground">
-          No sector times data available for this lap.
+        <div className="text-center py-8 text-muted-foreground flex flex-col items-center gap-2" role="status" aria-live="polite">
+          <AlertCircle className="w-8 h-8" />
+          <p>No sector times data available for this lap.</p>
         </div>
       )}
     </div>

@@ -142,7 +142,11 @@ export default function StartingGridPage() {
               <div className="flex-1">
                 <div className="font-bold">{driver.driver}</div>
                 <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                  <div className="w-2 h-4 rounded-full" style={{ backgroundColor: teamColors[driver.team] || "#666" }} />
+                  <div
+                    className="w-2 h-4 rounded-full"
+                    style={{ backgroundColor: teamColors[driver.team] || "#666" }}
+                    aria-hidden="true"
+                  />
                   {driver.team}
                 </div>
               </div>
