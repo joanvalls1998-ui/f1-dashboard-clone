@@ -1,5 +1,10 @@
 import { Consistency } from "@/components/Consistency";
 
+export const metadata = {
+  title: "Consistència F1 2026 — Estadístiques de Pilots",
+  description: "Analitza la consistència dels pilots de Fórmula 1 2026. Voltes ràpides, estabilitat i rendiment per cursa.",
+};
+
 export default function ConsistencyPage() {
   return (
     <div className="space-y-8">

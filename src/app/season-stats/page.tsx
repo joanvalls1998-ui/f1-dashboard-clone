@@ -47,41 +47,6 @@ interface FastestLap {
   time: string;
 }
 
-const mockStats: SeasonStats = {
-  completedRaces: 3,
-  totalRaces: 22,
-  driverStandings: [
-    { position: 1, driver: "Andrea Kimi Antonelli", abbreviation: "ANT", team: "Mercedes", nationality: "Italian", points: 72, wins: 2, podiums: 3 },
-    { position: 2, driver: "George Russell", abbreviation: "RUS", team: "Mercedes", nationality: "British", points: 55, wins: 0, podiums: 3 },
-    { position: 3, driver: "Charles Leclerc", abbreviation: "LEC", team: "Ferrari", nationality: "Monegasque", points: 42, wins: 0, podiums: 2 },
-    { position: 4, driver: "Lewis Hamilton", abbreviation: "HAM", team: "Ferrari", nationality: "British", points: 35, wins: 0, podiums: 2 },
-    { position: 5, driver: "Lando Norris", abbreviation: "NOR", team: "McLaren", nationality: "British", points: 20, wins: 0, podiums: 1 },
-    { position: 6, driver: "Oscar Piastri", abbreviation: "PIA", team: "McLaren", nationality: "Australian", points: 18, wins: 1, podiums: 1 },
-    { position: 7, driver: "Pierre Gasly", abbreviation: "GAS", team: "Alpine", nationality: "French", points: 15, wins: 0, podiums: 0 },
-    { position: 8, driver: "Oliver Bearman", abbreviation: "BEA", team: "Haas F1 Team", nationality: "British", points: 16, wins: 0, podiums: 0 },
-    { position: 9, driver: "Liam Lawson", abbreviation: " LAW", team: "RB F1 Team", nationality: "New Zealander", points: 8, wins: 0, podiums: 0 },
-    { position: 10, driver: "Isack Hadjar", abbreviation: "HAD", team: "RB F1 Team", nationality: "French", points: 4, wins: 0, podiums: 0 },
-  ],
-  constructorStandings: [
-    { position: 1, name: "Mercedes", points: 127, wins: 2, podiums: 6 },
-    { position: 2, name: "Ferrari", points: 77, wins: 0, podiums: 4 },
-    { position: 3, name: "McLaren", points: 38, wins: 1, podiums: 2 },
-    { position: 4, name: "Alpine", points: 15, wins: 0, podiums: 0 },
-    { position: 5, name: "Haas F1 Team", points: 16, wins: 0, podiums: 0 },
-    { position: 6, name: "RB F1 Team", points: 12, wins: 0, podiums: 0 },
-  ],
-  raceWinners: [
-    { raceName: "Australian Grand Prix", winner: "Andrea Kimi Antonelli", team: "Mercedes", date: "2026-03-08" },
-    { raceName: "Chinese Grand Prix", winner: "Andrea Kimi Antonelli", team: "Mercedes", date: "2026-03-15" },
-    { raceName: "Japanese Grand Prix", winner: "Oscar Piastri", team: "McLaren", date: "2026-03-29" },
-  ],
-  fastestLaps: [
-    { raceName: "Australian Grand Prix", driver: "Oscar Piastri", team: "McLaren", time: "1:19.546" },
-    { raceName: "Chinese Grand Prix", driver: "Andrea Kimi Antonelli", team: "Mercedes", time: "1:34.183" },
-    { raceName: "Japanese Grand Prix", driver: "Oscar Piastri", team: "McLaren", time: "1:28.103" },
-  ],
-};
-
 export default function SeasonStatsPage() {
   const [stats, setStats] = useState<SeasonStats | null>(null);
   const [loading, setLoading] = useState(true);
@@ -136,11 +101,12 @@ export default function SeasonStatsPage() {
             }));
 
           setStats({
-            ...mockStats,
             driverStandings: parsedDrivers,
             constructorStandings: parsedConstructors,
             raceWinners: winners,
+            fastestLaps: [],
             completedRaces: winners.length,
+            totalRaces: 0,
           });
           setLoading(false);
           return;
@@ -148,7 +114,7 @@ export default function SeasonStatsPage() {
       } catch (error) {
         console.error("Error fetching stats:", error);
       }
-      setStats(mockStats);
+      setStats({ completedRaces: 0, totalRaces: 0, driverStandings: [], constructorStandings: [], raceWinners: [], fastestLaps: [] });
       setLoading(false);
     }
 

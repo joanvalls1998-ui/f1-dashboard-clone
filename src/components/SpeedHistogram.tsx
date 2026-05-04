@@ -10,23 +10,6 @@ interface SpeedHistogram {
   color: string;
 }
 
-const mockHistogram: SpeedHistogram[] = [
-  { speed_range: "260-265", count: 2, color: "#ff3333" },
-  { speed_range: "265-270", count: 5, color: "#ff6633" },
-  { speed_range: "270-275", count: 12, color: "#ff9933" },
-  { speed_range: "275-280", count: 18, color: "#ffcc33" },
-  { speed_range: "280-285", count: 25, color: "#ffff33" },
-  { speed_range: "285-290", count: 30, color: "#ccff33" },
-  { speed_range: "290-295", count: 22, color: "#99ff33" },
-  { speed_range: "295-300", count: 15, color: "#66ff33" },
-  { speed_range: "300-305", count: 8, color: "#33ff33" },
-  { speed_range: "305-310", count: 3, color: "#33ff66" },
-  { speed_range: "310-315", count: 1, color: "#33ff99" },
-  { speed_range: "315-320", count: 0, color: "#33ffcc" },
-  { speed_range: "320-325", count: 1, color: "#33ccff" },
-  { speed_range: "325-330", count: 0, color: "#3399ff" },
-];
-
 export function SpeedHistogram() {
   const [histogramData, setHistogramData] = useState<SpeedHistogram[]>([]);
   const [loading, setLoading] = useState(true);
@@ -35,7 +18,7 @@ export function SpeedHistogram() {
   useEffect(() => {
     // Simulate fetching speed data
     setTimeout(() => {
-      setHistogramData(mockHistogram);
+      setHistogramData([]);
       setLoading(false);
     }, 500);
   }, []);

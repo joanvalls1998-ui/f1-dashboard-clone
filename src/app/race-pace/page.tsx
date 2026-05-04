@@ -23,105 +23,6 @@ interface DriverPace {
   laps: { lap: number; time: string; position: number }[];
 }
 
-const mockPace: DriverPace[] = [
-  {
-    driver: "Oscar Piastri",
-    abbreviation: "PIA",
-    team: "McLaren",
-    avgLapTime: "1:29.234",
-    fastestLap: "1:28.103",
-    fastestLapNum: 42,
-    totalLaps: 52,
-    laps: [
-      { lap: 1, time: "1:35.268", position: 1 },
-      { lap: 2, time: "1:30.456", position: 1 },
-      { lap: 3, time: "1:29.876", position: 1 },
-      { lap: 10, time: "1:29.234", position: 1 },
-      { lap: 20, time: "1:29.456", position: 1 },
-      { lap: 30, time: "1:29.123", position: 1 },
-      { lap: 40, time: "1:28.901", position: 1 },
-      { lap: 42, time: "1:28.103", position: 1 },
-      { lap: 50, time: "1:29.234", position: 1 },
-    ],
-  },
-  {
-    driver: "Andrea Kimi Antonelli",
-    abbreviation: "ANT",
-    team: "Mercedes",
-    avgLapTime: "1:29.567",
-    fastestLap: "1:28.234",
-    fastestLapNum: 38,
-    totalLaps: 52,
-    laps: [
-      { lap: 1, time: "1:36.360", position: 3 },
-      { lap: 2, time: "1:30.678", position: 3 },
-      { lap: 3, time: "1:30.123", position: 2 },
-      { lap: 10, time: "1:29.890", position: 2 },
-      { lap: 20, time: "1:29.567", position: 2 },
-      { lap: 30, time: "1:29.345", position: 2 },
-      { lap: 38, time: "1:28.234", position: 2 },
-      { lap: 50, time: "1:29.678", position: 2 },
-    ],
-  },
-  {
-    driver: "Charles Leclerc",
-    abbreviation: "LEC",
-    team: "Ferrari",
-    avgLapTime: "1:29.789",
-    fastestLap: "1:28.456",
-    fastestLapNum: 45,
-    totalLaps: 52,
-    laps: [
-      { lap: 1, time: "1:37.206", position: 5 },
-      { lap: 2, time: "1:31.234", position: 4 },
-      { lap: 3, time: "1:30.567", position: 4 },
-      { lap: 10, time: "1:30.123", position: 3 },
-      { lap: 20, time: "1:29.890", position: 3 },
-      { lap: 30, time: "1:29.678", position: 3 },
-      { lap: 45, time: "1:28.456", position: 3 },
-      { lap: 50, time: "1:30.234", position: 3 },
-    ],
-  },
-  {
-    driver: "George Russell",
-    abbreviation: "RUS",
-    team: "Mercedes",
-    avgLapTime: "1:29.890",
-    fastestLap: "1:28.678",
-    fastestLapNum: 35,
-    totalLaps: 52,
-    laps: [
-      { lap: 1, time: "1:36.890", position: 6 },
-      { lap: 2, time: "1:31.456", position: 5 },
-      { lap: 3, time: "1:30.890", position: 5 },
-      { lap: 10, time: "1:30.234", position: 4 },
-      { lap: 20, time: "1:30.012", position: 4 },
-      { lap: 30, time: "1:29.890", position: 4 },
-      { lap: 35, time: "1:28.678", position: 4 },
-      { lap: 50, time: "1:30.456", position: 4 },
-    ],
-  },
-  {
-    driver: "Lando Norris",
-    abbreviation: "NOR",
-    team: "McLaren",
-    avgLapTime: "1:30.123",
-    fastestLap: "1:28.890",
-    fastestLapNum: 48,
-    totalLaps: 52,
-    laps: [
-      { lap: 1, time: "1:38.012", position: 8 },
-      { lap: 2, time: "1:31.678", position: 7 },
-      { lap: 3, time: "1:31.234", position: 7 },
-      { lap: 10, time: "1:30.567", position: 6 },
-      { lap: 20, time: "1:30.234", position: 5 },
-      { lap: 30, time: "1:29.890", position: 5 },
-      { lap: 48, time: "1:28.890", position: 5 },
-      { lap: 50, time: "1:30.123", position: 5 },
-    ],
-  },
-];
-
 export default function RacePacePage() {
   const [paceData, setPaceData] = useState<DriverPace[]>([]);
   const [loading, setLoading] = useState(true);
@@ -172,7 +73,7 @@ export default function RacePacePage() {
       } catch (error) {
         console.error("Error fetching race pace:", error);
       }
-      setPaceData(mockPace);
+      setPaceData([]);
       setLoading(false);
     }
 

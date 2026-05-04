@@ -15,7 +15,6 @@ interface IntervalData {
   current_lap: number;
 }
 
-// Format gap/interval safely - removes bad signs like "+-"
 function formatGap(gap: string | undefined): string {
   if (!gap || gap === '--' || gap === 'N/A') return '--';
   const cleaned = gap.replace(/^[+-]+/, '').replace(/[+-]+$/, '');
@@ -25,19 +24,6 @@ function formatGap(gap: string | undefined): string {
   return `+${num.toFixed(3)}`;
 }
 
-const mockIntervals: IntervalData[] = [
-  { driver_number: 1, driver_name: "ANT", team_name: "Mercedes", team_color: "27f4d2", position: 1, gap_to_leader: "--", interval_to_ahead: "--", last_lap_time: "1:28.103", current_lap: 52 },
-  { driver_number: 81, driver_name: "PIA", team_name: "McLaren", team_color: "ff8000", position: 2, gap_to_leader: "+13.722", interval_to_ahead: "+13.722", last_lap_time: "1:28.456", current_lap: 52 },
-  { driver_number: 16, driver_name: "LEC", team_name: "Ferrari", team_color: "e8002d", position: 3, gap_to_leader: "+15.270", interval_to_ahead: "+1.548", last_lap_time: "1:28.234", current_lap: 52 },
-  { driver_number: 63, driver_name: "RUS", team_name: "Mercedes", team_color: "27f4d2", position: 4, gap_to_leader: "+15.754", interval_to_ahead: "+0.484", last_lap_time: "1:28.567", current_lap: 52 },
-  { driver_number: 55, driver_name: "NOR", team_name: "McLaren", team_color: "ff8000", position: 5, gap_to_leader: "+23.479", interval_to_ahead: "+7.725", last_lap_time: "1:28.890", current_lap: 51 },
-  { driver_number: 44, driver_name: "HAM", team_name: "Ferrari", team_color: "e8002d", position: 6, gap_to_leader: "+35.123", interval_to_ahead: "+11.644", last_lap_time: "1:29.012", current_lap: 51 },
-  { driver_number: 12, driver_name: "NOR", team_name: "McLaren", team_color: "ff8000", position: 7, gap_to_leader: "+45.678", interval_to_ahead: "+10.555", last_lap_time: "1:29.234", current_lap: 51 },
-  { driver_number: 11, driver_name: "VER", team_name: "Red Bull Racing", team_color: "3671c6", position: 8, gap_to_leader: "+58.901", interval_to_ahead: "+13.223", last_lap_time: "1:29.456", current_lap: 50 },
-  { driver_number: 14, driver_name: "ALO", team_name: "Aston Martin", team_color: "229971", position: 9, gap_to_leader: "+72.345", interval_to_ahead: "+13.444", last_lap_time: "1:29.678", current_lap: 50 },
-  { driver_number: 87, driver_name: "HAD", team_name: "RB F1 Team", team_color: "6b3fc6", position: 10, gap_to_leader: "+89.678", interval_to_ahead: "+17.333", last_lap_time: "1:29.890", current_lap: 49 },
-];
-
 export function Intervals() {
   const [intervals, setIntervals] = useState<IntervalData[]>([]);
   const [loading, setLoading] = useState(true);
@@ -46,23 +32,43 @@ export function Intervals() {
 
   useEffect(() => {
     async function fetchIntervals() {
+      setLoading(true);
       try {
-        const response = await fetch("https://api.openf1.org/v1/live");
+        // Try OpenF1 intervals endpoint for a current session
+        const sessionsRes = await fetch(
+          "https://api.openf1.org/v1/sessions?year=2026&session_type=Race",
+          { signal: AbortSignal.timeout(8000) }
+        );
+        let sessionKey = "latest";
+        if (sessionsRes.ok) {
+          const sessions = await sessionsRes.json();
+          const now = new Date();
+          const completedRaces = (sessions || []).filter((s: any) =>
+            new Date(s.date_end) < now && !s.is_cancelled
+          );
+          if (completedRaces.length > 0) {
+            sessionKey = completedRaces[completedRaces.length - 1].session_key;
+          }
+        }
+
+        const response = await fetch(
+          `https://api.openf1.org/v1/intervals?session_key=${sessionKey}`,
+          { signal: AbortSignal.timeout(8000) }
+        );
         if (response.ok) {
           const data = await response.json();
-          if (data.drivers && data.drivers.length > 0) {
-            const transformed: IntervalData[] = data.drivers.map((d: any) => ({
+          if (Array.isArray(data) && data.length > 0) {
+            const transformed: IntervalData[] = data.map((d: any) => ({
               driver_number: d.driver_number,
-              driver_name: d.last_name || `DRV${d.driver_number}`,
+              driver_name: d.driver_code || String(d.driver_number),
               team_name: d.team_name || "Unknown",
               team_color: d.team_colour || "666666",
               position: d.position || 0,
               gap_to_leader: formatGap(d.gap_to_leader),
               interval_to_ahead: formatGap(d.interval),
-              last_lap_time: d.current_lap_time || "--:--.--",
+              last_lap_time: d.last_lap_time || "--:--.--",
               current_lap: d.current_lap || 0,
             })).sort((a: IntervalData, b: IntervalData) => a.position - b.position);
-
             setIntervals(transformed);
             setLoading(false);
             return;
@@ -71,13 +77,14 @@ export function Intervals() {
       } catch (error) {
         console.error("Error fetching intervals:", error);
       }
-      setIntervals(mockIntervals);
+      // No mock fallback - show empty state
+      setIntervals([]);
       setLoading(false);
     }
 
     fetchIntervals();
-    const interval = setInterval(fetchIntervals, 3000);
-    return () => clearInterval(interval);
+    const id = setInterval(fetchIntervals, 30000);
+    return () => clearInterval(id);
   }, []);
 
   const filteredIntervals = intervals

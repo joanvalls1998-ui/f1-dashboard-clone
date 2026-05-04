@@ -1,8 +1,10 @@
 import Image from "next/image";
+import Link from "next/link";
 import { fetchDriverStandings } from "@/lib/api";
 import { driverImages, teamColors } from "@/lib/f1-assets";
 import { Suspense } from "react";
 import { DriversListSkeleton } from "@/components/Skeletons";
+import JsonLd from "@/components/JsonLd";
 
 export const revalidate = 300; // ISR every 5 minutes
 
@@ -35,6 +37,11 @@ async function DriversGrid() {
         const firstName = nameParts.slice(0, -1).join(" ");
 
         return (
+          <Link
+            href={`/drivers/${driver.driverId}`}
+            className="block"
+            key={driver.abbreviation}
+          >
           <div
             key={driver.abbreviation}
             className="card card-interactive overflow-hidden animate-enter"
@@ -91,15 +98,33 @@ async function DriversGrid() {
               </div>
             </div>
           </div>
+          </Link>
         );
       })}
     </div>
   );
 }
 
-export default function DriversPage() {
+export default async function DriversPage() {
+  const drivers = await fetchDriverStandings(2026);
+
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    name: "Pilots de F1 2026",
+    description: "Llista completa de pilots de la temporada 2026 de la Fórmula 1.",
+    itemListElement: drivers.map((d: Driver, i: number) => ({
+      "@type": "Person",
+      position: i + 1,
+      name: d.fullName,
+      memberOf: { "@type": "SportsTeam", name: d.team },
+      url: `https://f1-dashboard-clone.vercel.app/drivers/${d.driverId}`,
+    })),
+  };
+
   return (
     <div className="space-y-6">
+      <JsonLd data={jsonLd} />
       <div className="flex items-center gap-3">
         <div className="w-12 h-12 rounded-xl flex items-center justify-center shrink-0" style={{ backgroundColor: 'var(--accent-red)' }}>
           <span className="font-bold text-lg" style={{ fontFamily: 'var(--font-heading)', color: '#fff' }}>22</span>

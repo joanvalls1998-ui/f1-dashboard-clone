@@ -16,29 +16,6 @@ interface QualifyingResult {
   laps?: number;
 }
 
-const mockGrid: QualifyingResult[] = [
-  { position: 1, driver: "Andrea Kimi Antonelli", abbreviation: "ANT", team: "Mercedes", q1: "1:30.035", q2: "1:29.048", q3: "1:28.778" },
-  { position: 2, driver: "George Russell", abbreviation: "RUS", team: "Mercedes", q1: "1:29.967", q2: "1:29.686", q3: "1:29.076" },
-  { position: 3, driver: "Oscar Piastri", abbreviation: "PIA", team: "McLaren", q1: "1:30.200", q2: "1:29.451", q3: "1:29.132" },
-  { position: 4, driver: "Charles Leclerc", abbreviation: "LEC", team: "Ferrari", q1: "1:29.915", q2: "1:29.303", q3: "1:29.405" },
-  { position: 5, driver: "Lando Norris", abbreviation: "NOR", team: "McLaren", q1: "1:30.401", q2: "1:29.795", q3: "1:29.409" },
-  { position: 6, driver: "Lewis Hamilton", abbreviation: "HAM", team: "Ferrari", q1: "1:30.123", q2: "1:29.567", q3: "1:29.512" },
-  { position: 7, driver: "Max Verstappen", abbreviation: "VER", team: "Red Bull Racing", q1: "1:30.678", q2: "1:29.890", q3: "1:29.678" },
-  { position: 8, driver: "Pierre Gasly", abbreviation: "GAS", team: "Alpine", q1: "1:30.234", q2: "1:29.901", q3: "1:29.890" },
-  { position: 9, driver: "Isack Hadjar", abbreviation: "HAD", team: "RB F1 Team", q1: "1:30.567", q2: "1:29.987", q3: "1:29.923" },
-  { position: 10, driver: "Oliver Bearman", abbreviation: "BEA", team: "Haas F1 Team", q1: "1:30.890", q2: "1:30.123", q3: "1:30.012" },
-  { position: 11, driver: "Liam Lawson", abbreviation: " LAW", team: "RB F1 Team", q1: "1:30.456", q2: "1:30.234", q3: "" },
-  { position: 12, driver: "Fernando Alonso", abbreviation: "ALO", team: "Aston Martin", q1: "1:30.678", q2: "1:30.345", q3: "" },
-  { position: 13, driver: "Nico Hülkenberg", abbreviation: "HUL", team: "Audi", q1: "1:30.890", q2: "1:30.456", q3: "" },
-  { position: 14, driver: "Gabriel Bortoleto", abbreviation: "BOR", team: "Audi", q1: "1:31.012", q2: "1:30.567", q3: "" },
-  { position: 15, driver: "Franco Colapinto", abbreviation: "COL", team: "Alpine", q1: "1:30.789", q2: "1:30.678", q3: "" },
-  { position: 16, driver: "Alex Albon", abbreviation: "ALB", team: "Williams", q1: "1:31.123", q2: "", q3: "" },
-  { position: 17, driver: "Lance Stroll", abbreviation: "STO", team: "Aston Martin", q1: "1:31.234", q2: "", q3: "" },
-  { position: 18, driver: "Valtteri Bottas", abbreviation: "BOT", team: "Cadillac", q1: "1:31.345", q2: "", q3: "" },
-  { position: 19, driver: "MartyHandler", abbreviation: "DOO", team: "Cadillac", q1: "1:31.456", q2: "", q3: "" },
-  { position: 20, driver: "Yuki Tsunoda", abbreviation: "TSU", team: "Haas F1 Team", q1: "1:31.567", q2: "", q3: "" },
-];
-
 export default function StartingGridPage() {
   const [grid, setGrid] = useState<QualifyingResult[]>([]);
   const [loading, setLoading] = useState(true);
@@ -68,7 +45,7 @@ export default function StartingGridPage() {
       } catch (error) {
         console.error("Error fetching grid:", error);
       }
-      setGrid(mockGrid);
+      setGrid([]);
       setLoading(false);
     }
 

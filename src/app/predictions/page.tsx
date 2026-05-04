@@ -1,5 +1,10 @@
 import PredictEngine from "@/components/PredictEngine";
 
+export const metadata = {
+  title: "Prediccions F1 2026 — Resultats i Anàlisi",
+  description: "Prediccions de resultats de Fórmula 1 2026. Machine learning, anàlisi estadística i pronòstics de curses.",
+};
+
 export default function PredictionsPage() {
   return (
     <div className="space-y-8">

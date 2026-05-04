@@ -1,5 +1,10 @@
 import { Weather } from "@/components/Weather";
 
+export const metadata = {
+  title: "Temps F1 2026 — Meteorologia de Curses",
+  description: "Condicions meteorològiques de les curses de Fórmula 1 2026. Temperatura, pluja i vent.",
+};
+
 export default function WeatherPage() {
   return (
     <div className="space-y-8">

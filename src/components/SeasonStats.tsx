@@ -42,39 +42,6 @@ interface SeasonPoint {
 const ERGAST_BASE = 'https://api.jolpi.ca/ergast/f1';
 
 // Fallback 2026 mock season data (no live session)
-const mockDriverStats: DriverStats[] = [
-  { driverId: "antonelli", abbreviation: "ANT", fullName: "Kimi Antonelli", team: "Mercedes", teamColor: "#27f4d2", wins: 8, podiums: 12, fastestLaps: 5, points: 286, position: 1 },
-  { driverId: "piastri", abbreviation: "PIA", fullName: "Oscar Piastri", team: "McLaren", teamColor: "#ff8700", wins: 5, podiums: 11, fastestLaps: 4, points: 234, position: 2 },
-  { driverId: "norris", abbreviation: "NOR", fullName: "Lando Norris", team: "McLaren", teamColor: "#ff8700", wins: 3, podiums: 9, fastestLaps: 3, points: 198, position: 3 },
-  { driverId: "leclerc", abbreviation: "LEC", fullName: "Charles Leclerc", team: "Ferrari", teamColor: "#ff1800", wins: 3, podiums: 9, fastestLaps: 3, points: 198, position: 4 },
-  { driverId: "hamilton", abbreviation: "HAM", fullName: "Lewis Hamilton", team: "Ferrari", teamColor: "#ff1800", wins: 2, podiums: 8, fastestLaps: 2, points: 176, position: 5 },
-  { driverId: "russell", abbreviation: "RUS", fullName: "George Russell", team: "Mercedes", teamColor: "#27f4d2", wins: 1, podiums: 6, fastestLaps: 2, points: 143, position: 6 },
-  { driverId: "alonso", abbreviation: "ALO", fullName: "Fernando Alonso", team: "Aston Martin", teamColor: "#0072ff", wins: 1, podiums: 5, fastestLaps: 1, points: 112, position: 7 },
-  { driverId: "verstappen", abbreviation: "VER", fullName: "Max Verstappen", team: "Red Bull Racing", teamColor: "#3671c6", wins: 1, podiums: 4, fastestLaps: 1, points: 98, position: 8 },
-  { driverId: "hulkenberg", abbreviation: "HUL", fullName: "Nico Hulkenberg", team: "Audi", teamColor: "#c80029", wins: 0, podiums: 2, fastestLaps: 1, points: 54, position: 9 },
-  { driverId: "stroll", abbreviation: "STR", fullName: "Lance Stroll", team: "Aston Martin", teamColor: "#0072ff", wins: 0, podiums: 1, fastestLaps: 0, points: 41, position: 10 },
-  { driverId: "gasly", abbreviation: "GAS", fullName: "Pierre Gasly", team: "Alpine", teamColor: "#ff87bc", wins: 0, podiums: 1, fastestLaps: 0, points: 34, position: 11 },
-  { driverId: "hadjar", abbreviation: "HAD", fullName: "Isack Hadjar", team: "Red Bull Racing", teamColor: "#3671c6", wins: 0, podiums: 0, fastestLaps: 0, points: 29, position: 12 },
-  { driverId: "ocon", abbreviation: "OCO", fullName: "Esteban Ocon", team: "Haas F1 Team", teamColor: "#b6babd", wins: 0, podiums: 1, fastestLaps: 0, points: 29, position: 13 },
-  { driverId: "albon", abbreviation: "ALB", fullName: "Alexander Albon", team: "Williams", teamColor: "#64c4ff", wins: 0, podiums: 0, fastestLaps: 0, points: 18, position: 14 },
-  { driverId: "lawson", abbreviation: "LAW", fullName: "Liam Lawson", team: "RB F1 Team", teamColor: "#203f94", wins: 0, podiums: 0, fastestLaps: 0, points: 14, position: 15 },
-  { driverId: "bortoleto", abbreviation: "BOR", fullName: "Gabriel Bortoleto", team: "Audi", teamColor: "#c80029", wins: 0, podiums: 0, fastestLaps: 0, points: 9, position: 16 },
-  { driverId: "bottas", abbreviation: "BOT", fullName: "Valtteri Bottas", team: "Cadillac", teamColor: "#c80029", wins: 0, podiums: 0, fastestLaps: 0, points: 6, position: 17 },
-  { driverId: "sainz", abbreviation: "SAI", fullName: "Carlos Sainz", team: "Williams", teamColor: "#64c4ff", wins: 0, podiums: 2, fastestLaps: 1, points: 86, position: 4 },
-  { driverId: "bearman", abbreviation: "BEA", fullName: "Oliver Bearman", team: "Haas F1 Team", teamColor: "#b6babd", wins: 0, podiums: 0, fastestLaps: 0, points: 42, position: 10 },
-  { driverId: "colapinto", abbreviation: "COL", fullName: "Franco Colapinto", team: "Alpine", teamColor: "#ff87bc", wins: 0, podiums: 0, fastestLaps: 0, points: 3, position: 18 },
-  { driverId: "lindblad", abbreviation: "LIN", fullName: "Arvid Lindblad", team: "RB F1 Team", teamColor: "#203f94", wins: 0, podiums: 0, fastestLaps: 0, points: 2, position: 19 },
-  { driverId: "perez", abbreviation: "PER", fullName: "Sergio Perez", team: "Cadillac", teamColor: "#c80029", wins: 0, podiums: 0, fastestLaps: 0, points: 1, position: 20 },
-];
-
-const mockSeasonPoints: SeasonPoint[] = [
-  { driver_name: "VER", team_color: "3671c6", rounds: [1,2,3,4,5,6,7,8,9,10], points_by_round: [{round:1,points:25},{round:2,points:18},{round:3,points:25},{round:4,points:18},{round:5,points:25},{round:6,points:15},{round:7,points:25},{round:8,points:18},{round:9,points:25},{round:10,points:18}], total_points: 286 },
-  { driver_name: "NOR", team_color: "ff8000", rounds: [1,2,3,4,5,6,7,8,9,10], points_by_round: [{round:1,points:18},{round:2,points:25},{round:3,points:18},{round:4,points:25},{round:5,points:18},{round:6,points:25},{round:7,points:18},{round:8,points:25},{round:9,points:15},{round:10,points:25}], total_points: 234 },
-  { driver_name: "LEC", team_color: "e8002d", rounds: [1,2,3,4,5,6,7,8,9,10], points_by_round: [{round:1,points:15},{round:2,points:12},{round:3,points:15},{round:4,points:15},{round:5,points:12},{round:6,points:18},{round:7,points:12},{round:8,points:15},{round:9,points:18},{round:10,points:12}], total_points: 198 },
-  { driver_name: "HAM", team_color: "27f4d2", rounds: [1,2,3,4,5,6,7,8,9,10], points_by_round: [{round:1,points:12},{round:2,points:8},{round:3,points:12},{round:4,points:8},{round:5,points:15},{round:6,points:12},{round:7,points:15},{round:8,points:12},{round:9,points:12},{round:10,points:8}], total_points: 176 },
-  { driver_name: "PIA", team_color: "ff8000", rounds: [1,2,3,4,5,6,7,8,9,10], points_by_round: [{round:1,points:10},{round:2,points:15},{round:3,points:10},{round:4,points:12},{round:5,points:10},{round:6,points:8},{round:7,points:10},{round:8,points:8},{round:9,points:25},{round:10,points:10}], total_points: 169 },
-];
-
 export function SeasonStats() {
   const [drivers, setDrivers] = useState<DriverStanding[]>([]);
   const [seasonData, setSeasonData] = useState<SeasonPoint[]>([]);
@@ -213,9 +180,9 @@ export function SeasonStats() {
       } catch (error) {
         console.error('Error fetching season data:', error);
         // Use fallback mock data when API fails
-        setDriverStats(mockDriverStats);
-        setSeasonData(mockSeasonPoints);
-        setSelectedDrivers(mockDriverStats.slice(0, 3).map(d => d.abbreviation));
+        setDriverStats([]);
+        setSeasonData([]);
+        setSelectedDrivers([]);
       }
       setLoading(false);
     }

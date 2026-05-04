@@ -1,6 +1,11 @@
 import { DestructorsLeaderboard } from "@/components/DestructorsStandings";
 import { Bomb, AlertTriangle } from "lucide-react";
 
+export const metadata = {
+  title: "Destructors Championship F1 2026",
+  description: "Classificació de pilots amb més incidents, abandonaments i penalitzacions de la temporada 2026 de Fórmula 1.",
+};
+
 export default function DestructorsPage() {
   return (
     <div className="space-y-8">

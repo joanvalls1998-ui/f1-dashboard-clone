@@ -1,5 +1,10 @@
 import { LiveTiming } from "@/components/LiveTiming";
 
+export const metadata = {
+  title: "Directe F1 — Cronometratge en Temps Real",
+  description: "Segueix les sessions de Fórmula 1 en temps real amb cronometratge en directe, posicions i telemetry.",
+};
+
 export default function LivePage() {
   return (
     <div className="space-y-8">

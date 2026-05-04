@@ -1,14 +1,15 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { User, TrendingUp, Award, Clock, Flag, Search } from "lucide-react";
+import { User, Search, Trophy, Target, Timer, Flag } from "lucide-react";
+import { TableSkeleton } from "@/components/Skeletons";
 
 interface Driver {
   driver_number: number;
-  team_name: string;
-  team_color: string;
   first_name: string;
   last_name: string;
+  team_name: string;
+  team_color: string;
   country: string;
   headshot_url: string;
 }
@@ -23,91 +24,115 @@ interface SeasonStats {
   races: number;
 }
 
+const ERGAST = "https://api.jolpi.ca/ergast/f1";
+
+async function fetchJson(url: string) {
+  try {
+    const res = await fetch(url, { signal: AbortSignal.timeout(8000) });
+    if (!res.ok) return null;
+    return await res.json();
+  } catch {
+    return null;
+  }
+}
+
 export function DriverStats() {
   const [drivers, setDrivers] = useState<Driver[]>([]);
-  const [selectedDriver, setSelectedDriver] = useState<Driver | null>(null);
   const [stats, setStats] = useState<SeasonStats | null>(null);
+  const [selectedDriver, setSelectedDriver] = useState<Driver | null>(null);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
 
   useEffect(() => {
     async function fetchDrivers() {
-      try {
-        const response = await fetch(
-          "https://api.jolpi.ca/ergast/f1/2026/driverstandings.json",
-          { signal: AbortSignal.timeout(10000) }
-        );
-        const data = await response.json();
-        const standings = data.MRData.StandingsTable.StandingsLists[0].DriverStandings;
-
-        const uniqueDrivers = standings.map((item: any) => ({
-          driver_number: parseInt(item.Driver.permanentNumber) || 0,
-          team_name: item.Constructors[0].name,
-          team_color: "666666",
-          first_name: item.Driver.givenName,
-          last_name: item.Driver.familyName,
-          country: item.Driver.nationality || "XX",
-          headshot_url: "",
+      // Try OpenF1 drivers first
+      const data = await fetchJson("https://api.openf1.org/v1/drivers");
+      if (Array.isArray(data) && data.length > 0) {
+        const mapped = data.map((d: any) => ({
+          driver_number: d.driver_number,
+          first_name: d.first_name || "",
+          last_name: d.last_name || "",
+          team_name: d.team_name || "Unknown",
+          team_color: d.team_colour || "666666",
+          country: d.country_code || "",
+          headshot_url: d.headshot_url || "",
         }));
-
-        setDrivers(uniqueDrivers as Driver[]);
-        if (uniqueDrivers.length > 0) {
-          setSelectedDriver(uniqueDrivers[0] as Driver);
-        }
+        setDrivers(mapped);
+        setSelectedDriver(mapped[0] || null);
         setLoading(false);
-      } catch (error) {
-        console.error("Error fetching drivers:", error);
-        setLoading(false);
+        return;
       }
+      // Fallback to Ergast
+      const erg = await fetchJson(`${ERGAST}/current/drivers.json`);
+      const list = erg?.MRData?.DriverTable?.Drivers || [];
+      const mapped = list.map((d: any) => ({
+        driver_number: parseInt(d.permanentNumber) || 0,
+        first_name: d.givenName || "",
+        last_name: d.familyName || "",
+        team_name: "Unknown",
+        team_color: "666666",
+        country: d.nationality || "",
+        headshot_url: "",
+      }));
+      setDrivers(mapped);
+      setSelectedDriver(mapped[0] || null);
+      setLoading(false);
     }
-
     fetchDrivers();
   }, []);
 
   useEffect(() => {
-    async function fetchStats() {
-      if (!selectedDriver) return;
-      
-      // Mock stats based on driver number (simulating 2024 season)
-      const mockStats: Record<number, SeasonStats> = {
-        1: { position: 1, wins: 19, podiums: 22, poles: 12, fastest_laps: 9, points: 437, races: 24 },
-        16: { position: 2, wins: 4, podiums: 17, poles: 4, fastest_laps: 3, points: 374, races: 24 },
-        55: { position: 3, wins: 4, podiums: 16, poles: 4, fastest_laps: 4, points: 356, races: 24 },
-        11: { position: 4, wins: 2, podiums: 11, poles: 2, fastest_laps: 2, points: 291, races: 24 },
-        44: { position: 5, wins: 2, podiums: 9, poles: 1, fastest_laps: 2, points: 223, races: 24 },
-        14: { position: 6, wins: 1, podiums: 7, poles: 2, fastest_laps: 2, points: 183, races: 24 },
-        63: { position: 7, wins: 0, podiums: 6, poles: 1, fastest_laps: 0, points: 145, races: 24 },
-        81: { position: 8, wins: 1, podiums: 5, poles: 0, fastest_laps: 2, points: 125, races: 24 },
-        18: { position: 9, wins: 0, podiums: 2, poles: 0, fastest_laps: 1, points: 70, races: 24 },
-        31: { position: 10, wins: 0, podiums: 2, poles: 0, fastest_laps: 1, points: 68, races: 24 },
-        27: { position: 11, wins: 0, podiums: 1, poles: 0, fastest_laps: 0, points: 41, races: 24 },
-        10: { position: 12, wins: 0, podiums: 1, poles: 0, fastest_laps: 1, points: 33, races: 24 },
-        24: { position: 13, wins: 0, podiums: 0, poles: 0, fastest_laps: 0, points: 8, races: 24 },
-        77: { position: 14, wins: 0, podiums: 0, poles: 0, fastest_laps: 0, points: 4, races: 24 },
-        4: { position: 15, wins: 0, podiums: 0, poles: 0, fastest_laps: 0, points: 0, races: 24 },
-      };
-      
-      setStats(mockStats[selectedDriver.driver_number] || {
-        position: 99, wins: 0, podiums: 0, poles: 0, fastest_laps: 0, points: 0, races: 0
+    if (!selectedDriver) return;
+    async function fetchStatsForDriver() {
+      setLoading(true);
+      const driverNumber = selectedDriver!.driver_number;
+      // Get standings
+      const standings = await fetchJson(`${ERGAST}/current/driverstandings.json`);
+      const allRaces = await fetchJson(`${ERGAST}/current/results.json?limit=1000`);
+      const allQualy = await fetchJson(`${ERGAST}/current/qualifying.json?limit=1000`);
+
+      const list = standings?.MRData?.StandingsTable?.StandingsLists?.[0]?.DriverStandings || [];
+      const entry = list.find((s: any) =>
+        parseInt(s.Driver?.permanentNumber) === driverNumber
+      );
+
+      let wins = 0, podiums = 0, fastestLaps = 0, poles = 0, points = 0, position = 99, races = 0;
+      if (entry) {
+        position = parseInt(entry.position);
+        points = parseInt(entry.points);
+        wins = parseInt(entry.wins);
+      }
+      // Count podiums and fastest laps from results
+      const raceList = allRaces?.MRData?.RaceTable?.Races || [];
+      raceList.forEach((race: any) => {
+        race.Results?.forEach((result: any) => {
+          if (parseInt(result.Driver?.permanentNumber) === driverNumber) {
+            races++;
+            const pos = parseInt(result.position);
+            if (pos >= 1 && pos <= 3) podiums++;
+            if (result.FastestLap?.rank === "1") fastestLaps++;
+          }
+        });
       });
+      // Count poles from qualifying
+      const qualyList = allQualy?.MRData?.RaceTable?.Races || [];
+      qualyList.forEach((race: any) => {
+        const pole = race.QualifyingResults?.find((q: any) => q.position === "1");
+        if (pole && parseInt(pole.Driver?.permanentNumber) === driverNumber) poles++;
+      });
+
+      setStats({ position, wins, podiums, poles, fastest_laps: fastestLaps, points, races });
+      setLoading(false);
     }
-    
-    fetchStats();
+    fetchStatsForDriver();
   }, [selectedDriver]);
 
-  const filteredDrivers = drivers.filter(driver => {
+  const filteredDrivers = drivers.filter((driver) => {
     const fullName = `${driver.first_name} ${driver.last_name}`.toLowerCase();
-    return fullName.includes(search.toLowerCase()) || 
-           driver.driver_number.toString().includes(search);
+    return fullName.includes(search.toLowerCase()) || driver.driver_number.toString().includes(search);
   });
 
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center py-12">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
-      </div>
-    );
-  }
+  if (loading) return <TableSkeleton rows={6} />;
 
   return (
     <div className="space-y-6">
@@ -187,57 +212,34 @@ export function DriverStats() {
           {/* Season stats */}
           <div className="lg:col-span-2 rounded-lg border bg-card p-6">
             <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
-              <TrendingUp className="w-5 h-5 text-green-500" />
-              2024 Season Stats
+              <Trophy className="w-5 h-5 text-yellow-500" />
+              Season Statistics
             </h3>
-            
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-              <div className="text-center p-4 rounded-lg bg-muted">
-                <div className="text-3xl font-bold text-yellow-500">P{stats.position}</div>
-                <div className="text-sm text-muted-foreground">Championship Position</div>
-              </div>
-              <div className="text-center p-4 rounded-lg bg-muted">
-                <div className="text-3xl font-bold">{stats.points}</div>
-                <div className="text-sm text-muted-foreground">Total Points</div>
-              </div>
-              <div className="text-center p-4 rounded-lg bg-muted">
-                <div className="text-3xl font-bold">{stats.races}</div>
-                <div className="text-sm text-muted-foreground">Races</div>
-              </div>
-              <div className="text-center p-4 rounded-lg bg-muted">
-                <div className="text-3xl font-bold">{stats.wins}</div>
+
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+              <div className="p-4 rounded-lg bg-muted">
+                <div className="text-3xl font-bold text-yellow-500">{stats.wins}</div>
                 <div className="text-sm text-muted-foreground">Wins</div>
               </div>
-            </div>
-
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              <div className="flex items-center gap-3 p-3 rounded-lg bg-blue-500/10">
-                <Award className="w-8 h-8 text-blue-500" />
-                <div>
-                  <div className="text-xl font-bold">{stats.podiums}</div>
-                  <div className="text-xs text-muted-foreground">Podiums</div>
-                </div>
+              <div className="p-4 rounded-lg bg-muted">
+                <div className="text-3xl font-bold text-blue-500">{stats.podiums}</div>
+                <div className="text-sm text-muted-foreground">Podiums</div>
               </div>
-              <div className="flex items-center gap-3 p-3 rounded-lg bg-purple-500/10">
-                <Flag className="w-8 h-8 text-purple-500" />
-                <div>
-                  <div className="text-xl font-bold">{stats.poles}</div>
-                  <div className="text-xs text-muted-foreground">Pole Positions</div>
-                </div>
+              <div className="p-4 rounded-lg bg-muted">
+                <div className="text-3xl font-bold text-purple-500">{stats.poles}</div>
+                <div className="text-sm text-muted-foreground">Poles</div>
               </div>
-              <div className="flex items-center gap-3 p-3 rounded-lg bg-orange-500/10">
-                <Clock className="w-8 h-8 text-orange-500" />
-                <div>
-                  <div className="text-xl font-bold">{stats.fastest_laps}</div>
-                  <div className="text-xs text-muted-foreground">Fastest Laps</div>
-                </div>
+              <div className="p-4 rounded-lg bg-muted">
+                <div className="text-3xl font-bold text-orange-500">{stats.fastest_laps}</div>
+                <div className="text-sm text-muted-foreground">Fastest Laps</div>
               </div>
-              <div className="flex items-center gap-3 p-3 rounded-lg bg-green-500/10">
-                <TrendingUp className="w-8 h-8 text-green-500" />
-                <div>
-                  <div className="text-xl font-bold">{stats.wins}</div>
-                  <div className="text-xs text-muted-foreground">Wins</div>
-                </div>
+              <div className="p-4 rounded-lg bg-muted">
+                <div className="text-3xl font-bold">{stats.points}</div>
+                <div className="text-sm text-muted-foreground">Points</div>
+              </div>
+              <div className="p-4 rounded-lg bg-muted">
+                <div className="text-3xl font-bold">{stats.races}</div>
+                <div className="text-sm text-muted-foreground">Races</div>
               </div>
             </div>
           </div>

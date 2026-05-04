@@ -18,19 +18,6 @@ interface SectorTime {
   is_personal_best: boolean;
 }
 
-const mockSectorTimes: SectorTime[] = [
-  { driver_number: 1, driver_name: "VER", team_name: "Red Bull Racing", team_color: "3671c6", lap: 42, sector_1_time: 28.123, sector_2_time: 32.456, sector_3_time: 31.877, lap_time: 92.456, tyre: "MEDIUM", is_personal_best: true },
-  { driver_number: 16, driver_name: "LEC", team_name: "Ferrari", team_color: "e8002d", lap: 42, sector_1_time: 28.234, sector_2_time: 32.567, sector_3_time: 31.877, lap_time: 92.678, tyre: "MEDIUM", is_personal_best: true },
-  { driver_number: 55, driver_name: "NOR", team_name: "McLaren", team_color: "ff8000", lap: 42, sector_1_time: 28.345, sector_2_time: 32.678, sector_3_time: 31.867, lap_time: 92.890, tyre: "MEDIUM", is_personal_best: true },
-  { driver_number: 11, driver_name: "PER", team_name: "Red Bull Racing", team_color: "3671c6", lap: 41, sector_1_time: 28.456, sector_2_time: 32.789, sector_3_time: 31.767, lap_time: 93.012, tyre: "HARD", is_personal_best: false },
-  { driver_number: 44, driver_name: "HAM", team_name: "Mercedes", team_color: "27f4d2", lap: 41, sector_1_time: 28.567, sector_2_time: 32.890, sector_3_time: 31.777, lap_time: 93.234, tyre: "MEDIUM", is_personal_best: true },
-  { driver_number: 14, driver_name: "ALO", team_name: "Aston Martin", team_color: "229971", lap: 41, sector_1_time: 28.678, sector_2_time: 32.901, sector_3_time: 31.877, lap_time: 93.456, tyre: "HARD", is_personal_best: false },
-  { driver_number: 63, driver_name: "RUS", team_name: "Mercedes", team_color: "27f4d2", lap: 40, sector_1_time: 28.789, sector_2_time: 32.912, sector_3_time: 31.866, lap_time: 93.567, tyre: "HARD", is_personal_best: false },
-  { driver_number: 81, driver_name: "PIA", team_name: "McLaren", team_color: "ff8000", lap: 40, sector_1_time: 28.890, sector_2_time: 32.923, sector_3_time: 31.865, lap_time: 93.678, tyre: "MEDIUM", is_personal_best: false },
-  { driver_number: 18, driver_name: "STR", team_name: "Aston Martin", team_color: "229971", lap: 40, sector_1_time: 28.901, sector_2_time: 32.934, sector_3_time: 31.954, lap_time: 93.789, tyre: "HARD", is_personal_best: false },
-  { driver_number: 27, driver_name: "HUL", team_name: "Haas F1 Team", team_color: "b6babd", lap: 39, sector_1_time: 29.012, sector_2_time: 32.945, sector_3_time: 31.933, lap_time: 93.890, tyre: "HARD", is_personal_best: false },
-];
-
 export function SectorTimes() {
   const [sectorTimes, setSectorTimes] = useState<SectorTime[]>([]);
   const [loading, setLoading] = useState(true);
@@ -94,7 +81,7 @@ export function SectorTimes() {
       } catch (error) {
         console.error("Error fetching sector times:", error);
       }
-      setSectorTimes(mockSectorTimes);
+      setSectorTimes([]);
       setLoading(false);
     }
 

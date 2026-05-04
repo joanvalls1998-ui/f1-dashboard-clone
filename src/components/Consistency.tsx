@@ -40,70 +40,6 @@ interface DriverResult {
   time?: string;
 }
 
-// Mock consistency data for 2026 season
-const mockConsistencyData: ConsistencyMetric[] = [
-  {
-    driver_name: "Kimi Antonelli", abbreviation: "ANT", team_name: "Mercedes", team_color: "27f4d2", position: 1,
-    lap_time_stddev: 127, lap_time_avg: 90523, fastest_lap: 90234, slowest_lap: 91234,
-    avg_finish_position: 1.2, position_stddev: 0.4, best_finish: 1, worst_finish: 3,
-    races_finished: 8, races_started: 8, dnfs: 0, points_total: 219, points_per_race: 27.4, points_stddev: 4.2
-  },
-  {
-    driver_name: "Oscar Piastri", abbreviation: "PIA", team_name: "McLaren", team_color: "ff8700", position: 2,
-    lap_time_stddev: 189, lap_time_avg: 90678, fastest_lap: 90345, slowest_lap: 91456,
-    avg_finish_position: 2.8, position_stddev: 1.1, best_finish: 1, worst_finish: 5,
-    races_finished: 8, races_started: 8, dnfs: 0, points_total: 178, points_per_race: 22.3, points_stddev: 6.8
-  },
-  {
-    driver_name: "Lando Norris", abbreviation: "NOR", team_name: "McLaren", team_color: "ff8700", position: 3,
-    lap_time_stddev: 203, lap_time_avg: 90712, fastest_lap: 90312, slowest_lap: 91678,
-    avg_finish_position: 3.5, position_stddev: 1.8, best_finish: 1, worst_finish: 7,
-    races_finished: 7, races_started: 8, dnfs: 1, points_total: 156, points_per_race: 19.5, points_stddev: 9.1
-  },
-  {
-    driver_name: "Charles Leclerc", abbreviation: "LEC", team_name: "Ferrari", team_color: "ff1800", position: 4,
-    lap_time_stddev: 178, lap_time_avg: 90789, fastest_lap: 90456, slowest_lap: 91345,
-    avg_finish_position: 4.2, position_stddev: 1.3, best_finish: 2, worst_finish: 6,
-    races_finished: 8, races_started: 8, dnfs: 0, points_total: 145, points_per_race: 18.1, points_stddev: 5.6
-  },
-  {
-    driver_name: "Lewis Hamilton", abbreviation: "HAM", team_name: "Ferrari", team_color: "ff1800", position: 5,
-    lap_time_stddev: 167, lap_time_avg: 90801, fastest_lap: 90489, slowest_lap: 91312,
-    avg_finish_position: 4.8, position_stddev: 1.5, best_finish: 2, worst_finish: 8,
-    races_finished: 7, races_started: 8, dnfs: 1, points_total: 132, points_per_race: 16.5, points_stddev: 7.2
-  },
-  {
-    driver_name: "George Russell", abbreviation: "RUS", team_name: "Mercedes", team_color: "27f4d2", position: 6,
-    lap_time_stddev: 156, lap_time_avg: 90823, fastest_lap: 90512, slowest_lap: 91289,
-    avg_finish_position: 5.5, position_stddev: 1.2, best_finish: 3, worst_finish: 7,
-    races_finished: 8, races_started: 8, dnfs: 0, points_total: 118, points_per_race: 14.8, points_stddev: 4.9
-  },
-  {
-    driver_name: "Max Verstappen", abbreviation: "VER", team_name: "Red Bull Racing", team_color: "3671c6", position: 7,
-    lap_time_stddev: 234, lap_time_avg: 90956, fastest_lap: 90578, slowest_lap: 92123,
-    avg_finish_position: 7.2, position_stddev: 2.8, best_finish: 4, worst_finish: 12,
-    races_finished: 6, races_started: 8, dnfs: 2, points_total: 87, points_per_race: 10.9, points_stddev: 12.3
-  },
-  {
-    driver_name: "Fernando Alonso", abbreviation: "ALO", team_name: "Aston Martin", team_color: "0072ff", position: 8,
-    lap_time_stddev: 198, lap_time_avg: 90912, fastest_lap: 90601, slowest_lap: 91678,
-    avg_finish_position: 7.8, position_stddev: 2.1, best_finish: 4, worst_finish: 11,
-    races_finished: 7, races_started: 8, dnfs: 1, points_total: 82, points_per_race: 10.3, points_stddev: 8.7
-  },
-  {
-    driver_name: "Lance Stroll", abbreviation: "STR", team_name: "Aston Martin", team_color: "0072ff", position: 9,
-    lap_time_stddev: 278, lap_time_avg: 91089, fastest_lap: 90678, slowest_lap: 92567,
-    avg_finish_position: 9.4, position_stddev: 3.2, best_finish: 5, worst_finish: 15,
-    races_finished: 5, races_started: 8, dnfs: 3, points_total: 54, points_per_race: 6.8, points_stddev: 15.6
-  },
-  {
-    driver_name: "Isack Hadjar", abbreviation: "HAD", team_name: "Red Bull Racing", team_color: "3671c6", position: 10,
-    lap_time_stddev: 245, lap_time_avg: 91023, fastest_lap: 90623, slowest_lap: 92345,
-    avg_finish_position: 10.1, position_stddev: 2.9, best_finish: 6, worst_finish: 14,
-    races_finished: 6, races_started: 8, dnfs: 2, points_total: 48, points_per_race: 6.0, points_stddev: 11.2
-  },
-];
-
 export function Consistency() {
   const [metrics, setMetrics] = useState<ConsistencyMetric[]>([]);
   const [loading, setLoading] = useState(true);
@@ -137,8 +73,8 @@ export function Consistency() {
       }
 
       // Use mock data for consistency metrics
-      setMetrics(mockConsistencyData);
-      setDataSource("mock");
+      setMetrics([]);
+      setDataSource("live");
       setLoading(false);
     }
 
@@ -201,7 +137,7 @@ export function Consistency() {
               setMetrics([]);
               setLoading(true);
               setTimeout(() => {
-                setMetrics(mockConsistencyData);
+                setMetrics([]);
                 setLoading(false);
               }, 500);
             }}

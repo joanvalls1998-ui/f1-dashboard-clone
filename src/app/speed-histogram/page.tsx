@@ -1,5 +1,10 @@
 import { SpeedHistogram } from "@/components/SpeedHistogram";
 
+export const metadata = {
+  title: "Histograma de Velocitat F1 2026",
+  description: "Histograma de velocitat de Fórmula 1 2026. Distribució de velocitats per pilot i cursa.",
+};
+
 export default function SpeedHistogramPage() {
   return (
     <div className="space-y-8">

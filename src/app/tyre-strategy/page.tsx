@@ -1,5 +1,10 @@
 import { TyreStrategy } from "@/components/TyreStrategy";
 
+export const metadata = {
+  title: "Estratègia de Pneumàtics F1 2026",
+  description: "Estratègia de pneumàtics de la Fórmula 1 2026. Compostos, desgast i parades a boxes.",
+};
+
 export default function TyreStrategyPage() {
   return (
     <div className="space-y-8">

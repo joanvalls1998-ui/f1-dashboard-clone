@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { CircleDot, Search, Clock } from "lucide-react";
+import { TableSkeleton } from "@/components/Skeletons";
 
 interface TyreStint {
   driver_number: number;
@@ -25,81 +26,6 @@ interface DriverStrategy {
   stints: TyreStint[];
 }
 
-const mockStrategies: DriverStrategy[] = [
-  {
-    driver_number: 1,
-    driver_name: "VER",
-    team_name: "Red Bull Racing",
-    team_color: "3671c6",
-    current_compound: "MEDIUM",
-    total_pits: 1,
-    stints: [
-      { driver_number: 1, driver_name: "VER", team_name: "Red Bull Racing", team_color: "3671c6", compound: "MEDIUM", start_lap: 1, end_lap: 18, total_laps: 18, tyre_age: 18 },
-      { driver_number: 1, driver_name: "VER", team_name: "Red Bull Racing", team_color: "3671c6", compound: "HARD", start_lap: 19, end_lap: 42, total_laps: 24, tyre_age: 24 },
-    ]
-  },
-  {
-    driver_number: 16,
-    driver_name: "LEC",
-    team_name: "Ferrari",
-    team_color: "e8002d",
-    current_compound: "MEDIUM",
-    total_pits: 1,
-    stints: [
-      { driver_number: 16, driver_name: "LEC", team_name: "Ferrari", team_color: "e8002d", compound: "MEDIUM", start_lap: 1, end_lap: 18, total_laps: 18, tyre_age: 18 },
-      { driver_number: 16, driver_name: "LEC", team_name: "Ferrari", team_color: "e8002d", compound: "HARD", start_lap: 19, end_lap: 42, total_laps: 24, tyre_age: 24 },
-    ]
-  },
-  {
-    driver_number: 55,
-    driver_name: "NOR",
-    team_name: "McLaren",
-    team_color: "ff8000",
-    current_compound: "MEDIUM",
-    total_pits: 1,
-    stints: [
-      { driver_number: 55, driver_name: "NOR", team_name: "McLaren", team_color: "ff8000", compound: "MEDIUM", start_lap: 1, end_lap: 18, total_laps: 18, tyre_age: 18 },
-      { driver_number: 55, driver_name: "NOR", team_name: "McLaren", team_color: "ff8000", compound: "HARD", start_lap: 19, end_lap: 42, total_laps: 24, tyre_age: 24 },
-    ]
-  },
-  {
-    driver_number: 11,
-    driver_name: "PER",
-    team_name: "Red Bull Racing",
-    team_color: "3671c6",
-    current_compound: "HARD",
-    total_pits: 1,
-    stints: [
-      { driver_number: 11, driver_name: "PER", team_name: "Red Bull Racing", team_color: "3671c6", compound: "HARD", start_lap: 1, end_lap: 17, total_laps: 17, tyre_age: 17 },
-      { driver_number: 11, driver_name: "PER", team_name: "Red Bull Racing", team_color: "3671c6", compound: "MEDIUM", start_lap: 18, end_lap: 42, total_laps: 25, tyre_age: 25 },
-    ]
-  },
-  {
-    driver_number: 44,
-    driver_name: "HAM",
-    team_name: "Mercedes",
-    team_color: "27f4d2",
-    current_compound: "MEDIUM",
-    total_pits: 1,
-    stints: [
-      { driver_number: 44, driver_name: "HAM", team_name: "Mercedes", team_color: "27f4d2", compound: "HARD", start_lap: 1, end_lap: 19, total_laps: 19, tyre_age: 19 },
-      { driver_number: 44, driver_name: "HAM", team_name: "Mercedes", team_color: "27f4d2", compound: "MEDIUM", start_lap: 20, end_lap: 42, total_laps: 23, tyre_age: 23 },
-    ]
-  },
-  {
-    driver_number: 14,
-    driver_name: "ALO",
-    team_name: "Aston Martin",
-    team_color: "229971",
-    current_compound: "HARD",
-    total_pits: 1,
-    stints: [
-      { driver_number: 14, driver_name: "ALO", team_name: "Aston Martin", team_color: "229971", compound: "MEDIUM", start_lap: 1, end_lap: 18, total_laps: 18, tyre_age: 18 },
-      { driver_number: 14, driver_name: "ALO", team_name: "Aston Martin", team_color: "229971", compound: "HARD", start_lap: 19, end_lap: 42, total_laps: 24, tyre_age: 24 },
-    ]
-  },
-];
-
 const TYRE_COLORS: Record<string, string> = {
   "SOFT": "#ff3333",
   "MEDIUM": "#ffff33",
@@ -116,12 +42,31 @@ export function TyreStrategy() {
 
   useEffect(() => {
     async function fetchStrategies() {
+      setLoading(true);
       try {
-        const response = await fetch("https://api.openf1.org/v1/stints?session_key=latest");
+        // Find latest completed race session
+        let sessionKey = "latest";
+        const sessionsRes = await fetch(
+          "https://api.openf1.org/v1/sessions?year=2026&session_type=Race",
+          { signal: AbortSignal.timeout(8000) }
+        );
+        if (sessionsRes.ok) {
+          const sessions = await sessionsRes.json();
+          const completed = (sessions || [])
+            .filter((s: any) => new Date(s.date_end) < new Date() && !s.is_cancelled);
+          if (completed.length > 0) {
+            sessionKey = completed[completed.length - 1].session_key;
+          }
+        }
+
+        const response = await fetch(
+          `https://api.openf1.org/v1/stints?session_key=${sessionKey}`,
+          { signal: AbortSignal.timeout(8000) }
+        );
+
         if (response.ok) {
           const data = await response.json();
-          if (data.length > 0) {
-            // Transform stints data into strategies
+          if (Array.isArray(data) && data.length > 0) {
             const drivers = Array.from(new Set(data.map((s: any) => s.driver_number))) as number[];
             const transformed: DriverStrategy[] = drivers.map((driverNum: number) => {
               const driverStints = data.filter((s: any) => s.driver_number === driverNum);
@@ -153,7 +98,8 @@ export function TyreStrategy() {
       } catch (error) {
         console.error("Error fetching strategies:", error);
       }
-      setStrategies(mockStrategies);
+      // No mock fallback
+      setStrategies([]);
       setLoading(false);
     }
 
@@ -167,13 +113,7 @@ export function TyreStrategy() {
            s.driver_number.toString().includes(search);
   });
 
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center py-12">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
-      </div>
-    );
-  }
+  if (loading) return <TableSkeleton rows={6} />;
 
   return (
     <div className="space-y-4">
@@ -284,7 +224,7 @@ export function TyreStrategy() {
         ))}
       </div>
 
-      {filteredStrategies.length === 0 && !loading && (
+      {filteredStrategies.length === 0 && (
         <div className="text-center py-8 text-muted-foreground">
           No strategy data available.
         </div>

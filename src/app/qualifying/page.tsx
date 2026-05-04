@@ -1,5 +1,10 @@
 import { QualifyingAnalysis } from "@/components/QualifyingAnalysis";
 
+export const metadata = {
+  title: "Classificació F1 2026 — Qualifying",
+  description: "Resultats de classificació (qualifying) de la Fórmula 1 2026. Grid, Q1, Q2, Q3 i posicions de sortida.",
+};
+
 export default function QualifyingPage() {
   return (
     <div className="space-y-8">

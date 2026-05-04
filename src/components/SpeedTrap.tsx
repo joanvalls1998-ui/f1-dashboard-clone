@@ -14,22 +14,6 @@ interface SpeedData {
   location?: string;
 }
 
-// Mock speed trap data for fallback (realistic Japan GP Suzuka speeds)
-const mockSpeedData: SpeedData[] = [
-  { driver_number: 1, driver_name: "VER", team_name: "Red Bull Racing", team_color: "3671c6", speed: 318, is_fastest: true, gap_to_fastest: 0 },
-  { driver_number: 16, driver_name: "LEC", team_name: "Ferrari", team_color: "e8002d", speed: 317, is_fastest: false, gap_to_fastest: -1 },
-  { driver_number: 55, driver_name: "NOR", team_name: "McLaren", team_color: "ff8000", speed: 316, is_fastest: false, gap_to_fastest: -2 },
-  { driver_number: 44, driver_name: "HAM", team_name: "Mercedes", team_color: "27f4d2", speed: 315, is_fastest: false, gap_to_fastest: -3 },
-  { driver_number: 11, driver_name: "PER", team_name: "Red Bull Racing", team_color: "3671c6", speed: 315, is_fastest: false, gap_to_fastest: -3 },
-  { driver_number: 81, driver_name: "PIA", team_name: "McLaren", team_color: "ff8000", speed: 314, is_fastest: false, gap_to_fastest: -4 },
-  { driver_number: 14, driver_name: "ALO", team_name: "Aston Martin", team_color: "229971", speed: 313, is_fastest: false, gap_to_fastest: -5 },
-  { driver_number: 63, driver_name: "RUS", team_name: "Mercedes", team_color: "27f4d2", speed: 312, is_fastest: false, gap_to_fastest: -6 },
-  { driver_number: 18, driver_name: "STR", team_name: "Aston Martin", team_color: "229971", speed: 311, is_fastest: false, gap_to_fastest: -7 },
-  { driver_number: 10, driver_name: "GAS", team_name: "Alpine", team_color: "ff87bc", speed: 310, is_fastest: false, gap_to_fastest: -8 },
-  { driver_number: 27, driver_name: "HUL", team_name: "Haas F1 Team", team_color: "b6babd", speed: 309, is_fastest: false, gap_to_fastest: -9 },
-  { driver_number: 31, driver_name: "OCO", team_name: "Alpine", team_color: "ff87bc", speed: 308, is_fastest: false, gap_to_fastest: -10 },
-];
-
 export function SpeedTrap() {
   const [speeds, setSpeeds] = useState<SpeedData[]>([]);
   const [loading, setLoading] = useState(true);
@@ -164,12 +148,11 @@ export function SpeedTrap() {
 
       } catch (err) {
         console.error("Error fetching speed data:", err);
-        setError("Using demo data");
+        setError("No hi ha dades disponibles");
       }
-      
-      // Final fallback to mock data
-      setSpeeds(mockSpeedData);
-      setDataSource("mock");
+      // No mock fallback - empty state
+      setSpeeds([]);
+      setDataSource("live");
       setLoading(false);
     }
 
@@ -212,9 +195,9 @@ export function SpeedTrap() {
           <Gauge className="w-5 h-5 text-green-500" />
           <h2 className="text-lg font-semibold">Speed Trap</h2>
         </div>
-        {dataSource === "mock" && (
+        {error && (
           <span className="text-xs px-2 py-1 rounded bg-amber-500/20 text-amber-500">
-            Demo Data
+            {error}
           </span>
         )}
       </div>

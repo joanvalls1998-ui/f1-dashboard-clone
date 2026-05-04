@@ -24,23 +24,6 @@ const driverIdToAbbrev: Record<string, string> = {
   "callum_colapinto": "COL",
 };
 
-const mockPitStops: PitStop[] = [
-  { driver: "PIA", abbreviation: "PIA", team: "McLaren", lap: 19, stop: 1, time: "0:21.456", duration: "21.456" },
-  { driver: "NOR", abbreviation: "NOR", team: "McLaren", lap: 19, stop: 1, time: "0:21.502", duration: "21.502" },
-  { driver: "LEC", abbreviation: "LEC", team: "Ferrari", lap: 18, stop: 1, time: "0:21.678", duration: "21.678" },
-  { driver: "VER", abbreviation: "VER", team: "Red Bull Racing", lap: 20, stop: 1, time: "0:21.890", duration: "21.890" },
-  { driver: "RUS", abbreviation: "RUS", team: "Mercedes", lap: 20, stop: 1, time: "0:21.912", duration: "21.912" },
-  { driver: "HAM", abbreviation: "HAM", team: "Ferrari", lap: 18, stop: 1, time: "0:22.034", duration: "22.034" },
-  { driver: "ALO", abbreviation: "ALO", team: "Aston Martin", lap: 21, stop: 1, time: "0:22.156", duration: "22.156" },
-  { driver: "ANT", abbreviation: "ANT", team: "Mercedes", lap: 21, stop: 1, time: "0:22.234", duration: "22.234" },
-  { driver: "HUL", abbreviation: "HUL", team: "Haas", lap: 22, stop: 1, time: "0:22.345", duration: "22.345" },
-  { driver: "TSU", abbreviation: "TSU", team: "RB", lap: 22, stop: 1, time: "0:22.456", duration: "22.456" },
-  { driver: "PIA", abbreviation: "PIA", team: "McLaren", lap: 39, stop: 2, time: "0:22.123", duration: "22.123" },
-  { driver: "NOR", abbreviation: "NOR", team: "McLaren", lap: 39, stop: 2, time: "0:22.234", duration: "22.234" },
-  { driver: "LEC", abbreviation: "LEC", team: "Ferrari", lap: 38, stop: 2, time: "0:22.456", duration: "22.456" },
-  { driver: "VER", abbreviation: "VER", team: "Red Bull Racing", lap: 40, stop: 2, time: "0:22.567", duration: "22.567" },
-];
-
 const RACE = { round: 4, name: 'Japanese Grand Prix', year: 2026 };
 
 export default function PitStopsPage() {
@@ -90,7 +73,7 @@ export default function PitStopsPage() {
         console.error('Error fetching pit stops:', e);
         setError(true);
       }
-      setPitStops(mockPitStops);
+      setPitStops([]); setError(false);
       setLoading(false);
     }
     fetchPitStops();

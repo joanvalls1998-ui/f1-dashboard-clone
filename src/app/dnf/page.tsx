@@ -1,5 +1,10 @@
 import { DNFTracker } from "@/components/DNFTracker";
 
+export const metadata = {
+  title: "Abandonaments F1 2026 — DNF",
+  description: "Llista d'abandonaments (DNF) de la temporada 2026 de Fórmula 1. Causes, voltes i pilots afectats.",
+};
+
 export default function DnfPage() {
   return (
     <div className="space-y-8">

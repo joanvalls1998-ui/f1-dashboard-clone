@@ -1,12 +1,14 @@
 import type { MetadataRoute } from "next";
+import { fetchDriverStandings } from "@/lib/api";
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = "https://f1-dashboard-clone.vercel.app";
 
   const routes = [
     "",
     "calendar",
     "constructors",
+    "consistency",
     "destructors",
     "dnf",
     "driver-comparison",
@@ -38,13 +40,27 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "tyre-strategy",
     "used-elements",
     "weather",
-    "consistency",
   ];
 
-  return routes.map((route) => ({
+  const staticPages: MetadataRoute.Sitemap = routes.map((route) => ({
     url: `${baseUrl}/${route}`,
     lastModified: new Date(),
-    changeFrequency: route === "" ? "daily" : "weekly",
+    changeFrequency: (route === "" ? "daily" : "weekly") as "daily" | "weekly",
     priority: route === "" ? 1 : 0.7,
   }));
+
+  let driverPages: MetadataRoute.Sitemap = [];
+  try {
+    const drivers = await fetchDriverStandings(2026);
+    driverPages = drivers.map((d) => ({
+      url: `${baseUrl}/drivers/${d.driverId}`,
+      lastModified: new Date(),
+      changeFrequency: "daily",
+      priority: 0.8,
+    }));
+  } catch {
+    // fallback: no driver detail pages
+  }
+
+  return [...staticPages, ...driverPages];
 }

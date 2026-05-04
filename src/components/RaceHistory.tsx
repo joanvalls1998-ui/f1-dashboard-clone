@@ -16,18 +16,6 @@ interface PositionRecord {
   pit_stops: number;
 }
 
-const mockRaceHistory: PositionRecord[] = [
-  { driver_number: 12, driver_name: "ANT", team_name: "Mercedes", team_color: "27f4d2", positions_by_lap: [1,1,1,1,2,2,2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1], total_laps: 42, final_position: 1, fastest_lap: 28, fastest_lap_time: "1:32.456", pit_stops: 1 },
-  { driver_number: 81, driver_name: "PIA", team_name: "McLaren", team_color: "ff8700", positions_by_lap: [2,2,3,3,3,3,3,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2], total_laps: 42, final_position: 2, fastest_lap: 35, fastest_lap_time: "1:32.678", pit_stops: 1 },
-  { driver_number: 16, driver_name: "LEC", team_name: "Ferrari", team_color: "ff1800", positions_by_lap: [3,3,2,4,4,4,4,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3], total_laps: 42, final_position: 3, fastest_lap: 42, fastest_lap_time: "1:32.890", pit_stops: 1 },
-  { driver_number: 63, driver_name: "RUS", team_name: "Mercedes", team_color: "27f4d2", positions_by_lap: [4,4,4,2,1,1,1,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4], total_laps: 42, final_position: 4, fastest_lap: 22, fastest_lap_time: "1:33.012", pit_stops: 1 },
-  { driver_number: 4, driver_name: "NOR", team_name: "McLaren", team_color: "ff8700", positions_by_lap: [5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5], total_laps: 42, final_position: 5, fastest_lap: 38, fastest_lap_time: "1:33.234", pit_stops: 1 },
-  { driver_number: 44, driver_name: "HAM", team_name: "Ferrari", team_color: "ff1800", positions_by_lap: [6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6], total_laps: 42, final_position: 6, fastest_lap: 18, fastest_lap_time: "1:33.456", pit_stops: 1 },
-  { driver_number: 1, driver_name: "VER", team_name: "Red Bull Racing", team_color: "3671c6", positions_by_lap: [7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7], total_laps: 42, final_position: 7, fastest_lap: 32, fastest_lap_time: "1:33.567", pit_stops: 1 },
-  { driver_number: 14, driver_name: "ALO", team_name: "Aston Martin", team_color: "0072ff", positions_by_lap: [8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8], total_laps: 42, final_position: 8, fastest_lap: 40, fastest_lap_time: "1:33.678", pit_stops: 1 },
-  { driver_number: 6, driver_name: "HAD", team_name: "Red Bull Racing", team_color: "3671c6", positions_by_lap: [9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9], total_laps: 42, final_position: 9, fastest_lap: 25, fastest_lap_time: "1:33.789", pit_stops: 1 },
-  { driver_number: 27, driver_name: "HUL", team_name: "Audi", team_color: "c80029", positions_by_lap: [10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10], total_laps: 42, final_position: 10, fastest_lap: 15, fastest_lap_time: "1:33.890", pit_stops: 1 },
-];
 
 export function RaceHistory() {
   const [raceHistory, setRaceHistory] = useState<PositionRecord[]>([]);
@@ -73,7 +61,7 @@ export function RaceHistory() {
       } catch (error) {
         console.error("Error fetching race history:", error);
       }
-      setRaceHistory(mockRaceHistory);
+      setRaceHistory([]); // no mock fallback
       setLoading(false);
     }
 

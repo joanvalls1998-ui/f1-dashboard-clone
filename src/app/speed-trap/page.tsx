@@ -1,5 +1,10 @@
 import { SpeedTrap } from "@/components/SpeedTrap";
 
+export const metadata = {
+  title: "Radar de Velocitat F1 2026",
+  description: "Velocitat màxima i radar de velocitat de la Fórmula 1 2026. Speed trap i velocitats punta.",
+};
+
 export default function SpeedTrapPage() {
   return (
     <div className="space-y-8">

@@ -3,6 +3,8 @@ import ConstructorStandings from "@/components/ConstructorStandings";
 import { Suspense } from "react";
 import SimpleErrorBoundary, { ErrorFallbackUI } from "@/components/SimpleErrorBoundary";
 import { DriverStandingsSkeleton, ConstructorStandingsSkeleton } from "@/components/Skeletons";
+import { fetchDriverStandings, fetchConstructorStandings } from "@/lib/api";
+import JsonLd from "@/components/JsonLd";
 
 export const revalidate = 300;
 
@@ -11,9 +13,37 @@ export const metadata = {
   description: "Classificació del Mundial de Pilots i Constructors de Fórmula 1 2026. Puntuacions, victòries i estadístiques en temps real.",
 };
 
-export default function StandingsPage() {
+export default async function StandingsPage() {
+  const [drivers, constructors] = await Promise.all([
+    fetchDriverStandings(2026),
+    fetchConstructorStandings(2026),
+  ]);
+
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    name: "Classificacions F1 2026",
+    description: "Classificació del Mundial de Pilots i Constructors de Fórmula 1 2026.",
+    itemListElement: [
+      ...drivers.map((d: any, i: number) => ({
+        "@type": "Person",
+        position: i + 1,
+        name: d.fullName,
+        memberOf: { "@type": "SportsTeam", name: d.team },
+        description: `${d.points} punts`,
+      })),
+      ...constructors.map((c: any, i: number) => ({
+        "@type": "Organization",
+        position: i + 1,
+        name: c.name,
+        description: `${c.points} punts, ${c.wins} victòries`,
+      })),
+    ],
+  };
+
   return (
     <div className="space-y-8">
+      <JsonLd data={jsonLd} />
       <div>
         <p className="eyebrow">2026 Championship</p>
         <h1

@@ -19,23 +19,6 @@ interface WeatherData {
   circuit?: string;
 }
 
-// Japan GP 2026 (Suzuka) mock weather data
-const mockJapanWeather: WeatherData = {
-  air_temperature: 19.4,
-  track_temperature: 37.0,
-  humidity: 46.1,
-  pressure: 1012.1,
-  wind_speed: 3.1,
-  wind_direction: 115,
-  rainfall: 0,
-  track_temperature_change: "steady",
-  air_temperature_change: "rising",
-  wind_speed_change: "steady",
-  conditions: "sunny",
-  session_key: 11253,
-  circuit: "Suzuka"
-};
-
 export function Weather() {
   const [weather, setWeather] = useState<WeatherData | null>(null);
   const [loading, setLoading] = useState(true);
@@ -110,11 +93,9 @@ export function Weather() {
         }
       } catch (err) {
         console.error("Error fetching weather:", err);
-        setError("Using cached data");
+        setError("No hi ha dades meteorològiques disponibles");
       }
 
-      // Fallback to mock Japan GP data
-      setWeather(mockJapanWeather);
       setLastUpdate(new Date());
       setLoading(false);
     }

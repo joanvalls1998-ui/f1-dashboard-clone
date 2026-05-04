@@ -6,20 +6,28 @@
 
 @layer base {
   :root {
+    /* === F1 PREMIUM THEME === */
+    color-scheme: dark;
+
     /* === BASE === */
-    --bg-base: #09090b;
-    --bg-surface: #18181b;
-    --bg-elevated: #27272a;
-    --bg-overlay: #3f3f46;
+    --bg-base: #0a0a0a;
+    --bg-surface: #111111;
+    --bg-elevated: #1a1a1a;
+    --bg-overlay: #27272a;
+    --bg-raised: #2a2a2e;
 
     /* === TEXT === */
-    --text-primary: #fafafa;
+    --text-primary: #f4f4f5;
     --text-secondary: #a1a1aa;
-    --text-muted: #52525b;
+    --text-muted: #71717a;
+    --text-tertiary: #52525b;
 
     /* === F1 BRAND ACCENT === */
     --accent-red: #E10600;
-    --accent-red-dim: rgba(225, 6, 0, 0.25);
+    --accent-red-bright: #ff1a14;
+    --accent-red-dim: rgba(225, 6, 0, 0.18);
+    --accent-red-subtle: rgba(225, 6, 0, 0.08);
+    --accent-red-glow: rgba(225, 6, 0, 0.35);
 
     /* === STATUS === */
     --status-live: #22c55e;
@@ -39,9 +47,9 @@
     --tyre-wet: #06b6d4;
 
     /* === SHADOWS === */
-    --shadow-card: 0 1px 3px rgba(0,0,0,0.4), 0 1px 2px rgba(0,0,0,0.3);
-    --shadow-elevated: 0 10px 15px -3px rgba(0,0,0,0.5), 0 4px 6px -2px rgba(0,0,0,0.3);
-    --shadow-live: 0 0 12px rgba(34, 197, 94, 0.4);
+    --shadow-card: 0 1px 3px rgba(0,0,0,0.5), 0 1px 2px rgba(0,0,0,0.4);
+    --shadow-elevated: 0 10px 24px -4px rgba(0,0,0,0.6), 0 4px 12px -2px rgba(0,0,0,0.4);
+    --shadow-live: 0 0 12px rgba(34, 197, 94, 0.3);
 
     /* === TEAM COLORS === */
     --team-mercedes: #27F4D2;
@@ -56,20 +64,24 @@
     --team-cadillac: #C80029;
     --team-aston: #0072FF;
 
-    /* === SIDEBAR DARK (always dark) === */
-    --sidebar-bg: #18181b;
+    /* === SIDEBAR PREMIUM === */
+    --sidebar-bg: #0f0f11;
     --sidebar-fg: #a1a1aa;
-    --sidebar-accent: #27272a;
+    --sidebar-accent: #1a1a1e;
     --sidebar-accent-fg: #fafafa;
-    --sidebar-border: #3f3f46;
+    --sidebar-border: rgba(63, 63, 70, 0.5);
     --sidebar-red: #E10600;
+    --sidebar-glow: rgba(225, 6, 0, 0.15);
+
+    /* === RADIUS === */
+    --radius: 0.75rem;
 
     /* === TYPOGRAPHY === */
-    --font-heading: 'Plus Jakarta Sans', system-ui, sans-serif;
-    --font-body: 'Inter', system-ui, sans-serif;
-    --font-mono: 'JetBrains Mono', monospace;
+    --font-heading: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+    --font-body: 'Inter', system-ui, -apple-system, sans-serif;
+    --font-mono: 'JetBrains Mono', ui-monospace, monospace;
 
-    /* === CHART / SECTOR (kept from original) === */
+    /* === CHART / SECTOR === */
     --chart-1: 12 76% 61%;
     --chart-2: 173 58% 39%;
     --chart-3: 197 37% 24%;
@@ -99,34 +111,59 @@
     font-family: var(--font-body);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    overflow-x: hidden;
   }
 
   h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-heading);
     font-weight: 700;
     color: var(--text-primary);
+    letter-spacing: -0.01em;
+    text-wrap: balance;
   }
 
-  /* Custom scrollbar */
+  /* === CUSTOM SCROLLBAR PREMIUM === */
   ::-webkit-scrollbar {
-    width: 6px;
-    height: 6px;
+    width: 5px;
+    height: 5px;
   }
   ::-webkit-scrollbar-track {
-    background: var(--bg-base);
+    background: transparent;
   }
   ::-webkit-scrollbar-thumb {
-    background: var(--bg-overlay);
-    border-radius: 3px;
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 10px;
+    border: 1px solid transparent;
+    background-clip: padding-box;
   }
   ::-webkit-scrollbar-thumb:hover {
-    background: var(--text-muted);
+    background: rgba(255, 255, 255, 0.15);
+    border: 1px solid transparent;
+    background-clip: padding-box;
+  }
+  ::-webkit-scrollbar-corner {
+    background: transparent;
   }
 
-  /* Text selection */
+  /* Firefox scrollbar */
+  @supports (scrollbar-width: thin) {
+    * {
+      scrollbar-width: thin;
+      scrollbar-color: rgba(255, 255, 255, 0.08) transparent;
+    }
+  }
+
+  /* === TEXT SELECTION === */
   ::selection {
     background: var(--accent-red-dim);
     color: var(--text-primary);
+  }
+
+  /* === FOCUS RING === */
+  *:focus-visible {
+    outline: 2px solid var(--accent-red);
+    outline-offset: 2px;
   }
 }
 
@@ -135,13 +172,13 @@
   .card {
     background: var(--bg-surface);
     border: 1px solid var(--bg-overlay);
-    border-radius: 12px;
+    border-radius: calc(var(--radius) + 2px);
     padding: 1.25rem;
-    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    transition: border-color 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease;
   }
 
   .card-interactive {
-    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+    transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
   }
   .card-interactive:hover {
     transform: translateY(-2px);
@@ -158,13 +195,19 @@
     font-weight: 600;
     font-size: 0.875rem;
     font-family: var(--font-body);
-    transition: opacity 0.15s ease, transform 0.1s ease;
+    transition: all 0.2s ease;
     cursor: pointer;
     border: none;
+    position: relative;
+    overflow: hidden;
   }
-  .btn-primary:hover { opacity: 0.9; transform: translateY(-1px); }
+  .btn-primary:hover {
+    background: var(--accent-red-bright);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 16px var(--accent-red-dim);
+  }
   .btn-primary:active { transform: scale(0.97); }
-  .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+  .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
 
   .btn-ghost {
     background: transparent;
@@ -175,13 +218,13 @@
     font-weight: 500;
     font-size: 0.875rem;
     font-family: var(--font-body);
-    transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+    transition: all 0.2s ease;
     cursor: pointer;
   }
   .btn-ghost:hover {
     background: var(--bg-elevated);
     color: var(--text-primary);
-    border-color: var(--text-muted);
+    border-color: var(--text-tertiary);
   }
 
   .btn-press:active { transform: scale(0.97); }
@@ -193,7 +236,7 @@
     font-size: 0.875rem;
     color: var(--text-secondary);
     border-bottom: 2px solid transparent;
-    transition: color 0.15s ease, border-color 0.15s ease;
+    transition: color 0.2s ease, border-color 0.2s ease;
     cursor: pointer;
     background: none;
     border-top: none;
@@ -215,17 +258,17 @@
     color: var(--text-primary);
   }
   .stat-label {
-    font-size: 0.75rem;
-    font-weight: 500;
+    font-size: 0.7rem;
+    font-weight: 600;
     text-transform: uppercase;
-    letter-spacing: 0.05em;
+    letter-spacing: 0.08em;
     color: var(--text-muted);
   }
   .eyebrow {
-    font-size: 0.75rem;
+    font-size: 0.7rem;
     font-weight: 600;
     text-transform: uppercase;
-    letter-spacing: 0.1em;
+    letter-spacing: 0.12em;
     color: var(--text-muted);
     font-family: var(--font-body);
   }
@@ -254,7 +297,7 @@
     border-radius: 50%;
     background: var(--status-live);
     box-shadow: var(--shadow-live);
-    animation: livePulse 2s ease-in-out infinite;
+    animation: livePulse 2.5s ease-in-out infinite;
     flex-shrink: 0;
   }
 
@@ -267,13 +310,13 @@
 @layer utilities {
   /* === ANIMATIONS === */
   @keyframes fadeInUp {
-    from { opacity: 0; transform: translateY(12px); }
+    from { opacity: 0; transform: translateY(16px); }
     to { opacity: 1; transform: translateY(0); }
   }
 
   @keyframes livePulse {
     0%, 100% { opacity: 1; }
-    50% { opacity: 0.5; }
+    50% { opacity: 0.3; }
   }
 
   @keyframes shimmer {
@@ -281,9 +324,15 @@
     100% { background-position: 200% 0; }
   }
 
+  @keyframes sidebarGlow {
+    0% { opacity: 0.4; }
+    50% { opacity: 0.8; }
+    100% { opacity: 0.4; }
+  }
+
   /* Staggered enter for list items */
   .animate-enter {
-    animation: fadeInUp 0.4s ease-out forwards;
+    animation: fadeInUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
     opacity: 0;
   }
   .animate-enter:nth-child(1) { animation-delay: 0ms; }
@@ -315,14 +364,20 @@
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
   }
   .animate-enter {
-    animation: none;
-    opacity: 1;
+    animation: none !important;
+    opacity: 1 !important;
   }
   .live-dot {
-    animation: none;
-    opacity: 1;
+    animation: none !important;
+    opacity: 1 !important;
+  }
+  .skeleton {
+    animation: none !important;
+    background: var(--bg-elevated) !important;
   }
 }

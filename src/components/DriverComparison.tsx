@@ -11,19 +11,6 @@ interface LapComparison {
   lec_lap_time: number | null;
 }
 
-const mockComparisonData: LapComparison[] = [
-  { lap_number: 1, ver_lap_time: 120.456, nor_lap_time: 120.678, lec_lap_time: 120.234 },
-  { lap_number: 2, ver_lap_time: 95.123, nor_lap_time: 95.456, lec_lap_time: 95.234 },
-  { lap_number: 3, ver_lap_time: 94.567, nor_lap_time: 94.789, lec_lap_time: 94.456 },
-  { lap_number: 4, ver_lap_time: 93.890, nor_lap_time: 94.123, lec_lap_time: 93.789 },
-  { lap_number: 5, ver_lap_time: 93.234, nor_lap_time: 93.456, lec_lap_time: 93.123 },
-  { lap_number: 6, ver_lap_time: 92.890, nor_lap_time: 93.234, lec_lap_time: 92.890 },
-  { lap_number: 7, ver_lap_time: 92.456, nor_lap_time: 92.789, lec_lap_time: 92.456 },
-  { lap_number: 8, ver_lap_time: 92.123, nor_lap_time: 92.456, lec_lap_time: 92.234 },
-  { lap_number: 9, ver_lap_time: 91.890, nor_lap_time: 92.123, lec_lap_time: 92.123 },
-  { lap_number: 10, ver_lap_time: 91.567, nor_lap_time: 91.890, lec_lap_time: 92.123 },
-];
-
 const drivers = [
   { name: "VER", color: "3671c6", team: "Red Bull Racing" },
   { name: "NOR", color: "ff8700", team: "McLaren" },
@@ -58,7 +45,7 @@ export function DriverComparison() {
   useEffect(() => {
     // Simulate fetching comparison data
     setTimeout(() => {
-      setComparisonData(mockComparisonData);
+      setComparisonData([]);
       setLoading(false);
     }, 500);
   }, []);
