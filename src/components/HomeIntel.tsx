@@ -55,7 +55,7 @@ function getWeekendPhaseTagClass(phase: string): string {
     case 'Previa': return 'bg-blue-500/20 text-blue-400 border-blue-500/30';
     case 'Sprint': return 'bg-purple-500/20 text-purple-400 border-purple-500/30';
     case 'Carrera': return 'bg-green-500/20 text-green-400 border-green-500/30';
-    default: return 'bg-gray-500/20 text-gray-400 border-gray-500/30';
+    default: return 'bg-gray-500/20 var(--text-muted) border-gray-500/30';
   }
 }
 
@@ -193,11 +193,11 @@ function CountdownTimer({ targetDate }: { targetDate: Date }) {
 
   return (
     <div className="flex items-center gap-1 text-lg font-mono">
-      <span className="bg-[#1a1a1a] px-2 py-1 rounded text-white">{String(timeLeft.hours).padStart(2, '0')}</span>
-      <span className="text-gray-500">:</span>
-      <span className="bg-[#1a1a1a] px-2 py-1 rounded text-white">{String(timeLeft.minutes).padStart(2, '0')}</span>
-      <span className="text-gray-500">:</span>
-      <span className="bg-[#1a1a1a] px-2 py-1 rounded text-white">{String(timeLeft.seconds).padStart(2, '0')}</span>
+      <span className="var(--bg-elevated) px-2 py-1 rounded var(--text-primary)">{String(timeLeft.hours).padStart(2, '0')}</span>
+      <span className="var(--text-muted)">:</span>
+      <span className="var(--bg-elevated) px-2 py-1 rounded var(--text-primary)">{String(timeLeft.minutes).padStart(2, '0')}</span>
+      <span className="var(--text-muted)">:</span>
+      <span className="var(--bg-elevated) px-2 py-1 rounded var(--text-primary)">{String(timeLeft.seconds).padStart(2, '0')}</span>
     </div>
   );
 }
@@ -205,19 +205,19 @@ function CountdownTimer({ targetDate }: { targetDate: Date }) {
 // Phase Summary Card
 function PhaseSummaryCard({ context }: { context: WeekendContext }) {
   return (
-    <div className="bg-[#171717] rounded-xl p-4 border border-[#333]">
+    <div className="var(--bg-surface) rounded-xl p-4 border var(--border-color)">
       <div className="flex items-center gap-2 mb-3">
         <Flag className="w-4 h-4 text-blue-400" />
-        <h3 className="text-white font-semibold">Resumen de fase</h3>
+        <h3 className="var(--text-primary) font-semibold">Resumen de fase</h3>
       </div>
-      <div className="text-gray-300 text-sm mb-3">
+      <div className="var(--text-secondary) text-sm mb-3">
         {escapeHtml(context.focusDescription || 'Sin resumen disponible.')}
       </div>
       <div className="flex gap-2">
         <span className={`px-3 py-1 rounded-full text-xs font-medium border ${getWeekendPhaseTagClass(context.phaseLabel)}`}>
           {escapeHtml(context.phaseLabel || 'Previa')}
         </span>
-        <span className="px-3 py-1 rounded-full text-xs font-medium border bg-gray-500/20 text-gray-400 border-gray-500/30">
+        <span className="px-3 py-1 rounded-full text-xs font-medium border bg-gray-500/20 var(--text-muted) border-gray-500/30">
           {context.isSprint ? 'Sprint weekend' : 'Formato normal'}
         </span>
       </div>
@@ -232,23 +232,23 @@ function HierarchyCard({ context, favorite }: { context: WeekendContext; favorit
   if (!target) return null;
 
   return (
-    <div className="bg-[#171717] rounded-xl p-4 border border-[#333]">
+    <div className="var(--bg-surface) rounded-xl p-4 border var(--border-color)">
       <div className="flex items-center gap-2 mb-3">
         <TrendingUp className="w-4 h-4 text-purple-400" />
-        <h3 className="text-white font-semibold">Jerarquía rápida</h3>
+        <h3 className="var(--text-primary) font-semibold">Jerarquía rápida</h3>
       </div>
       <div className="space-y-3">
         <div className="border-l-2 border-blue-500 pl-3">
-          <div className="text-xs text-gray-400 font-medium">1) Sesión clave</div>
-          <div className="text-sm text-white">{escapeHtml(target.label)} · {getSessionStatusLabel(target.status)}</div>
+          <div className="text-xs var(--text-muted) font-medium">1) Sesión clave</div>
+          <div className="text-sm var(--text-primary)">{escapeHtml(target.label)} · {getSessionStatusLabel(target.status)}</div>
         </div>
         <div className="border-l-2 border-green-500 pl-3">
-          <div className="text-xs text-gray-400 font-medium">2) Impacto favorito</div>
-          <div className="text-sm text-white">{escapeHtml(getSessionImpactOnFavorite(target.key, favorite))}</div>
+          <div className="text-xs var(--text-muted) font-medium">2) Impacto favorito</div>
+          <div className="text-sm var(--text-primary)">{escapeHtml(getSessionImpactOnFavorite(target.key, favorite))}</div>
         </div>
         <div className="border-l-2 border-yellow-500 pl-3">
-          <div className="text-xs text-gray-400 font-medium">3) Siguiente paso</div>
-          <div className="text-sm text-white">{escapeHtml(context.nextSessionCountdown || 'Esperando nueva referencia')}</div>
+          <div className="text-xs var(--text-muted) font-medium">3) Siguiente paso</div>
+          <div className="text-sm var(--text-primary)">{escapeHtml(context.nextSessionCountdown || 'Esperando nueva referencia')}</div>
         </div>
       </div>
     </div>
@@ -260,16 +260,16 @@ function WhatToWatchCard({ items }: { items: string[] }) {
   const displayItems = items.length ? items.slice(0, 3) : ['Sin claves activas ahora mismo.'];
 
   return (
-    <div className="bg-[#171717] rounded-xl p-4 border border-[#333]">
+    <div className="var(--bg-surface) rounded-xl p-4 border var(--border-color)">
       <div className="flex items-center gap-2 mb-3">
         <Target className="w-4 h-4 text-red-400" />
-        <h3 className="text-white font-semibold">Qué mirar</h3>
+        <h3 className="var(--text-primary) font-semibold">Qué mirar</h3>
       </div>
       <div className="space-y-2">
         {displayItems.map((item: string, index: number) => (
           <div key={index} className="flex items-start gap-2 text-sm">
-            <span className="text-gray-500 mt-0.5">•</span>
-            <span className="text-gray-300">{escapeHtml(item)}</span>
+            <span className="var(--text-muted) mt-0.5">•</span>
+            <span className="var(--text-secondary)">{escapeHtml(item)}</span>
           </div>
         ))}
       </div>
@@ -287,26 +287,26 @@ function TeamStatusCard({ favorite }: { favorite: Favorite | null }) {
   if (!team) return null;
 
   return (
-    <div className="bg-[#171717] rounded-xl p-4 border border-[#333]">
+    <div className="var(--bg-surface) rounded-xl p-4 border var(--border-color)">
       <div className="flex items-center gap-2 mb-3">
         <AlertCircle className="w-4 h-4 text-cyan-400" />
-        <h3 className="text-white font-semibold">Estado del equipo</h3>
+        <h3 className="var(--text-primary) font-semibold">Estado del equipo</h3>
       </div>
       <div className="grid grid-cols-3 gap-3">
-        <div className="bg-[#1a1a1a] rounded-lg p-3 text-center">
-          <div className="text-xs text-gray-400 mb-1">Carrera</div>
-          <div className="text-xl font-bold text-white">{team.racePace}%</div>
-          <div className="text-xs text-gray-500">Ritmo</div>
+        <div className="var(--bg-elevated) rounded-lg p-3 text-center">
+          <div className="text-xs var(--text-muted) mb-1">Carrera</div>
+          <div className="text-xl font-bold var(--text-primary)">{team.racePace}%</div>
+          <div className="text-xs var(--text-muted)">Ritmo</div>
         </div>
-        <div className="bg-[#1a1a1a] rounded-lg p-3 text-center">
-          <div className="text-xs text-gray-400 mb-1">Qualy</div>
-          <div className="text-xl font-bold text-white">{team.qualyPace}%</div>
-          <div className="text-xs text-gray-500">1 vuelta</div>
+        <div className="var(--bg-elevated) rounded-lg p-3 text-center">
+          <div className="text-xs var(--text-muted) mb-1">Qualy</div>
+          <div className="text-xl font-bold var(--text-primary)">{team.qualyPace}%</div>
+          <div className="text-xs var(--text-muted)">1 vuelta</div>
         </div>
-        <div className="bg-[#1a1a1a] rounded-lg p-3 text-center">
-          <div className="text-xs text-gray-400 mb-1">Fiabilidad</div>
-          <div className="text-xl font-bold text-white">{team.reliability}%</div>
-          <div className="text-xs text-gray-500">Base</div>
+        <div className="var(--bg-elevated) rounded-lg p-3 text-center">
+          <div className="text-xs var(--text-muted) mb-1">Fiabilidad</div>
+          <div className="text-xl font-bold var(--text-primary)">{team.reliability}%</div>
+          <div className="text-xs var(--text-muted)">Base</div>
         </div>
       </div>
     </div>
@@ -437,14 +437,14 @@ export function HomeIntel() {
   if (loading) {
     return (
       <div className="flex items-center justify-center py-20">
-        <Loader2 className="w-8 h-8 text-white animate-spin" />
+        <Loader2 className="w-8 h-8 var(--text-primary) animate-spin" />
       </div>
     );
   }
 
   if (!nextRaceInfo || !context) {
     return (
-      <div className="text-gray-400 text-center py-8">
+      <div className="var(--text-muted) text-center py-8">
         No hay información del próximo GP disponible.
       </div>
     );
@@ -453,7 +453,7 @@ export function HomeIntel() {
   return (
     <div className="space-y-4">
       {/* Next GP Hero Card */}
-      <div className="bg-[#171717] rounded-xl overflow-hidden border border-[#333]">
+      <div className="var(--bg-surface) rounded-xl overflow-hidden border var(--border-color)">
         {nextRaceInfo.circuitImage && (
           <div className="h-40 overflow-hidden">
             <img
@@ -468,21 +468,21 @@ export function HomeIntel() {
           <div className="flex items-center justify-between mb-2">
             <div className="flex items-center gap-2">
               <MapPin className="w-4 h-4 text-red-400" />
-              <span className="text-gray-400 text-sm">{nextRaceInfo.locality}, {nextRaceInfo.country}</span>
+              <span className="var(--text-muted) text-sm">{nextRaceInfo.locality}, {nextRaceInfo.country}</span>
             </div>
-            <span className="text-xs text-gray-500">Ronda {nextRaceInfo.round}</span>
+            <span className="text-xs var(--text-muted)">Ronda {nextRaceInfo.round}</span>
           </div>
-          <h2 className="text-xl font-bold text-white mb-3">{nextRaceInfo.raceName}</h2>
+          <h2 className="text-xl font-bold var(--text-primary) mb-3">{nextRaceInfo.raceName}</h2>
           
           {/* Next Session Countdown */}
           {nextRaceInfo.nextSessionTime && (
-            <div className="bg-[#1a1a1a] rounded-lg p-3">
+            <div className="var(--bg-elevated) rounded-lg p-3">
               <div className="flex items-center gap-2 mb-2">
                 <Clock className="w-4 h-4 text-yellow-400" />
-                <span className="text-gray-400 text-sm">FP1 · Mayo 1, 2026</span>
+                <span className="var(--text-muted) text-sm">FP1 · Mayo 1, 2026</span>
               </div>
               <div className="flex items-center gap-2">
-                <span className="text-gray-400 text-sm">{context.nextSessionCountdown}</span>
+                <span className="var(--text-muted) text-sm">{context.nextSessionCountdown}</span>
                 <CountdownTimer targetDate={nextRaceInfo.nextSessionTime} />
               </div>
             </div>

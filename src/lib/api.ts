@@ -38,6 +38,8 @@ export interface Race {
   winnerTeam?: string;
   status: 'completed' | 'upcoming' | 'cancelled';
   sessionKey?: number;
+  lat?: number;
+  lng?: number;
 }
 
 export interface Session {
@@ -114,6 +116,8 @@ export async function fetchRaceCalendar(year: number = 2026): Promise<Race[]> {
       circuit: race.Circuit.circuitName,
       date: new Date(race.date).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }),
       status: new Date(race.date) < new Date() ? 'completed' as const : 'upcoming' as const,
+      lat: parseFloat(race.Circuit.Location.lat),
+      lng: parseFloat(race.Circuit.Location.long),
     }));
   } catch (error) {
     console.error('Error fetching race calendar:', error);

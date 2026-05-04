@@ -113,7 +113,7 @@ export default function PitStopsPage() {
         <Wrench className="w-6 h-6 text-orange-500" />
         <h1 className="text-2xl font-bold">Pit Stop Analysis</h1>
       </div>
-      <p className="text-muted-foreground text-sm">{RACE.name} {RACE.year} — {pitStops.length} pit stops recorded</p>
+      <p className="var(--text-muted) text-sm">{RACE.name} {RACE.year} — {pitStops.length} pit stops recorded</p>
 
       {error && (
         <div className="flex items-center gap-2 text-sm text-amber-500 bg-amber-500/10 rounded-lg px-4 py-2" role="alert">
@@ -144,7 +144,7 @@ export default function PitStopsPage() {
                   <td className="p-3"><span className="font-mono font-medium">{stop.lap}</span></td>
                   <td className="p-3">
                     <div className="font-medium">{stop.driver}</div>
-                    <div className="text-xs text-muted-foreground">{stop.team}</div>
+                    <div className="text-xs var(--text-muted)">{stop.team}</div>
                   </td>
                   <td className="p-3 text-center">
                     <span className="px-2 py-0.5 bg-muted rounded text-xs font-medium">#{stop.stop}</span>
@@ -171,14 +171,14 @@ export default function PitStopsPage() {
               <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold ${
                 i === 0 ? 'bg-yellow-500 text-black' :
                 i === 1 ? 'bg-gray-400 text-black' :
-                i === 2 ? 'bg-amber-600 text-white' :
+                i === 2 ? 'bg-amber-600 var(--text-primary)' :
                 'bg-muted'
               }`}>
                 {i + 1}
               </div>
               <div className="flex-1">
                 <div className="font-medium">{stop.driver}</div>
-                <div className="text-xs text-muted-foreground">Lap {stop.lap} — {stop.team}</div>
+                <div className="text-xs var(--text-muted)">Lap {stop.lap} — {stop.team}</div>
               </div>
               <div className="font-mono text-xl font-bold text-green-400">
                 {stop.duration}s
@@ -189,7 +189,7 @@ export default function PitStopsPage() {
       </div>
 
       {pitStops.length === 0 && (
-        <div className="text-center py-8 text-muted-foreground flex flex-col items-center gap-2" role="status">
+        <div className="text-center py-8 var(--text-muted) flex flex-col items-center gap-2" role="status">
           <AlertCircle className="w-8 h-8" />
           <p>No pit stop data available.</p>
         </div>

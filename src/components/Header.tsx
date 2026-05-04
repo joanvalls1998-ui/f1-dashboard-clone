@@ -1,7 +1,7 @@
 "use client";
 
 import { usePathname } from "next/navigation";
-import { Sun, Moon, Menu } from "lucide-react";
+import { Sun, Moon } from "lucide-react";
 import { useState, useEffect } from "react";
 
 export function Header() {
@@ -9,12 +9,8 @@ export function Header() {
   const [darkMode, setDarkMode] = useState(true);
 
   useEffect(() => {
-    if (darkMode) {
-      document.documentElement.classList.add("dark");
-    } else {
-      document.documentElement.classList.remove("dark");
-    }
-  }, [darkMode]);
+    document.documentElement.classList.add("dark");
+  }, []);
 
   const getTitle = () => {
     if (pathname === "/") return "Home";
@@ -32,41 +28,60 @@ export function Header() {
     if (pathname === "/used-elements") return "Used Elements";
     if (pathname === "/destructors") return "Destructors Championship";
     if (pathname === "/track-dna") return "Track DNA";
+    if (pathname === "/live") return "Live Timing";
+    if (pathname === "/predictions") return "Predicción";
+    if (pathname === "/favorito") return "Favorito";
+    if (pathname === "/engineer") return "Ingeniero";
+    if (pathname === "/home-intel") return "Home Intel";
+    if (pathname === "/news") return "News";
+    if (pathname === "/race-mode") return "Modo Carrera";
+    if (pathname === "/sector-times") return "Sector Times";
+    if (pathname === "/intervals") return "Intervals";
+    if (pathname === "/qualifying") return "Qualifying";
+    if (pathname === "/starting-grid") return "Starting Grid";
+    if (pathname === "/race-history") return "Race History";
+    if (pathname === "/weather") return "Weather";
+    if (pathname === "/track-map") return "Track Map";
+    if (pathname === "/season-stats") return "Season Stats";
+    if (pathname === "/dnf") return "DNF Tracker";
+    if (pathname === "/speed-trap") return "Speed Trap";
+    if (pathname === "/speed-histogram") return "Speed Histogram";
+    if (pathname === "/tyre-strategy") return "Tyre Strategy";
+    if (pathname === "/driver-comparison") return "Driver Comparison";
     return "F1 Dashboard";
   };
 
   return (
-    <header className="sticky top-0 z-30 backdrop-blur-md bg-background/80 border-b">
-      <div className="flex h-16 items-center gap-2 px-4">
-        <button
-          className="md:hidden p-2 hover:bg-accent rounded-md"
-          aria-label="Toggle menu"
-        >
-          <Menu className="w-5 h-5" />
-        </button>
-
-        <div className="h-4 w-px bg-border hidden md:block" />
-
+    <header
+      className="sticky top-0 z-20 backdrop-blur-md border-b"
+      style={{
+        backgroundColor: 'rgba(9,9,11,0.85)',
+        borderColor: 'var(--bg-overlay)',
+      }}
+    >
+      <div className="flex h-14 items-center gap-3 px-4 md:px-6">
+        {/* Title */}
         <nav aria-label="breadcrumb">
-          <ol className="flex flex-wrap items-center gap-1.5 text-sm text-muted-foreground">
+          <ol className="flex flex-wrap items-center gap-1.5 text-sm">
             <li>
-              <span className="font-normal text-foreground">{getTitle()}</span>
+              <span
+                className="font-semibold"
+                style={{ color: 'var(--text-primary)', fontFamily: 'var(--font-heading)' }}
+              >
+                {getTitle()}
+              </span>
             </li>
           </ol>
         </nav>
 
         <div className="ml-auto flex items-center gap-2">
-          <button
-            onClick={() => setDarkMode(!darkMode)}
-            className="inline-flex items-center justify-center gap-1 whitespace-nowrap rounded-md text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground h-9 w-9"
-            aria-label="Toggle theme"
-          >
-            {darkMode ? (
-              <Sun className="w-4 h-4" />
-            ) : (
-              <Moon className="w-4 h-4" />
-            )}
-          </button>
+          {/* Live dot (only on non-live pages) */}
+          {pathname !== '/live' && (
+            <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-full" style={{ backgroundColor: 'var(--bg-surface)', border: '1px solid var(--bg-overlay)' }}>
+              <div className="live-dot" />
+              <span className="text-xs font-medium" style={{ color: 'var(--status-live)' }}>Live</span>
+            </div>
+          )}
         </div>
       </div>
     </header>

@@ -194,7 +194,7 @@ export default function RacePacePage() {
         <Activity className="w-6 h-6 text-cyan-500" />
         <h1 className="text-2xl font-bold">Race Pace Analysis</h1>
       </div>
-      <p className="text-muted-foreground text-sm">Japanese Grand Prix 2026 — Lap by lap pace data</p>
+      <p className="var(--text-muted) text-sm">Japanese Grand Prix 2026 — Lap by lap pace data</p>
 
       {/* Pace table */}
       <div className="bg-card rounded-xl p-6 border">
@@ -218,7 +218,7 @@ export default function RacePacePage() {
                 <tr key={i} className="border-b hover:bg-muted/50">
                   <td className="p-3">
                     <div className="font-medium">{driver.driver}</div>
-                    <div className="text-xs text-muted-foreground sm:hidden">{driver.team}</div>
+                    <div className="text-xs var(--text-muted) sm:hidden">{driver.team}</div>
                   </td>
                   <td className="p-3 text-center hidden sm:table-cell">
                     <div className="text-sm">{driver.team}</div>
@@ -230,7 +230,7 @@ export default function RacePacePage() {
                     <span className="font-mono font-bold text-green-400">{driver.fastestLap}</span>
                   </td>
                   <td className="p-3 text-center hidden md:table-cell">
-                    <span className="text-sm text-muted-foreground">Lap {driver.fastestLapNum}</span>
+                    <span className="text-sm var(--text-muted)">Lap {driver.fastestLapNum}</span>
                   </td>
                 </tr>
               ))}
@@ -260,14 +260,14 @@ export default function RacePacePage() {
                     style={{ height: `${100 - heightPercent}%` }}
                     title={`Lap ${lap.lap}: ${lap.time}`}
                   >
-                    <div className="absolute -top-6 left-1/2 -translate-x-1/2 text-xs bg-black/80 text-white px-1 rounded opacity-0 group-hover:opacity-100 whitespace-nowrap">
+                    <div className="absolute -top-6 left-1/2 -translate-x-1/2 text-xs bg-black/80 var(--text-primary) px-1 rounded opacity-0 group-hover:opacity-100 whitespace-nowrap">
                       {lap.time}
                     </div>
                   </div>
                 );
               })}
             </div>
-            <div className="flex justify-between text-xs text-muted-foreground mt-1">
+            <div className="flex justify-between text-xs var(--text-muted) mt-1">
               <span>Lap 1</span>
               <span>Lap {driver.laps[driver.laps.length - 1]?.lap}</span>
             </div>

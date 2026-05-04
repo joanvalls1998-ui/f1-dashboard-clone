@@ -103,7 +103,7 @@ export function DriverAvatar({ driver, size = 'md', showPoints = false }: Driver
           />
         ) : (
           <div 
-            className="w-full h-full flex items-center justify-center font-bold text-white"
+            className="w-full h-full flex items-center justify-center font-bold"
             style={{ backgroundColor: color + '33', color }}
           >
             {getDriverInitials(driver.fullName)}
@@ -114,7 +114,7 @@ export function DriverAvatar({ driver, size = 'md', showPoints = false }: Driver
         {driver.fullName.split(' ').pop()}
       </span>
       {showPoints && (
-        <span className="text-xs text-gray-500">{driver.points} pts</span>
+        <span className="text-xs" style={{ color: 'var(--text-muted)' }}>{driver.points} pts</span>
       )}
     </div>
   );
@@ -130,7 +130,7 @@ export function TeamCardFull({ team }: TeamCardFullProps) {
   return (
     <div className="bg-[#1a1a1a] rounded-xl overflow-hidden">
       {/* Header with team color */}
-      <div className="h-2 w-full" style={{ backgroundColor: team.color }} />
+      <div className="h-1 w-full" style={{ backgroundColor: team.color }} />
       
       {/* Car image placeholder */}
       <div className="relative h-32 bg-gradient-to-br from-[#2a2a2a] to-[#1a1a1a] overflow-hidden">
@@ -166,16 +166,18 @@ interface TeamGalleryProps {
 
 export function TeamGallery({ title = "Teams & Drivers 2026" }: TeamGalleryProps) {
   return (
-    <div className="bg-[#171717] rounded-xl p-4 sm:p-6">
+    <div className="card">
       <div className="flex items-center gap-2 mb-6">
-        <Users className="w-6 h-6 text-[#E10600]" />
-        <h2 className="text-2xl font-bold text-white">{title}</h2>
+        <Users className="w-5 h-5" style={{ color: 'var(--accent-red)' }} />
+        <h2 className="text-xl font-bold" style={{ fontFamily: 'var(--font-heading)', color: 'var(--text-primary)' }}>{title}</h2>
       </div>
-      
+
       {/* Teams grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {teams2026.map((team) => (
-          <TeamCardFull key={team.name} team={team} />
+        {teams2026.map((team, i) => (
+          <div key={team.name} className="animate-enter" style={{ animationDelay: `${i * 40}ms` }}>
+            <TeamCardFull team={team} />
+          </div>
         ))}
       </div>
     </div>
@@ -188,18 +190,20 @@ interface AllDriversGridProps {
 
 export function AllDriversGrid({ title = "All Drivers 2026" }: AllDriversGridProps) {
   return (
-    <div className="bg-[#171717] rounded-xl p-4 sm:p-6">
+    <div className="card">
       <div className="flex items-center gap-2 mb-6">
-        <Trophy className="w-6 h-6 text-yellow-500" />
-        <h2 className="text-2xl font-bold text-white">{title}</h2>
-        <span className="ml-auto text-gray-500 text-sm">22 drivers</span>
+        <Trophy className="w-5 h-5" style={{ color: '#eab308' }} />
+        <h2 className="text-xl font-bold" style={{ fontFamily: 'var(--font-heading)', color: 'var(--text-primary)' }}>{title}</h2>
+        <span className="ml-auto eyebrow">22 drivers</span>
       </div>
-      
+
       <div className="grid grid-cols-4 sm:grid-cols-5 md:grid-cols-6 lg:grid-cols-11 gap-4">
         {allDrivers2026
           .sort((a, b) => a.position - b.position)
-          .map((driver) => (
-            <DriverAvatar key={driver.abbreviation} driver={driver} size="lg" showPoints />
+          .map((driver, i) => (
+            <div key={driver.abbreviation} className="animate-enter" style={{ animationDelay: `${i * 30}ms` }}>
+              <DriverAvatar driver={driver} size="lg" showPoints />
+            </div>
           ))}
       </div>
     </div>

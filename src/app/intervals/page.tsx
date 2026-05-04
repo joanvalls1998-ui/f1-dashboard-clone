@@ -118,7 +118,7 @@ export default function IntervalsPage() {
       <div className="space-y-8">
         <div>
           <h1 className="text-3xl font-bold mb-2">Intervals</h1>
-          <p className="text-muted-foreground">Time gaps between drivers from the last race.</p>
+          <p className="text-gray-400">Time gaps between drivers from the last race.</p>
         </div>
         <div className="flex items-center justify-center py-12">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
@@ -132,7 +132,7 @@ export default function IntervalsPage() {
       {/* Header */}
       <div>
         <h1 className="text-3xl font-bold mb-2">Intervals</h1>
-        <p className="text-muted-foreground">
+        <p className="text-gray-400">
           Time gaps between drivers from the last race
           {raceInfo && (
             <span className="ml-2">
@@ -144,7 +144,7 @@ export default function IntervalsPage() {
 
       {/* Race info banner */}
       {raceInfo && (
-        <div className="flex items-center gap-2 text-sm text-muted-foreground bg-card rounded-lg border p-3">
+        <div className="flex items-center gap-2 text-sm var(--text-muted) bg-card rounded-lg border p-3">
           <Flag className="w-4 h-4 text-green-500" />
           <span>
             {raceInfo.raceName.replace(" Grand Prix", " GP")} •{" "}
@@ -160,7 +160,7 @@ export default function IntervalsPage() {
       {/* Filters */}
       <div className="flex flex-wrap gap-3">
         <div className="relative flex-1 min-w-[200px]">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 var(--text-muted)" />
           <input
             type="text"
             placeholder="Search driver or team..."
@@ -202,7 +202,7 @@ export default function IntervalsPage() {
                       interval.position === 1
                         ? "text-yellow-500"
                         : interval.position === 2
-                        ? "text-gray-400"
+                        ? "var(--text-muted)"
                         : interval.position === 3
                         ? "text-amber-600"
                         : ""
@@ -221,12 +221,12 @@ export default function IntervalsPage() {
                       <div className="font-medium">
                         {interval.abbreviation} {interval.fullName}
                       </div>
-                      <div className="text-xs text-muted-foreground">{interval.team}</div>
+                      <div className="text-xs var(--text-muted)">{interval.team}</div>
                     </div>
                   </div>
                 </td>
                 <td className="p-3 text-center">
-                  <span className="font-medium text-muted-foreground">{interval.laps}</span>
+                  <span className="font-medium var(--text-muted)">{interval.laps}</span>
                 </td>
                 <td className="p-3 text-center">
                   <span
@@ -249,7 +249,7 @@ export default function IntervalsPage() {
                   </span>
                 </td>
                 <td className="p-3 text-center">
-                  <span className="text-muted-foreground font-mono text-sm">
+                  <span className="var(--text-muted) font-mono text-sm">
                     {interval.interval_to_ahead}
                   </span>
                 </td>
@@ -303,7 +303,7 @@ export default function IntervalsPage() {
       </div>
 
       {filteredIntervals.length === 0 && !loading && (
-        <div className="text-center py-8 text-muted-foreground">
+        <div className="text-center py-8 var(--text-muted)">
           No interval data available.
         </div>
       )}

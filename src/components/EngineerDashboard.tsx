@@ -271,38 +271,38 @@ function generateMockTelemetry(lapTime: number | null): TelemetryPoint {
 function SessionHeader({ session, driverName, teamColor }: { session: Session; driverName: string; teamColor: string }) {
   return (
     <div className="mb-4">
-      <div className="text-xs text-gray-500 uppercase tracking-wider mb-1">Session</div>
+      <div className="text-xs var(--text-muted) uppercase tracking-wider mb-1">Session</div>
       <div className="flex items-center justify-between">
         <div>
-          <div className="text-lg font-bold text-white">{session.gp_label}</div>
-          <div className="text-sm text-gray-400">{session.session_label}</div>
+          <div className="text-lg font-bold var(--text-primary)">{session.gp_label}</div>
+          <div className="text-sm var(--text-muted)">{session.session_label}</div>
         </div>
         <div className="flex gap-4">
           <div className="text-center">
-            <div className="text-lg font-bold text-white">{session.lap_count}</div>
-            <div className="text-xs text-gray-500">Laps</div>
+            <div className="text-lg font-bold var(--text-primary)">{session.lap_count}</div>
+            <div className="text-xs var(--text-muted)">Laps</div>
           </div>
           <div className="text-center">
-            <div className="text-lg font-bold text-white">{session.air_temp}°</div>
-            <div className="text-xs text-gray-500">Air</div>
+            <div className="text-lg font-bold var(--text-primary)">{session.air_temp}°</div>
+            <div className="text-xs var(--text-muted)">Air</div>
           </div>
           <div className="text-center">
-            <div className="text-lg font-bold text-white">{session.track_temp}°</div>
-            <div className="text-xs text-gray-500">Track</div>
+            <div className="text-lg font-bold var(--text-primary)">{session.track_temp}°</div>
+            <div className="text-xs var(--text-muted)">Track</div>
           </div>
         </div>
       </div>
       {/* Driver chip with inline color */}
       <div className="flex items-center gap-2 mt-3">
         <div
-          className="flex items-center gap-1.5 bg-[#1a1a1a] rounded-full px-3 py-1 border border-[#333]"
+          className="flex items-center gap-1.5 var(--bg-elevated) rounded-full px-3 py-1 border var(--border-color)"
           style={{ borderColor: `${teamColor}40` }}
         >
           <div
             className="w-2 h-2 rounded-full"
             style={{ backgroundColor: teamColor }}
           />
-          <span className="text-sm font-medium text-white">{driverName}</span>
+          <span className="text-sm font-medium var(--text-primary)">{driverName}</span>
         </div>
       </div>
     </div>
@@ -336,7 +336,7 @@ function TrackView({
 
   return (
     <div className="mb-4">
-      <div className="text-xs text-gray-500 uppercase tracking-wider mb-2">
+      <div className="text-xs var(--text-muted) uppercase tracking-wider mb-2">
         Track View · Telemetry playback
       </div>
       <div className="bg-gradient-to-br from-[#0a0a0f] to-[#0d0d14] rounded-xl border border-[#222] p-4">
@@ -344,10 +344,10 @@ function TrackView({
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-2">
             <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
-            <span className="text-xs text-gray-400">LIVE</span>
+            <span className="text-xs var(--text-muted)">LIVE</span>
           </div>
-          <div className="text-sm text-gray-300">
-            LAP <span className="font-bold text-white">{currentLap}</span> / {laps[laps.length - 1]?.lapNumber || '—'}
+          <div className="text-sm var(--text-secondary)">
+            LAP <span className="font-bold var(--text-primary)">{currentLap}</span> / {laps[laps.length - 1]?.lapNumber || '—'}
           </div>
         </div>
 
@@ -389,12 +389,12 @@ function TrackView({
         <div className="flex items-center gap-3 mb-4">
           <button
             onClick={onTogglePlay}
-            className="w-8 h-8 rounded-full bg-[#1a1a1a] border border-[#333] flex items-center justify-center text-white hover:bg-[#252525] transition-colors"
+            className="w-8 h-8 rounded-full var(--bg-elevated) border var(--border-color) flex items-center justify-center var(--text-primary) hover:var(--bg-overlay) transition-colors"
           >
             {isPlaying ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4 ml-0.5" />}
           </button>
           <div className="flex-1">
-            <div className="relative h-1.5 bg-[#1f1f1f] rounded-full">
+            <div className="relative h-1.5 var(--bg-elevated) rounded-full">
               <div
                 className="absolute h-full bg-[#00ff94] rounded-full transition-all duration-200"
                 style={{ width: `${progress}%` }}
@@ -413,7 +413,7 @@ function TrackView({
                 className={`px-2 py-0.5 text-xs rounded transition-colors ${
                   playbackSpeed === s
                     ? 'bg-[#00ff94] text-black font-medium'
-                    : 'bg-[#1a1a1a] text-gray-400 border border-[#333] hover:border-[#444]'
+                    : 'var(--bg-elevated) var(--text-muted) border var(--border-color) hover:border-[#444]'
                 }`}
               >
                 {s}×
@@ -425,16 +425,16 @@ function TrackView({
         {/* Current lap info */}
         <div className="grid grid-cols-2 gap-3">
           <div className="bg-[#141414] rounded-lg p-3">
-            <div className="text-xs text-gray-500 mb-1">Lap Time</div>
-            <div className="text-xl font-mono font-bold text-white">
+            <div className="text-xs var(--text-muted) mb-1">Lap Time</div>
+            <div className="text-xl font-mono font-bold var(--text-primary)">
               {formatLapTime(lapTime)}
             </div>
           </div>
           <div className="bg-[#141414] rounded-lg p-3">
-            <div className="text-xs text-gray-500 mb-1">Top Speed</div>
-            <div className="text-xl font-mono font-bold text-white">
+            <div className="text-xs var(--text-muted) mb-1">Top Speed</div>
+            <div className="text-xl font-mono font-bold var(--text-primary)">
               {speed ?? '—'}
-              <span className="text-xs text-gray-400 ml-1">km/h</span>
+              <span className="text-xs var(--text-muted) ml-1">km/h</span>
             </div>
           </div>
         </div>
@@ -453,7 +453,7 @@ function TrackView({
                     border: `1px solid ${COMPOUND_COLORS[stint.compound] || '#666'}40`
                   }}
                 >
-                  <span className="text-gray-300">
+                  <span className="var(--text-secondary)">
                     {stint.compound === 'SOFT' ? 'S' : stint.compound === 'MEDIUM' ? 'M' : 'H'}
                     {stint.number} · {stint.lapCount}laps
                   </span>
@@ -481,7 +481,7 @@ function LapSelector({
 }) {
   return (
     <div className="mb-4">
-      <div className="text-xs text-gray-500 uppercase tracking-wider mb-2">Lap selector</div>
+      <div className="text-xs var(--text-muted) uppercase tracking-wider mb-2">Lap selector</div>
       <div className="flex flex-wrap gap-1.5">
         {laps.map((lap) => {
           const isCurrent = lap.lapNumber === currentLap;
@@ -492,19 +492,19 @@ function LapSelector({
               onClick={() => onSelectLap(lap.lapNumber)}
               className={`flex flex-col items-center px-2 py-1 rounded-lg border transition-all ${
                 isSelected
-                  ? 'bg-[#00ff94]/10 border-[#00ff94]/50 text-white'
+                  ? 'bg-[#00ff94]/10 border-[#00ff94]/50 var(--text-primary)'
                   : isCurrent
-                  ? 'bg-[#00ff94]/5 border-[#00ff94]/30 text-white'
+                  ? 'bg-[#00ff94]/5 border-[#00ff94]/30 var(--text-primary)'
                   : lap.isPitIn || lap.isPitOut
-                  ? 'bg-[#1a1a1a] border-[#333] text-gray-500'
-                  : 'bg-[#1a1a1a] border-[#333] text-gray-300 hover:border-[#444]'
+                  ? 'var(--bg-elevated) var(--border-color) var(--text-muted)'
+                  : 'var(--bg-elevated) var(--border-color) var(--text-secondary) hover:border-[#444]'
               }`}
             >
               <span className={`text-xs font-medium ${isCurrent ? 'text-[#00ff94]' : ''}`}>
                 L{lap.lapNumber}
               </span>
               <span className={`text-xs font-mono ${
-                lap.isBest ? 'text-[#00ff94]' : 'text-gray-400'
+                lap.isBest ? 'text-[#00ff94]' : 'var(--text-muted)'
               }`}>
                 {lap.isPitIn || lap.isPitOut ? '—' : formatLapTime(lap.lapTime)}
               </span>
@@ -545,16 +545,16 @@ function MetricTile({
     <div
       className={`rounded-lg p-3 ${highlight ? 'bg-[#00ff94]/10 border border-[#00ff94]/30' : 'bg-[#141414]'}`}
     >
-      <div className="text-xs text-gray-500 mb-1">{label}</div>
+      <div className="text-xs var(--text-muted) mb-1">{label}</div>
       <div className="flex items-baseline gap-1">
-        <span className={`text-xl font-mono font-bold ${highlight ? 'text-[#00ff94]' : 'text-white'}`}>
+        <span className={`text-xl font-mono font-bold ${highlight ? 'text-[#00ff94]' : 'var(--text-primary)'}`}>
           {value}
         </span>
-        {unit && <span className="text-xs text-gray-400">{unit}</span>}
+        {unit && <span className="text-xs var(--text-muted)">{unit}</span>}
       </div>
       {delta && (
         <div className={`text-xs mt-1 ${
-          isPositive ? 'text-green-400' : isNegative ? 'text-red-400' : 'text-gray-400'
+          isPositive ? 'text-green-400' : isNegative ? 'text-red-400' : 'var(--text-muted)'
         }`}>
           {delta}
         </div>
@@ -582,7 +582,7 @@ function KeyMetrics({
 
   return (
     <div className="mb-4">
-      <div className="text-xs text-gray-500 uppercase tracking-wider mb-2">
+      <div className="text-xs var(--text-muted) uppercase tracking-wider mb-2">
         Telemetry · {selectedLapTime ? formatLapTime(selectedLapTime) : '—'}
       </div>
       <div className="grid grid-cols-4 gap-2">
@@ -743,7 +743,7 @@ export function EngineerDashboard() {
   if (loading) {
     return (
       <div className="flex items-center justify-center py-20">
-        <Loader2 className="w-8 h-8 text-white animate-spin" />
+        <Loader2 className="w-8 h-8 var(--text-primary) animate-spin" />
       </div>
     );
   }
@@ -751,7 +751,7 @@ export function EngineerDashboard() {
   if (!session) {
     return (
       <div className="flex items-center justify-center py-20">
-        <p className="text-gray-400">No session data available</p>
+        <p className="var(--text-muted)">No session data available</p>
       </div>
     );
   }
@@ -764,14 +764,14 @@ export function EngineerDashboard() {
         <div className="relative">
           <button
             onClick={() => setShowDriverPicker(!showDriverPicker)}
-            className="flex items-center gap-2 bg-[#1a1a1a] border border-[#333] rounded-lg px-3 py-2 text-white hover:border-[#444] transition-colors"
+            className="flex items-center gap-2 var(--bg-elevated) border var(--border-color) rounded-lg px-3 py-2 var(--text-primary) hover:border-[#444] transition-colors"
           >
             <Car className="w-4 h-4" style={{ color: teamColor }} />
             <span className="text-sm font-medium">{selectedDriverName}</span>
-            <ChevronDown className="w-4 h-4 text-gray-400" />
+            <ChevronDown className="w-4 h-4 var(--text-muted)" />
           </button>
           {showDriverPicker && (
-            <div className="absolute top-full left-0 mt-1 bg-[#1a1a1a] border border-[#333] rounded-lg shadow-xl z-50 w-64 max-h-80 overflow-y-auto">
+            <div className="absolute top-full left-0 mt-1 var(--bg-elevated) border var(--border-color) rounded-lg shadow-xl z-50 w-64 max-h-80 overflow-y-auto">
               {drivers2026.map(d => {
                 const tc = TEAM_COLORS_BY_KEY[d.colorClass] || '#888';
                 return (
@@ -781,13 +781,13 @@ export function EngineerDashboard() {
                       setSelectedDriverName(d.name);
                       setShowDriverPicker(false);
                     }}
-                    className={`w-full flex items-center gap-2 px-3 py-2 text-left hover:bg-[#252525] transition-colors ${
-                      d.name === selectedDriverName ? 'bg-[#252525]' : ''
+                    className={`w-full flex items-center gap-2 px-3 py-2 text-left hover:var(--bg-overlay) transition-colors ${
+                      d.name === selectedDriverName ? 'var(--bg-overlay)' : ''
                     }`}
                   >
                     <div className="w-2 h-2 rounded-full flex-shrink-0" style={{ backgroundColor: tc }} />
-                    <span className="text-sm text-white">{d.name}</span>
-                    <span className="text-xs text-gray-500 ml-auto">{d.team}</span>
+                    <span className="text-sm var(--text-primary)">{d.name}</span>
+                    <span className="text-xs var(--text-muted) ml-auto">{d.team}</span>
                   </button>
                 );
               })}
@@ -796,7 +796,7 @@ export function EngineerDashboard() {
         </div>
 
         {/* Session type selector */}
-        <div className="flex bg-[#1a1a1a] border border-[#333] rounded-lg overflow-hidden">
+        <div className="flex var(--bg-elevated) border var(--border-color) rounded-lg overflow-hidden">
           {SESSION_TYPES.map(st => (
             <button
               key={st.key}
@@ -804,7 +804,7 @@ export function EngineerDashboard() {
               className={`px-3 py-2 text-xs font-medium transition-colors ${
                 selectedSessionType === st.key
                   ? 'bg-[#00ff94] text-black'
-                  : 'text-gray-400 hover:text-white hover:bg-[#252525]'
+                  : 'var(--text-muted) hover:var(--text-primary) hover:var(--bg-overlay)'
               }`}
             >
               {st.label}

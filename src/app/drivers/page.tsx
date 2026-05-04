@@ -55,102 +55,107 @@ export default function DriversPage() {
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-[400px]">
-        <div className="text-gray-400">Loading drivers...</div>
+        <div style={{ color: 'var(--text-muted)' }}>Loading drivers...</div>
       </div>
     );
   }
 
   return (
     <div className="space-y-6">
+      {/* Header */}
       <div className="flex items-center gap-3">
-        <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#E8002D] to-[#FF8000] flex items-center justify-center">
-          <span className="text-white font-bold text-lg">22</span>
+        <div
+          className="w-12 h-12 rounded-xl flex items-center justify-center shrink-0"
+          style={{ backgroundColor: 'var(--accent-red)' }}
+        >
+          <span className="var(--text-primary) font-bold text-lg" style={{ fontFamily: 'var(--font-heading)' }}>22</span>
         </div>
         <div>
-          <h1 className="text-3xl font-bold">Drivers</h1>
-          <p className="text-muted-foreground text-sm">2026 Formula 1 World Championship</p>
+          <p className="eyebrow">2026 Season</p>
+          <h1
+            className="text-3xl font-extrabold"
+            style={{ fontFamily: "var(--font-heading)", color: "var(--text-primary)" }}
+          >
+            Drivers
+          </h1>
         </div>
       </div>
 
-      <div className="bg-[#171717] rounded-xl p-6">
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
-          {drivers.map((driver) => {
-            const imageUrl = driverImages[driver.abbreviation as keyof typeof driverImages];
-            const teamColor = teamColors[driver.team] || "#666666";
-            const nameParts = driver.fullName.split(" ");
-            const lastName = nameParts[nameParts.length - 1];
-            const firstName = nameParts.slice(0, -1).join(" ");
+      {/* Grid */}
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
+        {drivers.map((driver, i) => {
+          const imageUrl = driverImages[driver.abbreviation as keyof typeof driverImages];
+          const teamColor = teamColors[driver.team] || "#666666";
+          const nameParts = driver.fullName.split(" ");
+          const lastName = nameParts[nameParts.length - 1];
+          const firstName = nameParts.slice(0, -1).join(" ");
 
-            return (
+          return (
+            <div
+              key={driver.abbreviation}
+              className="card card-interactive overflow-hidden animate-enter"
+              style={{ animationDelay: `${i * 30}ms` }}
+            >
+              {/* Position badge */}
               <div
-                key={driver.abbreviation}
-                className="relative bg-[#1a1a1a] rounded-xl overflow-hidden hover:ring-2 transition-all duration-200 hover:scale-[1.02]"
-                style={{ "--team-color": teamColor, ringColor: teamColor } as React.CSSProperties}
+                className="absolute top-2 left-2 w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm z-10"
+                style={{ backgroundColor: teamColor, color: "#fff", fontFamily: 'var(--font-mono)' }}
               >
-                {/* Position badge */}
-                <div
-                  className="absolute top-2 left-2 w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm z-10"
-                  style={{ backgroundColor: teamColor, color: "#fff" }}
-                >
-                  {driver.position}
-                </div>
+                {driver.position}
+              </div>
 
-                {/* Driver photo */}
-                <div className="relative h-32 bg-gradient-to-b from-[#2a2a2a] to-[#1a1a1a]">
-                  {imageUrl ? (
-                    <Image
-                      src={imageUrl}
-                      alt={driver.fullName}
-                      fill
-                      className="object-cover object-top"
-                      unoptimized
-                    />
-                  ) : (
-                    <div className="w-full h-full flex items-center justify-center bg-[#2a2a2a]">
-                      <span className="text-4xl font-bold text-gray-600">
-                        {lastName[0]}
-                      </span>
-                    </div>
-                  )}
-                  {/* Gradient overlay */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#1a1a1a] via-transparent to-transparent" />
-                </div>
-
-                {/* Driver info */}
-                <div className="p-3">
-                  <div className="flex items-start justify-between gap-1">
-                    <div className="min-w-0">
-                      <h3 className="font-bold text-white text-sm truncate leading-tight">
-                        {lastName}
-                      </h3>
-                      <p className="text-xs text-gray-400 truncate">{firstName}</p>
-                    </div>
-                    <div
-                      className="shrink-0 px-2 py-1 rounded text-xs font-medium"
-                      style={{ backgroundColor: teamColor + "33", color: teamColor }}
+              {/* Driver photo */}
+              <div className="relative h-28 overflow-hidden rounded-lg mb-3" style={{ backgroundColor: 'var(--bg-elevated)' }}>
+                {imageUrl ? (
+                  <Image
+                    src={imageUrl}
+                    alt={driver.fullName}
+                    fill
+                    className="object-cover object-top"
+                    unoptimized
+                  />
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center">
+                    <span
+                      className="text-4xl font-black"
+                      style={{ color: teamColor + '66', fontFamily: 'var(--font-heading)' }}
                     >
-                      {driver.team.length > 12
-                        ? driver.team.split(" ").map(w => w[0]).join("")
-                        : driver.team}
-                    </div>
+                      {lastName[0]}
+                    </span>
                   </div>
+                )}
+                <div className="absolute inset-0 bg-gradient-to-t from-[var(--bg-surface)] via-transparent to-transparent" />
+              </div>
 
-                  {/* Points */}
-                  <div className="mt-2 flex items-center justify-between">
-                    <span className="text-xs text-gray-500">Points</span>
-                    <span className="font-bold text-white">{driver.points}</span>
+              {/* Driver info */}
+              <div className="space-y-1">
+                <div className="flex items-start justify-between gap-1">
+                  <div className="min-w-0">
+                    <h3
+                      className="font-bold text-sm truncate leading-tight"
+                      style={{ fontFamily: 'var(--font-heading)', color: 'var(--text-primary)' }}
+                    >
+                      {lastName}
+                    </h3>
+                    <p className="text-xs truncate" style={{ color: 'var(--text-muted)' }}>{firstName}</p>
                   </div>
+                  <div
+                    className="shrink-0 px-1.5 py-0.5 rounded text-xs font-medium"
+                    style={{ backgroundColor: teamColor + '22', color: teamColor }}
+                  >
+                    {driver.team.length > 10 ? driver.team.split(" ").map((w: string) => w[0]).join("") : driver.team}
+                  </div>
+                </div>
 
-                  {/* Number */}
-                  <div className="mt-1 flex items-center justify-between">
-                    <span className="text-xs text-gray-500">#</span>
-                    <span className="text-sm font-mono text-gray-300">{driver.number}</span>
-                  </div>
+                {/* Points + Number */}
+                <div className="flex items-center justify-between pt-2 border-t" style={{ borderColor: 'var(--bg-overlay)' }}>
+                  <span className="stat-number text-base" style={{ color: teamColor }}>{driver.points}</span>
+                  <span className="text-xs" style={{ fontFamily: 'var(--font-mono)', color: 'var(--text-muted)' }}>#{driver.number}</span>
                 </div>
               </div>
-            );
-          })}
-        </div>
+            </div>
+          );
+        })}
       </div>
     </div>
   );

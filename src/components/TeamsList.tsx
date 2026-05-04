@@ -53,7 +53,7 @@ export function TeamsList() {
   if (loading) {
     return (
       <div className="flex items-center justify-center py-12">
-        <Loader2 className="w-8 h-8 text-white animate-spin" />
+        <div className="w-8 h-8 border-2 rounded-full animate-spin" style={{ borderColor: 'var(--bg-overlay)', borderTopColor: 'var(--accent-red)' }} />
       </div>
     );
   }
@@ -63,27 +63,22 @@ export function TeamsList() {
       {teams.map((team) => (
         <div
           key={team.name}
-          className="bg-[#171717] rounded-xl p-4 sm:p-6 hover:bg-[#1f1f1f] transition-colors"
+          className="card card-interactive"
         >
           <div className="flex items-start justify-between mb-4">
             <div className="flex items-center gap-3">
               <div
-                className="w-4 h-4 rounded-sm mt-1"
+                className="w-4 h-4 rounded-sm mt-1 shrink-0"
                 style={{ backgroundColor: team.color }}
               />
               <div>
-                <h3 className="text-white font-bold text-lg">{team.name}</h3>
-                <p className="text-gray-500 text-sm">{team.points} pts</p>
+                <h3 className="font-bold text-lg" style={{ fontFamily: 'var(--font-heading)', color: 'var(--text-primary)' }}>{team.name}</h3>
+                <p className="text-sm" style={{ color: 'var(--text-muted)' }}>{team.points} pts</p>
               </div>
             </div>
             <div className="text-right">
-              <span className={`text-2xl font-bold ${
-                team.position === 1 ? "text-yellow-500" :
-                team.position === 2 ? "text-gray-300" :
-                team.position === 3 ? "text-amber-600" : "text-gray-400"
-              }`}>
-                P{team.position}
-              </span>
+              <span className="stat-number text-2xl" style={{ color: team.color }}>{team.points}</span>
+              <span className="text-xs ml-2" style={{ color: 'var(--text-muted)' }}>P{team.position}</span>
             </div>
           </div>
 
@@ -94,16 +89,17 @@ export function TeamsList() {
                   <img
                     src={driver.image}
                     alt={driver.name}
-                    className="w-10 h-10 rounded-full object-cover bg-[#2a2a2a]"
+                    className="w-10 h-10 rounded-full object-cover"
+                    style={{ backgroundColor: 'var(--bg-elevated)' }}
                   />
                 ) : (
-                  <div className="w-10 h-10 rounded-full bg-[#2a2a2a] flex items-center justify-center">
-                    <span className="text-xs text-gray-400">{driver.abbreviation}</span>
+                  <div className="w-10 h-10 rounded-full flex items-center justify-center" style={{ backgroundColor: 'var(--bg-elevated)' }}>
+                    <span className="text-xs" style={{ color: 'var(--text-muted)' }}>{driver.abbreviation}</span>
                   </div>
                 )}
                 <div>
-                  <p className="text-white text-sm font-medium">{driver.name}</p>
-                  <p className="text-gray-500 text-xs">{driver.abbreviation}</p>
+                  <p className="text-sm font-medium" style={{ color: 'var(--text-primary)' }}>{driver.name}</p>
+                  <p className="text-xs" style={{ color: 'var(--text-muted)' }}>{driver.abbreviation}</p>
                 </div>
               </div>
             ))}

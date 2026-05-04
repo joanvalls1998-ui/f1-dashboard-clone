@@ -5,7 +5,7 @@ export default function TyreStrategyPage() {
     <div className="space-y-8">
       <div>
         <h1 className="text-3xl font-bold mb-2">Tyre Strategy</h1>
-        <p className="text-muted-foreground">
+        <p className="text-[var(--text-secondary)]">
           Tyre compounds and stint analysis.
         </p>
       </div>

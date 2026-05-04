@@ -5,7 +5,7 @@ export default function SpeedHistogramPage() {
     <div className="space-y-8">
       <div>
         <h1 className="text-3xl font-bold mb-2">Speed Histogram</h1>
-        <p className="text-muted-foreground">
+        <p className="text-[var(--text-muted)]">
           Speed distribution analysis.
         </p>
       </div>

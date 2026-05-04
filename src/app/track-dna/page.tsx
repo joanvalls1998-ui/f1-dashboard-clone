@@ -485,10 +485,10 @@ export default function TrackDnaPage() {
       <div className="space-y-8">
         <div>
           <h1 className="text-3xl font-bold mb-2">Track DNA</h1>
-          <p className="text-muted-foreground">Track characteristics and circuit analysis.</p>
+          <p className="text-[var(--text-muted)]">Track characteristics and circuit analysis.</p>
         </div>
         <div className="flex items-center justify-center min-h-[400px]">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+          <div className="border-2 border-[var(--bg-overlay)] border-t-[var(--accent-red)] rounded-full animate-spin h-8 w-8"></div>
         </div>
       </div>
     );
@@ -499,32 +499,32 @@ export default function TrackDnaPage() {
       <div>
         <div className="flex items-center gap-3 mb-2">
           <div className="w-10 h-10 rounded-full bg-gradient-to-br from-green-500 to-emerald-600 flex items-center justify-center">
-            <Dna className="w-5 h-5 text-white" />
+            <Dna className="w-5 h-5 var(--text-primary)" />
           </div>
           <div>
             <h1 className="text-3xl font-bold">Track DNA</h1>
-            <p className="text-muted-foreground text-sm">Circuit characteristics and analysis for 2026 season</p>
+            <p className="text-[var(--text-muted)] text-sm">Circuit characteristics and analysis for 2026 season</p>
           </div>
         </div>
       </div>
 
       {/* Stats Summary */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <div className="bg-[#171717] rounded-lg p-4 text-center">
+        <div className="bg-[var(--bg-surface)] rounded-lg p-4 text-center">
           <p className="text-3xl font-black text-green-500">{circuits.length}</p>
-          <p className="text-xs text-gray-500 uppercase">Total Circuits</p>
+          <p className="text-xs text-[var(--text-muted)] uppercase">Total Circuits</p>
         </div>
-        <div className="bg-[#171717] rounded-lg p-4 text-center">
+        <div className="bg-[var(--bg-surface)] rounded-lg p-4 text-center">
           <p className="text-3xl font-black text-blue-500">{completedRaces.length}</p>
-          <p className="text-xs text-gray-500 uppercase">Completed</p>
+          <p className="text-xs text-[var(--text-muted)] uppercase">Completed</p>
         </div>
-        <div className="bg-[#171717] rounded-lg p-4 text-center">
+        <div className="bg-[var(--bg-surface)] rounded-lg p-4 text-center">
           <p className="text-3xl font-black text-yellow-500">{upcomingRaces.length}</p>
-          <p className="text-xs text-gray-500 uppercase">Upcoming</p>
+          <p className="text-xs text-[var(--text-muted)] uppercase">Upcoming</p>
         </div>
-        <div className="bg-[#171717] rounded-lg p-4 text-center">
+        <div className="bg-[var(--bg-surface)] rounded-lg p-4 text-center">
           <p className="text-3xl font-black text-red-500">370</p>
-          <p className="text-xs text-gray-500 uppercase">Max Speed (km/h)</p>
+          <p className="text-xs text-[var(--text-muted)] uppercase">Max Speed (km/h)</p>
         </div>
       </div>
 
@@ -543,7 +543,7 @@ export default function TrackDnaPage() {
             return (
               <div
                 key={circuit.round}
-                className={`bg-[#1a1a1a] rounded-xl overflow-hidden transition-all cursor-pointer ${
+                className={`bg-[var(--bg-surface)] rounded-xl overflow-hidden transition-all cursor-pointer ${
                   isSelected ? "ring-2 ring-green-500" : "hover:ring-1 hover:ring-gray-600"
                 }`}
                 onClick={() => setSelectedTrack(isSelected ? null : circuit.circuitId)}
@@ -557,17 +557,17 @@ export default function TrackDnaPage() {
                 }}
               >
                 {/* Header */}
-                <div className="p-4 border-b border-[#333]">
+                <div className="p-4 border-b border-[var(--border-color)]">
                   <div className="flex items-start justify-between">
                     <div>
                       <div className="flex items-center gap-2">
-                        <span className="px-2 py-0.5 rounded bg-[#E10600] text-white text-xs font-bold">
+                        <span className="px-2 py-0.5 rounded bg-[var(--accent-red)] var(--text-primary) text-xs font-bold">
                           R{circuit.round}
                         </span>
-                        <span className="text-xs text-gray-500">{circuit.date}</span>
+                        <span className="text-xs text-[var(--text-muted)]">{circuit.date}</span>
                       </div>
-                      <h3 className="text-white font-bold text-lg mt-1">{circuit.country}</h3>
-                      <p className="text-gray-500 text-sm">{circuit.city}</p>
+                      <h3 className="text-[var(--text-primary)] font-bold text-lg mt-1">{circuit.country}</h3>
+                      <p className="text-[var(--text-muted)] text-sm">{circuit.city}</p>
                     </div>
                     {circuit.status === "completed" ? (
                       <span className="px-2 py-1 rounded bg-green-500/10 text-green-500 text-xs font-medium">
@@ -586,72 +586,72 @@ export default function TrackDnaPage() {
                   <div className="p-4 space-y-3">
                     {/* Key Metrics */}
                     <div className="grid grid-cols-3 gap-2">
-                      <div className="text-center p-2 rounded bg-[#252525]">
-                        <p className="text-lg font-bold text-white">{dna.corners}</p>
-                        <p className="text-xs text-gray-500">Corners</p>
+                      <div className="text-center p-2 rounded bg-[var(--bg-elevated)]">
+                        <p className="text-lg font-bold text-[var(--text-primary)]">{dna.corners}</p>
+                        <p className="text-xs text-[var(--text-muted)]">Corners</p>
                       </div>
-                      <div className="text-center p-2 rounded bg-[#252525]">
-                        <p className="text-lg font-bold text-white">{dna.length.toFixed(2)}km</p>
-                        <p className="text-xs text-gray-500">Length</p>
+                      <div className="text-center p-2 rounded bg-[var(--bg-elevated)]">
+                        <p className="text-lg font-bold text-[var(--text-primary)]">{dna.length.toFixed(2)}km</p>
+                        <p className="text-xs text-[var(--text-muted)]">Length</p>
                       </div>
-                      <div className="text-center p-2 rounded bg-[#252525]">
+                      <div className="text-center p-2 rounded bg-[var(--bg-elevated)]">
                         <p className={`text-lg font-bold ${getCategoryColor(dna.topSpeed)}`}>
                           {dna.topSpeed}
                         </p>
-                        <p className="text-xs text-gray-500">Max km/h</p>
+                        <p className="text-xs text-[var(--text-muted)]">Max km/h</p>
                       </div>
                     </div>
 
                     {/* Details */}
                     <div className="space-y-2 text-sm">
                       <div className="flex items-center justify-between">
-                        <span className="text-gray-500 flex items-center gap-1">
+                        <span className="text-[var(--text-muted)] flex items-center gap-1">
                           <Gauge className="w-3 h-3" /> DRS Zones
                         </span>
-                        <span className="text-white font-medium">{dna.drsZones}</span>
+                        <span className="text-[var(--text-primary)] font-medium">{dna.drsZones}</span>
                       </div>
                       <div className="flex items-center justify-between">
-                        <span className="text-gray-500 flex items-center gap-1">
+                        <span className="text-[var(--text-muted)] flex items-center gap-1">
                           <AlertTriangle className="w-3 h-3" /> Braking Zones
                         </span>
-                        <span className="text-white font-medium">{dna.brakingZones}</span>
+                        <span className="text-[var(--text-primary)] font-medium">{dna.brakingZones}</span>
                       </div>
                       <div className="flex items-center justify-between">
-                        <span className="text-gray-500 flex items-center gap-1">
+                        <span className="text-[var(--text-muted)] flex items-center gap-1">
                           <TrendingUp className="w-3 h-3" /> Elevation
                         </span>
-                        <span className="text-white font-medium">{dna.elevationChange}m</span>
+                        <span className="text-[var(--text-primary)] font-medium">{dna.elevationChange}m</span>
                       </div>
                       <div className="flex items-center justify-between">
-                        <span className="text-gray-500 flex items-center gap-1">
+                        <span className="text-[var(--text-muted)] flex items-center gap-1">
                           <Timer className="w-3 h-3" /> Longest Straight
                         </span>
-                        <span className="text-white font-medium">{dna.longestStraight}m</span>
+                        <span className="text-[var(--text-primary)] font-medium">{dna.longestStraight}m</span>
                       </div>
                     </div>
 
                     {/* Expanded Details */}
                     {isSelected && (
-                      <div className="mt-4 pt-4 border-t border-[#333] space-y-3">
+                      <div className="mt-4 pt-4 border-t border-[var(--border-color)] space-y-3">
                         <div>
-                          <p className="text-xs text-gray-500 uppercase tracking-wider mb-1">
+                          <p className="text-xs text-[var(--text-muted)] uppercase tracking-wider mb-1">
                             Hardest Corner
                           </p>
-                          <p className="text-white font-medium text-sm">{dna.hardestCorner}</p>
+                          <p className="text-[var(--text-primary)] font-medium text-sm">{dna.hardestCorner}</p>
                         </div>
                         <div>
-                          <p className="text-xs text-gray-500 uppercase tracking-wider mb-1">
+                          <p className="text-xs text-[var(--text-muted)] uppercase tracking-wider mb-1">
                             Asphalt
                           </p>
-                          <p className="text-white font-medium text-sm">{dna.asphaltType}</p>
+                          <p className="text-[var(--text-primary)] font-medium text-sm">{dna.asphaltType}</p>
                         </div>
                         <div>
-                          <p className="text-xs text-gray-500 uppercase tracking-wider mb-1 flex items-center gap-1">
+                          <p className="text-xs text-[var(--text-muted)] uppercase tracking-wider mb-1 flex items-center gap-1">
                             <Award className="w-3 h-3" /> Notable History
                           </p>
-                          <p className="text-gray-400 text-sm">{dna.notableHistory}</p>
+                          <p className="text-[var(--text-muted)] text-sm">{dna.notableHistory}</p>
                         </div>
-                        <div className="flex items-center gap-2 text-xs text-gray-500">
+                        <div className="flex items-center gap-2 text-xs text-[var(--text-muted)]">
                           <Flag className="w-3 h-3" />
                           First F1 GP: {dna.firstGP}
                         </div>
@@ -659,14 +659,14 @@ export default function TrackDnaPage() {
                     )}
 
                     {!isSelected && (
-                      <p className="text-xs text-gray-600 text-center mt-2">
+                      <p className="text-xs text-[var(--text-muted)] text-center mt-2 opacity-60">
                         Click for more details
                       </p>
                     )}
                   </div>
                 ) : (
                   <div className="p-4">
-                    <p className="text-gray-500 text-sm text-center">
+                    <p className="text-[var(--text-muted)] text-sm text-center">
                       DNA data not available for this circuit
                     </p>
                   </div>

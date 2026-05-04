@@ -277,12 +277,12 @@ export default function UsedElementsPage() {
       <div className="space-y-8">
         <div>
           <h1 className="text-3xl font-bold mb-2">Used Elements</h1>
-          <p className="text-muted-foreground">
+          <p className="text-[var(--text-secondary)]">
             Track evolution and used elements throughout the season.
           </p>
         </div>
         <div className="flex items-center justify-center min-h-[400px]">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+          <div className="border-2 border-[var(--bg-overlay)] border-t-[var(--accent-red)] rounded-full h-8 w-8 animate-spin"></div>
         </div>
       </div>
     );
@@ -293,11 +293,11 @@ export default function UsedElementsPage() {
       <div>
         <div className="flex items-center gap-3 mb-2">
           <div className="w-10 h-10 rounded-full bg-gradient-to-br from-orange-500 to-red-600 flex items-center justify-center">
-            <Wrench className="w-5 h-5 text-white" />
+            <Wrench className="w-5 h-5 text-[var(--text-primary)]" />
           </div>
           <div>
             <h1 className="text-3xl font-bold">Used Elements</h1>
-            <p className="text-muted-foreground text-sm">
+            <p className="text-[var(--text-secondary)] text-sm">
               Track evolution and used elements throughout the season
             </p>
           </div>
@@ -306,34 +306,34 @@ export default function UsedElementsPage() {
 
       {/* Stats Summary */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <div className="bg-[#171717] rounded-lg p-4 text-center">
+        <div className="card p-4 text-center">
           <p className="text-3xl font-black text-orange-500">{totalElementChanges}</p>
-          <p className="text-xs text-gray-500 uppercase">Element Changes</p>
+          <p className="text-xs text-[var(--text-muted)] uppercase">Element Changes</p>
         </div>
-        <div className="bg-[#171717] rounded-lg p-4 text-center">
+        <div className="card p-4 text-center">
           <p className="text-3xl font-black text-red-500">{totalPenalties}</p>
-          <p className="text-xs text-gray-500 uppercase">Grid Penalties</p>
+          <p className="text-xs text-[var(--text-muted)] uppercase">Grid Penalties</p>
         </div>
-        <div className="bg-[#171717] rounded-lg p-4 text-center">
+        <div className="card p-4 text-center">
           <p className="text-3xl font-black text-yellow-500">{penalizedDrivers}</p>
-          <p className="text-xs text-gray-500 uppercase">Drivers Penalized</p>
+          <p className="text-xs text-[var(--text-muted)] uppercase">Drivers Penalized</p>
         </div>
-        <div className="bg-[#171717] rounded-lg p-4 text-center">
+        <div className="card p-4 text-center">
           <p className="text-3xl font-black text-blue-500">{teams.length}</p>
-          <p className="text-xs text-gray-500 uppercase">Teams Affected</p>
+          <p className="text-xs text-[var(--text-muted)] uppercase">Teams Affected</p>
         </div>
       </div>
 
       {/* Filters */}
       <div className="flex flex-wrap gap-3">
         <div className="relative flex-1 min-w-[200px]">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--text-muted)]" />
           <input
             type="text"
             placeholder="Search driver, team, element..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full pl-9 pr-3 py-2 rounded-md border bg-[#1a1a1a] text-sm"
+            className="w-full pl-9 pr-3 py-2 rounded-md border bg-[var(--bg-elevated)] text-sm"
             aria-label="Search used elements"
           />
         </div>
@@ -341,7 +341,7 @@ export default function UsedElementsPage() {
         <select
           value={selectedTeam}
           onChange={(e) => setSelectedTeam(e.target.value)}
-          className="px-3 py-2 rounded-md border bg-[#1a1a1a] text-sm"
+          className="px-3 py-2 rounded-md border bg-[var(--bg-elevated)] text-sm"
           aria-label="Filter by team"
         >
           <option value="all">All Teams</option>
@@ -355,7 +355,7 @@ export default function UsedElementsPage() {
         <select
           value={selectedElement}
           onChange={(e) => setSelectedElement(e.target.value)}
-          className="px-3 py-2 rounded-md border bg-[#1a1a1a] text-sm"
+          className="px-3 py-2 rounded-md border bg-[var(--bg-elevated)] text-sm"
           aria-label="Filter by element"
         >
           <option value="all">All Elements</option>
@@ -368,27 +368,27 @@ export default function UsedElementsPage() {
       </div>
 
       {/* Element Legend */}
-      <div className="bg-[#1a1a1a] rounded-xl p-4">
+      <div className="bg-[var(--bg-elevated)] rounded-xl p-4">
         <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">
-          <Filter className="w-4 h-4 text-gray-500" />
+          <Filter className="w-4 h-4 text-[var(--text-muted)]" />
           Element Categories
         </h3>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3 text-xs">
           <div className="flex items-center gap-2">
             <span className="px-2 py-1 rounded bg-blue-500/10 text-blue-500 font-medium">PU</span>
-            <span className="text-gray-400">Power Unit</span>
+            <span className="text-[var(--text-muted)]">Power Unit</span>
           </div>
           <div className="flex items-center gap-2">
             <span className="px-2 py-1 rounded bg-green-500/10 text-green-500 font-medium">GX</span>
-            <span className="text-gray-400">Gearbox</span>
+            <span className="text-[var(--text-muted)]">Gearbox</span>
           </div>
           <div className="flex items-center gap-2">
             <span className="px-2 py-1 rounded bg-yellow-500/10 text-yellow-500 font-medium">AERO</span>
-            <span className="text-gray-400">Aero Parts</span>
+            <span className="text-[var(--text-muted)]">Aero Parts</span>
           </div>
           <div className="flex items-center gap-2">
             <span className="px-2 py-1 rounded bg-purple-500/10 text-purple-500 font-medium">SS</span>
-            <span className="text-gray-400">Suspension</span>
+            <span className="text-[var(--text-muted)]">Suspension</span>
           </div>
         </div>
       </div>
@@ -401,16 +401,16 @@ export default function UsedElementsPage() {
         </h2>
 
         {filteredPenalties.length === 0 ? (
-          <div className="rounded-lg border bg-card p-6 text-center">
-            <RefreshCw className="w-8 h-8 text-gray-500 mx-auto mb-2" />
-            <p className="text-muted-foreground">No element usage data available</p>
-          </div>
+        <div className="card p-6 text-center">
+          <Wrench className="w-8 h-8 text-[var(--text-muted)] mx-auto mb-2" />
+          <p className="text-[var(--text-secondary)]">No element usage data available</p>
+        </div>
         ) : (
-          <div className="bg-[#1a1a1a] rounded-xl overflow-hidden">
+          <div className="bg-[var(--bg-elevated)] rounded-xl overflow-hidden">
             <div className="overflow-x-auto">
               <table className="w-full" aria-label="Used elements and penalties">
                 <thead>
-                  <tr className="border-b border-[#333] text-xs text-gray-500 uppercase tracking-wider">
+                  <tr className="border-b border-[var(--border-color)] text-xs text-[var(--text-muted)] uppercase tracking-wider">
                     <th className="text-left p-4">Driver</th>
                     <th className="text-left p-4">Team</th>
                     <th className="text-left p-4">Race</th>
@@ -423,12 +423,12 @@ export default function UsedElementsPage() {
                   {filteredPenalties.map((penalty, index) => (
                     <tr
                       key={`${penalty.abbreviation}-${penalty.round}-${index}`}
-                      className="border-b border-[#252525] hover:bg-[#252525] transition-colors"
+                      className="border-b border-[var(--border-color)] hover:bg-[var(--bg-overlay)] transition-colors"
                     >
                       <td className="p-4">
                         <div className="flex items-center gap-3">
-                          <span className="font-bold text-white">#{penalty.number}</span>
-                          <span className="text-white font-medium">{penalty.abbreviation}</span>
+                          <span className="font-bold text-[var(--text-primary)]">#{penalty.number}</span>
+                          <span className="text-[var(--text-primary)] font-medium">{penalty.abbreviation}</span>
                         </div>
                       </td>
                       <td className="p-4">
@@ -437,11 +437,11 @@ export default function UsedElementsPage() {
                             className="w-2 h-2 rounded-full"
                             style={{ backgroundColor: penalty.teamColor }}
                           />
-                          <span className="text-gray-300 text-sm">{penalty.team}</span>
+                          <span className="text-[var(--text-secondary)] text-sm">{penalty.team}</span>
                         </div>
                       </td>
                       <td className="p-4">
-                        <span className="text-gray-400 text-sm">
+                        <span className="text-[var(--text-muted)] text-sm">
                           R{penalty.round} - {penalty.raceName}
                         </span>
                       </td>
@@ -466,7 +466,7 @@ export default function UsedElementsPage() {
                           >
                             {penalty.elementCode}
                           </span>
-                          <span className="text-gray-400 text-sm">{penalty.element}</span>
+                          <span className="text-[var(--text-muted)] text-sm">{penalty.element}</span>
                         </div>
                       </td>
                       <td className="p-4">
@@ -475,7 +475,7 @@ export default function UsedElementsPage() {
                             FAILED
                           </span>
                         ) : (
-                          <span className="px-2 py-1 rounded bg-gray-500/10 text-gray-500 text-xs font-medium">
+                          <span className="px-2 py-1 rounded bg-[var(--bg-overlay)] text-[var(--text-muted)] text-xs font-medium">
                             USED
                           </span>
                         )}
@@ -488,7 +488,7 @@ export default function UsedElementsPage() {
                             </span>
                           </div>
                         ) : (
-                          <span className="text-gray-500 text-sm">-</span>
+                          <span className="text-[var(--text-muted)] text-sm">-</span>
                         )}
                       </td>
                     </tr>
@@ -516,35 +516,35 @@ export default function UsedElementsPage() {
             return (
               <div
                 key={team}
-                className="bg-[#1a1a1a] rounded-xl overflow-hidden"
+                className="bg-[var(--bg-elevated)] rounded-xl overflow-hidden"
                 style={{ borderTop: `3px solid ${teamColor}` }}
               >
                 <div className="p-4">
-                  <div className="flex items-center gap-2 mb-3">
+                    <div className="flex items-center gap-2 mb-3">
                     <div className="w-3 h-3 rounded-full" style={{ backgroundColor: teamColor }} />
-                    <h3 className="text-white font-bold">{team}</h3>
+                    <h3 className="text-[var(--text-primary)] font-bold">{team}</h3>
                   </div>
 
                   <div className="space-y-2">
                     <div className="flex justify-between text-sm">
-                      <span className="text-gray-500">Total Changes</span>
-                      <span className="text-white font-medium">{teamPenalties.length}</span>
+                      <span className="text-[var(--text-muted)]">Total Changes</span>
+                      <span className="text-[var(--text-primary)] font-medium">{teamPenalties.length}</span>
                     </div>
                     <div className="flex justify-between text-sm">
-                      <span className="text-gray-500">With Penalties</span>
+                      <span className="text-[var(--text-muted)]">With Penalties</span>
                       <span className="text-red-500 font-medium">{teamPenalized}</span>
                     </div>
                     <div className="flex justify-between text-sm">
-                      <span className="text-gray-500">Affected Drivers</span>
-                      <span className="text-white font-medium">
+                      <span className="text-[var(--text-muted)]">Affected Drivers</span>
+                      <span className="text-[var(--text-primary)] font-medium">
                         {new Set(teamPenalties.map((p) => p.abbreviation)).size}
                       </span>
                     </div>
                   </div>
 
                   {/* Element breakdown */}
-                  <div className="mt-3 pt-3 border-t border-[#333]">
-                    <p className="text-xs text-gray-500 mb-2">Most Affected:</p>
+                  <div className="mt-3 pt-3 border-t border-[var(--border-color)]">
+                    <p className="text-xs text-[var(--text-muted)] mb-2">Most Affected:</p>
                     <div className="flex flex-wrap gap-1">
                       {Array.from(
                         new Set(teamPenalties.map((p) => p.elementCode)),
@@ -553,7 +553,7 @@ export default function UsedElementsPage() {
                         .map((code) => (
                           <span
                             key={code}
-                            className="px-2 py-0.5 rounded text-xs bg-[#333] text-gray-300"
+                            className="px-2 py-0.5 rounded text-xs bg-[var(--bg-overlay)] text-[var(--text-secondary)]"
                           >
                             {code}
                           </span>

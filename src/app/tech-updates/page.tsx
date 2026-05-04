@@ -242,12 +242,12 @@ export default function TechUpdatesPage() {
       <div className="space-y-8">
         <div>
           <h1 className="text-3xl font-bold mb-2">Tech Updates</h1>
-          <p className="text-muted-foreground">
+          <p className="text-[var(--text-muted)]">
             Technical updates and aerodynamic developments from teams.
           </p>
         </div>
         <div className="flex items-center justify-center min-h-[400px]">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+          <div className="border-2 border-[var(--bg-overlay)] border-t-[var(--accent-red)] rounded-full animate-spin h-8 w-8"></div>
         </div>
       </div>
     );
@@ -258,11 +258,11 @@ export default function TechUpdatesPage() {
       <div>
         <div className="flex items-center gap-3 mb-2">
           <div className="w-10 h-10 rounded-full bg-gradient-to-br from-purple-500 to-indigo-600 flex items-center justify-center">
-            <Wrench className="w-5 h-5 text-white" />
+            <Wrench className="w-5 h-5 var(--text-primary)" />
           </div>
           <div>
             <h1 className="text-3xl font-bold">Tech Updates</h1>
-            <p className="text-muted-foreground text-sm">
+            <p className="text-[var(--text-muted)] text-sm">
               Technical updates and aerodynamic developments from teams
             </p>
           </div>
@@ -271,34 +271,34 @@ export default function TechUpdatesPage() {
 
       {/* Stats Summary */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <div className="bg-[#171717] rounded-lg p-4 text-center">
+        <div className="bg-[var(--bg-surface)] rounded-lg p-4 text-center">
           <p className="text-3xl font-black text-purple-500">{techUpdates.length}</p>
-          <p className="text-xs text-gray-500 uppercase">Total Updates</p>
+          <p className="text-xs text-[var(--text-muted)] uppercase">Total Updates</p>
         </div>
-        <div className="bg-[#171717] rounded-lg p-4 text-center">
+        <div className="bg-[var(--bg-surface)] rounded-lg p-4 text-center">
           <p className="text-3xl font-black text-red-500">
             {techUpdates.filter((u) => u.impact === "high").length}
           </p>
-          <p className="text-xs text-gray-500 uppercase">High Impact</p>
+          <p className="text-xs text-[var(--text-muted)] uppercase">High Impact</p>
         </div>
-        <div className="bg-[#171717] rounded-lg p-4 text-center">
+        <div className="bg-[var(--bg-surface)] rounded-lg p-4 text-center">
           <p className="text-3xl font-black text-yellow-500">
             {techUpdates.filter((u) => u.impact === "medium").length}
           </p>
-          <p className="text-xs text-gray-500 uppercase">Medium Impact</p>
+          <p className="text-xs text-[var(--text-muted)] uppercase">Medium Impact</p>
         </div>
-        <div className="bg-[#171717] rounded-lg p-4 text-center">
+        <div className="bg-[var(--bg-surface)] rounded-lg p-4 text-center">
           <p className="text-3xl font-black text-blue-500">{teams.length}</p>
-          <p className="text-xs text-gray-500 uppercase">Teams Updated</p>
+          <p className="text-xs text-[var(--text-muted)] uppercase">Teams Updated</p>
         </div>
       </div>
 
       {/* Filters */}
       <div className="flex flex-wrap gap-3">
-        <select
+          <select
           value={selectedTeam}
           onChange={(e) => setSelectedTeam(e.target.value)}
-          className="px-3 py-2 rounded-md border bg-[#1a1a1a] text-sm"
+          className="px-3 py-2 rounded-md border border-[var(--border-color)] bg-[var(--bg-surface)] text-sm"
           aria-label="Filter by team"
         >
           <option value="all">All Teams</option>
@@ -309,10 +309,10 @@ export default function TechUpdatesPage() {
           ))}
         </select>
 
-        <select
+          <select
           value={selectedType}
           onChange={(e) => setSelectedType(e.target.value)}
-          className="px-3 py-2 rounded-md border bg-[#1a1a1a] text-sm"
+          className="px-3 py-2 rounded-md border border-[var(--border-color)] bg-[var(--bg-surface)] text-sm"
           aria-label="Filter by update type"
         >
           <option value="all">All Types</option>
@@ -332,10 +332,10 @@ export default function TechUpdatesPage() {
         </h2>
 
         {filteredUpdates.length === 0 ? (
-          <div className="rounded-lg border bg-card p-6 text-center">
-            <AlertCircle className="w-8 h-8 text-gray-500 mx-auto mb-2" />
-            <p className="text-muted-foreground">No updates detected yet</p>
-            <p className="text-xs text-gray-600 mt-1">
+          <div className="rounded-lg border border-[var(--border-color)] bg-card p-6 text-center">
+            <AlertCircle className="w-8 h-8 text-[var(--text-muted)] mx-auto mb-2" />
+            <p className="text-[var(--text-muted)]">No updates detected yet</p>
+            <p className="text-xs text-[var(--text-muted)] mt-1 opacity-60">
               Updates are detected when teams show significant performance improvements
             </p>
           </div>
@@ -344,7 +344,7 @@ export default function TechUpdatesPage() {
             {filteredUpdates.map((update) => (
               <div
                 key={update.id}
-                className="bg-[#1a1a1a] rounded-xl overflow-hidden hover:ring-1 hover:ring-gray-600 transition-all"
+                className="bg-[var(--bg-surface)] rounded-xl overflow-hidden hover:ring-1 hover:ring-gray-600 transition-all"
               >
                 <div className="p-4">
                   <div className="flex items-start gap-4">
@@ -368,12 +368,12 @@ export default function TechUpdatesPage() {
                             >
                               {update.team}
                             </span>
-                            <span className="px-2 py-0.5 rounded bg-[#333] text-gray-400 text-xs">
+                            <span className="px-2 py-0.5 rounded bg-[var(--bg-elevated)] text-[var(--text-muted)] text-xs">
                               Round {update.round}
                             </span>
                           </div>
-                          <h3 className="text-white font-bold">{update.title}</h3>
-                          <p className="text-gray-400 text-sm">{update.race}</p>
+                          <h3 className="text-[var(--text-primary)] font-bold">{update.title}</h3>
+                          <p className="text-[var(--text-muted)] text-sm">{update.race}</p>
                         </div>
 
                         <div className="flex flex-col items-end gap-2">
@@ -393,13 +393,13 @@ export default function TechUpdatesPage() {
                         </div>
                       </div>
 
-                      <p className="text-gray-400 text-sm mt-3">{update.description}</p>
+                      <p className="text-[var(--text-muted)] text-sm mt-3">{update.description}</p>
 
                       {/* Update Type Badge */}
-                      <div className="flex items-center gap-2 mt-3 pt-3 border-t border-[#333]">
+                      <div className="flex items-center gap-2 mt-3 pt-3 border-t border-[var(--border-color)]">
                         <span
                           className="flex items-center gap-1 px-2 py-1 rounded text-xs"
-                          style={{ backgroundColor: "#333", color: "#aaa" }}
+                          style={{ backgroundColor: "var(--bg-elevated)", color: "var(--text-secondary)" }}
                         >
                           {getTypeIcon(update.type)}
                           {update.type.replace("_", " ").toUpperCase()}
@@ -419,9 +419,9 @@ export default function TechUpdatesPage() {
       </div>
 
       {/* Team Grid */}
-      <div className="space-y-6">
+        <div className="space-y-6">
         <h2 className="text-xl font-semibold flex items-center gap-2">
-          <Wrench className="w-5 h-5 text-gray-500" />
+          <Wrench className="w-5 h-5 text-[var(--text-muted)]" />
           Updates by Team
         </h2>
 
@@ -433,7 +433,7 @@ export default function TechUpdatesPage() {
             return (
               <div
                 key={team}
-                className="bg-[#1a1a1a] rounded-xl overflow-hidden"
+                className="bg-[var(--bg-surface)] rounded-xl overflow-hidden"
                 style={{ borderTop: `3px solid ${teamColor}` }}
               >
                 <div className="p-4">
@@ -442,17 +442,17 @@ export default function TechUpdatesPage() {
                       className="w-3 h-3 rounded-full"
                       style={{ backgroundColor: teamColor }}
                     />
-                    <h3 className="text-white font-bold">{team}</h3>
+                    <h3 className="text-[var(--text-primary)] font-bold">{team}</h3>
                   </div>
 
                   <div className="space-y-2">
                     {teamUpdates.length === 0 ? (
-                      <p className="text-gray-500 text-sm text-center py-2">No updates detected</p>
+                      <p className="text-[var(--text-muted)] text-sm text-center py-2">No updates detected</p>
                     ) : (
                       teamUpdates.slice(0, 3).map((update) => (
                         <div key={update.id} className="flex items-center gap-2 text-sm">
-                          <span className="text-gray-500">R{update.round}:</span>
-                          <span className="text-white">{update.title}</span>
+                          <span className="text-[var(--text-muted)]">R{update.round}:</span>
+                          <span className="text-[var(--text-primary)]">{update.title}</span>
                           <span
                             className={`ml-auto px-1.5 py-0.5 rounded text-xs ${
                               update.impact === "high"
@@ -468,7 +468,7 @@ export default function TechUpdatesPage() {
                   </div>
 
                   {teamUpdates.length > 3 && (
-                    <p className="text-gray-600 text-xs mt-2 text-center">
+                    <p className="text-[var(--text-muted)] text-xs mt-2 text-center opacity-60">
                       +{teamUpdates.length - 3} more updates
                     </p>
                   )}

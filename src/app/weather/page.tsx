@@ -5,7 +5,7 @@ export default function WeatherPage() {
     <div className="space-y-8">
       <div>
         <h1 className="text-3xl font-bold mb-2">Weather</h1>
-        <p className="text-muted-foreground">
+        <p className="text-[var(--text-secondary)]">
           Live weather conditions and track status.
         </p>
       </div>

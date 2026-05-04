@@ -127,7 +127,7 @@ export default function RaceHistoryPage() {
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-cyan-500" />
+        <div className="border-2 rounded-full h-8 w-8 animate-spin" style={{ borderColor: 'var(--bg-overlay)', borderTopColor: 'var(--accent-red)' }} />
       </div>
     );
   }
@@ -141,7 +141,7 @@ export default function RaceHistoryPage() {
       {/* Header */}
       <div className="flex items-center gap-2">
         <Flag className="w-6 h-6 text-red-500" />
-        <h1 className="text-2xl font-bold">2026 Race History</h1>
+        <h1 className="text-2xl font-bold" style={{ fontFamily: 'var(--font-heading)' }}>2026 Race History</h1>
       </div>
 
       {/* Race selector */}
@@ -152,7 +152,7 @@ export default function RaceHistoryPage() {
             onClick={() => setSelectedRace(i)}
             className={`px-4 py-2 rounded-lg whitespace-nowrap text-sm font-medium transition-colors ${
               selectedRace === i
-                ? "bg-cyan-500 text-black"
+                ? "btn-primary var(--text-primary)"
                 : "bg-card border hover:bg-muted"
             }`}
           >
@@ -172,11 +172,11 @@ export default function RaceHistoryPage() {
         <div className="flex items-center gap-4 mb-6">
           <div className="flex-1">
             <h2 className="text-xl font-bold">{currentRace.raceName}</h2>
-            <div className="flex items-center gap-2 text-muted-foreground text-sm mt-1">
+            <div className="flex items-center gap-2 text-sm mt-1" style={{ color: 'var(--text-muted)' }}>
               <MapPin className="w-4 h-4" />
               {currentRace.circuit}, {currentRace.country}
             </div>
-            <div className="flex items-center gap-2 text-muted-foreground text-sm">
+            <div className="flex items-center gap-2 text-sm" style={{ color: 'var(--text-muted)' }}>
               <Clock className="w-4 h-4" />
               {new Date(currentRace.date).toLocaleDateString("en-GB", {
                 day: "numeric",
@@ -206,7 +206,7 @@ export default function RaceHistoryPage() {
                   <td className="p-3">
                     <span className={`font-bold text-lg ${
                       result.position === 1 ? "text-yellow-500" :
-                      result.position === 2 ? "text-gray-400" :
+                      result.position === 2 ? "var(--text-muted)" :
                       result.position === 3 ? "text-amber-600" : ""
                     }`}>
                       {result.position}
@@ -214,7 +214,7 @@ export default function RaceHistoryPage() {
                   </td>
                   <td className="p-3">
                     <div className="font-medium">{result.driver}</div>
-                    <div className="text-xs text-muted-foreground md:hidden">{result.team}</div>
+                    <div className="text-xs md:hidden" style={{ color: 'var(--text-muted)' }}>{result.team}</div>
                   </td>
                   <td className="p-3 hidden md:table-cell">
                     <div className="flex items-center gap-2">

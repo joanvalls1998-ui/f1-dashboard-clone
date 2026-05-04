@@ -158,7 +158,7 @@ export default function SeasonStatsPage() {
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-cyan-500" />
+        <div className="border-2 rounded-full h-8 w-8 animate-spin" style={{ borderColor: 'var(--bg-overlay)', borderTopColor: 'var(--accent-red)' }} />
       </div>
     );
   }
@@ -171,9 +171,9 @@ export default function SeasonStatsPage() {
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
           <Trophy className="w-6 h-6 text-yellow-500" />
-          <h1 className="text-2xl font-bold">2026 Season Statistics</h1>
+          <h1 className="text-2xl font-bold" style={{ fontFamily: 'var(--font-heading)' }}>2026 Season Statistics</h1>
         </div>
-        <div className="text-sm text-muted-foreground">
+        <div className="text-sm" style={{ color: 'var(--text-muted)' }}>
           {stats.completedRaces} / {stats.totalRaces} races completed
         </div>
       </div>
@@ -182,19 +182,19 @@ export default function SeasonStatsPage() {
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <div className="bg-card rounded-lg p-4 border">
           <div className="text-2xl font-bold text-yellow-500">{stats.completedRaces}</div>
-          <div className="text-sm text-muted-foreground">Races Completed</div>
+          <div className="text-sm" style={{ color: 'var(--text-muted)' }}>Races Completed</div>
         </div>
         <div className="bg-card rounded-lg p-4 border">
           <div className="text-2xl font-bold text-cyan-500">{stats.driverStandings[0]?.points || 0}</div>
-          <div className="text-sm text-muted-foreground">Leader Points</div>
+          <div className="text-sm" style={{ color: 'var(--text-muted)' }}>Leader Points</div>
         </div>
         <div className="bg-card rounded-lg p-4 border">
           <div className="text-2xl font-bold text-orange-500">{stats.constructorStandings[0]?.points || 0}</div>
-          <div className="text-sm text-muted-foreground">Leader Constructor</div>
+          <div className="text-sm" style={{ color: 'var(--text-muted)' }}>Leader Constructor</div>
         </div>
         <div className="bg-card rounded-lg p-4 border">
           <div className="text-2xl font-bold text-green-500">{stats.raceWinners.length}</div>
-          <div className="text-sm text-muted-foreground">Unique Winners</div>
+          <div className="text-sm" style={{ color: 'var(--text-muted)' }}>Unique Winners</div>
         </div>
       </div>
 
@@ -207,8 +207,8 @@ export default function SeasonStatsPage() {
               <div className="w-8 text-center font-bold text-lg">
                 <span className={
                   driver.position === 1 ? "text-yellow-500" :
-                  driver.position === 2 ? "text-gray-400" :
-                  driver.position === 3 ? "text-amber-600" : "text-muted-foreground"
+                  driver.position === 2 ? "var(--text-muted)" :
+                  driver.position === 3 ? "text-amber-600" : ""
                 }>
                   {driver.position}
                 </span>
@@ -226,11 +226,11 @@ export default function SeasonStatsPage() {
               </div>
               <div className="flex-1">
                 <div className="font-medium">{driver.driver}</div>
-                <div className="text-xs text-muted-foreground">{driver.team}</div>
+                <div className="text-xs" style={{ color: 'var(--text-muted)' }}>{driver.team}</div>
               </div>
               <div className="text-right">
                 <div className="font-bold text-lg">{driver.points} pts</div>
-                <div className="text-xs text-muted-foreground">{driver.wins} wins</div>
+                <div className="text-xs" style={{ color: 'var(--text-muted)' }}>{driver.wins} wins</div>
               </div>
             </div>
           ))}
@@ -246,8 +246,8 @@ export default function SeasonStatsPage() {
               <div className="w-8 text-center font-bold text-lg">
                 <span className={
                   team.position === 1 ? "text-yellow-500" :
-                  team.position === 2 ? "text-gray-400" :
-                  team.position === 3 ? "text-amber-600" : "text-muted-foreground"
+                  team.position === 2 ? "var(--text-muted)" :
+                  team.position === 3 ? "text-amber-600" : ""
                 }>
                   {team.position}
                 </span>
@@ -258,7 +258,7 @@ export default function SeasonStatsPage() {
               </div>
               <div className="text-right">
                 <div className="font-bold text-lg">{team.points} pts</div>
-                <div className="text-xs text-muted-foreground">{team.wins} wins</div>
+                <div className="text-xs" style={{ color: 'var(--text-muted)' }}>{team.wins} wins</div>
               </div>
             </div>
           ))}
@@ -280,7 +280,7 @@ export default function SeasonStatsPage() {
                 </div>
                 <div className="flex-1">
                   <div className="font-medium text-sm">{race.raceName}</div>
-                  <div className="text-xs text-muted-foreground">{race.winner} ({race.team})</div>
+                  <div className="text-xs" style={{ color: 'var(--text-muted)' }}>{race.winner} ({race.team})</div>
                 </div>
               </div>
             ))}
@@ -295,12 +295,12 @@ export default function SeasonStatsPage() {
           <div className="space-y-3">
             {stats.fastestLaps.map((lap, i) => (
               <div key={i} className="flex items-center gap-3">
-                <div className="w-6 h-6 rounded-full bg-red-500 text-white flex items-center justify-center text-xs font-bold">
+                <div className="w-6 h-6 rounded-full bg-red-500 var(--text-primary) flex items-center justify-center text-xs font-bold">
                   {i + 1}
                 </div>
                 <div className="flex-1">
                   <div className="font-medium text-sm">{lap.raceName}</div>
-                  <div className="text-xs text-muted-foreground">{lap.driver} ({lap.team})</div>
+                  <div className="text-xs" style={{ color: 'var(--text-muted)' }}>{lap.driver} ({lap.team})</div>
                 </div>
                 <div className="font-mono text-sm font-bold">{lap.time}</div>
               </div>

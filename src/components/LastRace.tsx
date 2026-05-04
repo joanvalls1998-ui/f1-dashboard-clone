@@ -117,12 +117,12 @@ export default function LastRace() {
 
   if (loading) {
     return (
-      <div className="bg-[#171717] rounded-xl p-6">
+      <div className="var(--bg-surface) rounded-xl p-6">
         <div className="animate-pulse space-y-4">
-          <div className="h-6 bg-gray-700 rounded w-1/3"></div>
+          <div className="h-6 var(--bg-elevated) rounded w-1/3"></div>
           <div className="space-y-2">
             {[1, 2, 3].map((i) => (
-              <div key={i} className="h-12 bg-gray-800 rounded"></div>
+              <div key={i} className="h-12 var(--bg-overlay) rounded"></div>
             ))}
           </div>
         </div>
@@ -133,23 +133,23 @@ export default function LastRace() {
   const winner = results[0];
 
   return (
-    <div className="bg-[#171717] rounded-xl p-6">
+    <div className="var(--bg-surface) rounded-xl p-6">
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h2 className="text-xl font-bold text-white flex items-center gap-2">
+          <h2 className="text-xl font-bold var(--text-primary) flex items-center gap-2">
             <Flag className="w-5 h-5 text-green-500" />
             Last Race
           </h2>
           {raceInfo && (
-            <p className="text-sm text-gray-400 mt-1">
+            <p className="text-sm var(--text-muted) mt-1">
               {raceInfo.raceName.replace(" Grand Prix", " GP")} • {raceInfo.location}
             </p>
           )}
         </div>
         {raceInfo && (
           <div className="text-right">
-            <p className="text-xs text-gray-500">
+            <p className="text-xs var(--text-muted)">
               {new Date(raceInfo.date).toLocaleDateString("en-GB", {
                 day: "numeric",
                 month: "short",
@@ -173,7 +173,7 @@ export default function LastRace() {
                     className="w-full h-full object-cover"
                   />
                 ) : (
-                  <div className="w-full h-full bg-gray-700 flex items-center justify-center text-white font-bold">
+                  <div className="w-full h-full var(--bg-elevated) flex items-center justify-center var(--text-primary) font-bold">
                     {winner.abbreviation}
                   </div>
                 )}
@@ -184,16 +184,16 @@ export default function LastRace() {
             </div>
             <div>
               <p className="text-yellow-500 text-sm font-medium">WINNER</p>
-              <p className="text-white font-bold text-lg">{winner.fullName}</p>
-              <p className="text-gray-400 text-sm" style={{ color: getTeamColor(winner.team) }}>
+              <p className="var(--text-primary) font-bold text-lg">{winner.fullName}</p>
+              <p className="var(--text-muted) text-sm" style={{ color: getTeamColor(winner.team) }}>
                 {winner.team}
               </p>
             </div>
             <div className="ml-auto text-right">
-              <p className="text-2xl font-black text-white">{winner.points}</p>
-              <p className="text-xs text-gray-500">POINTS</p>
+              <p className="text-2xl font-black var(--text-primary)">{winner.points}</p>
+              <p className="text-xs var(--text-muted)">POINTS</p>
               {winner.time && (
-                <p className="text-sm text-gray-400 mt-1">{winner.time}</p>
+                <p className="text-sm var(--text-muted) mt-1">{winner.time}</p>
               )}
             </div>
           </div>
@@ -205,17 +205,17 @@ export default function LastRace() {
         {results.slice(1, 7).map((driver) => (
           <div
             key={driver.position}
-            className="flex items-center gap-3 py-2 px-3 rounded-lg bg-[#1f1f1f] hover:bg-[#2a2a2a] transition-colors"
+            className="flex items-center gap-3 py-2 px-3 rounded-lg var(--bg-elevated) hover:var(--bg-overlay) transition-colors"
           >
             <span className={`w-6 text-center font-bold ${
-              driver.position === 2 ? "text-gray-400" :
+              driver.position === 2 ? "var(--text-muted)" :
               driver.position === 3 ? "text-amber-600" :
-              "text-gray-500"
+              "var(--text-muted)"
             }`}>
               {driver.position}
             </span>
             
-            <div className="w-8 h-8 rounded-full overflow-hidden bg-gray-700">
+            <div className="w-8 h-8 rounded-full overflow-hidden var(--bg-elevated)">
               {driverImages[driver.abbreviation as keyof typeof driverImages] ? (
                 <img
                   src={driverImages[driver.abbreviation as keyof typeof driverImages]}
@@ -223,24 +223,24 @@ export default function LastRace() {
                   className="w-full h-full object-cover"
                 />
               ) : (
-                <div className="w-full h-full flex items-center justify-center text-xs text-white font-bold">
+                <div className="w-full h-full flex items-center justify-center text-xs var(--text-primary) font-bold">
                   {driver.abbreviation[0]}
                 </div>
               )}
             </div>
             
             <div className="flex-1 min-w-0">
-              <p className="text-white text-sm font-medium truncate">
+              <p className="var(--text-primary) text-sm font-medium truncate">
                 {driver.fullName}
                 {driver.fastestLap && (
                   <span className="ml-2 text-xs text-green-500 font-normal">FL</span>
                 )}
               </p>
-              <p className="text-xs text-gray-500 truncate">{driver.team}</p>
+              <p className="text-xs var(--text-muted) truncate">{driver.team}</p>
             </div>
             
             <div className="text-right">
-              <p className="text-white text-sm font-bold">{driver.points} pts</p>
+              <p className="var(--text-primary) text-sm font-bold">{driver.points} pts</p>
               {driver.status !== "Finished" && (
                 <p className="text-xs text-red-500">{driver.status}</p>
               )}
@@ -251,7 +251,7 @@ export default function LastRace() {
 
       {/* View all link */}
       <div className="mt-4 text-center">
-        <a href="/race-history" className="text-sm text-gray-400 hover:text-white transition-colors">
+        <a href="/race-history" className="text-sm var(--text-muted) hover:var(--text-primary) transition-colors">
           View full results →
         </a>
       </div>

@@ -387,7 +387,7 @@ function SignalBadge({ signal }: { signal: Signal }) {
     statement: 'bg-green-500/20 text-green-400 border-green-500/30',
     reliability: 'bg-red-500/20 text-red-400 border-red-500/30',
     market: 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30',
-    general: 'bg-gray-500/20 text-gray-400 border-gray-500/30'
+    general: 'bg-gray-500/20 var(--text-muted) border-gray-500/30'
   };
 
   return (
@@ -417,10 +417,10 @@ function MetricBar({ label, value, accent = 'bg-blue-500' }: { label: string; va
   return (
     <div className="space-y-1">
       <div className="flex justify-between text-sm">
-        <span className="text-gray-400">{label}</span>
-        <span className="text-white font-medium">{value}%</span>
+        <span className="var(--text-muted)">{label}</span>
+        <span className="var(--text-primary) font-medium">{value}%</span>
       </div>
-      <div className="h-2 bg-[#1f1f1f] rounded-full overflow-hidden">
+      <div className="h-2 var(--bg-elevated) rounded-full overflow-hidden">
         <div
           className={`h-full ${accent} transition-all duration-500`}
           style={{ width: `${value}%` }}
@@ -474,7 +474,7 @@ export function FavoritoDashboard() {
   if (loading || !favorite) {
     return (
       <div className="flex items-center justify-center py-20">
-        <Loader2 className="w-8 h-8 text-white animate-spin" />
+        <Loader2 className="w-8 h-8 var(--text-primary) animate-spin" />
       </div>
     );
   }
@@ -498,11 +498,11 @@ export function FavoritoDashboard() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-white flex items-center gap-2">
+          <h1 className="text-2xl font-bold var(--text-primary) flex items-center gap-2">
             <Star className="w-6 h-6 text-yellow-500" />
             Favorito del Fin de Semana
           </h1>
-          <p className="text-gray-400 text-sm mt-1">
+          <p className="var(--text-muted) text-sm mt-1">
             Análisis detallado de {favorite.name}
           </p>
         </div>
@@ -512,21 +512,21 @@ export function FavoritoDashboard() {
       </div>
 
       {/* Hero Card */}
-      <div className="bg-gradient-to-br from-[#1f1f1f] to-[#171717] rounded-2xl overflow-hidden border border-[#2a2a2a]">
+      <div className="bg-gradient-to-br from-[#1f1f1f] to-[#171717] rounded-2xl overflow-hidden border var(--border-color)">
         <div className="h-2 bg-gradient-to-r from-yellow-500 to-orange-500" />
         <div className="p-6">
           <div className="flex items-start justify-between mb-4">
             <div>
               <div className="flex items-center gap-3 mb-2">
                 <div className="w-3 h-3 rounded-full" style={{ backgroundColor: TEAM_COLORS_BY_KEY[favorite.colorClass] || '#666' }} />
-                <h2 className="text-xl font-bold text-white">{favorite.name}</h2>
+                <h2 className="text-xl font-bold var(--text-primary)">{favorite.name}</h2>
                 <SignalBadge signal={snapshot.signal} />
               </div>
-              <p className="text-gray-400 text-sm">{snapshot.headerSub} · {weekendContext?.raceName}</p>
+              <p className="var(--text-muted) text-sm">{snapshot.headerSub} · {weekendContext?.raceName}</p>
             </div>
             <button
               onClick={() => setShowSelector(!showSelector)}
-              className="px-3 py-2 bg-[#2a2a2a] hover:bg-[#3a3a3a] rounded-lg text-sm text-gray-300 flex items-center gap-2 transition-colors"
+              className="px-3 py-2 var(--bg-overlay) hover:bg-[#3a3a3a] rounded-lg text-sm var(--text-secondary) flex items-center gap-2 transition-colors"
             >
               Cambiar <ChevronDown className="w-4 h-4" />
             </button>
@@ -534,19 +534,19 @@ export function FavoritoDashboard() {
 
           {/* Favorite Selector Dropdown */}
           {showSelector && (
-            <div className="mb-4 bg-[#171717] rounded-xl border border-[#2a2a2a] overflow-hidden">
+            <div className="mb-4 var(--bg-surface) rounded-xl border var(--border-color) overflow-hidden">
               <div className="p-2 max-h-64 overflow-y-auto">
                 {availableDrivers.map((driver) => (
                   <button
                     key={driver.name}
                     onClick={() => handleFavoriteChange(driver)}
-                    className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-[#2a2a2a] transition-colors ${
-                      favorite.name === driver.name ? 'bg-[#2a2a2a]' : ''
+                    className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg hover:var(--bg-overlay) transition-colors ${
+                      favorite.name === driver.name ? 'var(--bg-overlay)' : ''
                     }`}
                   >
                     <div className="w-2 h-2 rounded-full" style={{ backgroundColor: TEAM_COLORS_BY_KEY[driver.colorClass] || '#666666' }} />
-                    <span className="text-white text-sm">{driver.name}</span>
-                    <span className="text-gray-500 text-xs ml-auto">{driver.team}</span>
+                    <span className="var(--text-primary) text-sm">{driver.name}</span>
+                    <span className="var(--text-muted) text-xs ml-auto">{driver.team}</span>
                   </button>
                 ))}
               </div>
@@ -555,44 +555,44 @@ export function FavoritoDashboard() {
 
           {/* Meta Grid */}
           <div className="grid grid-cols-2 gap-4 mt-4">
-            <div className="bg-[#1a1a1a] rounded-xl p-4">
-              <p className="text-xs text-gray-500 uppercase tracking-wider mb-1">Objetivo razonable</p>
-              <p className="text-lg font-bold text-white">{snapshot.objective.realistic}</p>
-              <p className="text-xs text-gray-500 mt-1">Meta principal del fin de semana</p>
+            <div className="var(--bg-elevated) rounded-xl p-4">
+              <p className="text-xs var(--text-muted) uppercase tracking-wider mb-1">Objetivo razonable</p>
+              <p className="text-lg font-bold var(--text-primary)">{snapshot.objective.realistic}</p>
+              <p className="text-xs var(--text-muted) mt-1">Meta principal del fin de semana</p>
             </div>
-            <div className="bg-[#1a1a1a] rounded-xl p-4">
-              <p className="text-xs text-gray-500 uppercase tracking-wider mb-1">Riesgo principal</p>
-              <p className="text-lg font-bold text-white">{snapshot.objective.risk}</p>
-              <p className="text-xs text-gray-500 mt-1">Factor que más condiciona el resultado</p>
+            <div className="var(--bg-elevated) rounded-xl p-4">
+              <p className="text-xs var(--text-muted) uppercase tracking-wider mb-1">Riesgo principal</p>
+              <p className="text-lg font-bold var(--text-primary)">{snapshot.objective.risk}</p>
+              <p className="text-xs var(--text-muted) mt-1">Factor que más condiciona el resultado</p>
             </div>
           </div>
 
-          <p className="text-gray-400 text-sm mt-4">{snapshot.signal.description}</p>
+          <p className="var(--text-muted) text-sm mt-4">{snapshot.signal.description}</p>
         </div>
       </div>
 
       {/* Objective Card */}
-      <div className="bg-[#171717] rounded-2xl p-6 border border-[#2a2a2a]">
+      <div className="var(--bg-surface) rounded-2xl p-6 border var(--border-color)">
         <div className="flex items-center gap-2 mb-4">
           <CheckCircle className="w-5 h-5 text-green-500" />
-          <h3 className="text-lg font-bold text-white">Plan competitivo</h3>
+          <h3 className="text-lg font-bold var(--text-primary)">Plan competitivo</h3>
         </div>
 
         <div className="grid grid-cols-3 gap-4">
-          <div className="bg-[#1a1a1a] rounded-xl p-4">
-            <p className="text-xs text-gray-500 uppercase tracking-wider mb-2">Mínimo</p>
-            <p className="text-xl font-bold text-white">{snapshot.objective.minimum}</p>
-            <p className="text-xs text-gray-500 mt-2">No comprometer el fin de semana</p>
+          <div className="var(--bg-elevated) rounded-xl p-4">
+            <p className="text-xs var(--text-muted) uppercase tracking-wider mb-2">Mínimo</p>
+            <p className="text-xl font-bold var(--text-primary)">{snapshot.objective.minimum}</p>
+            <p className="text-xs var(--text-muted) mt-2">No comprometer el fin de semana</p>
           </div>
-          <div className="bg-[#1a1a1a] rounded-xl p-4">
-            <p className="text-xs text-gray-500 uppercase tracking-wider mb-2">Razonable</p>
+          <div className="var(--bg-elevated) rounded-xl p-4">
+            <p className="text-xs var(--text-muted) uppercase tracking-wider mb-2">Razonable</p>
             <p className="text-xl font-bold text-yellow-400">{snapshot.objective.realistic}</p>
-            <p className="text-xs text-gray-500 mt-2">Resultado objetivo real</p>
+            <p className="text-xs var(--text-muted) mt-2">Resultado objetivo real</p>
           </div>
-          <div className="bg-[#1a1a1a] rounded-xl p-4">
-            <p className="text-xs text-gray-500 uppercase tracking-wider mb-2">Techo</p>
+          <div className="var(--bg-elevated) rounded-xl p-4">
+            <p className="text-xs var(--text-muted) uppercase tracking-wider mb-2">Techo</p>
             <p className="text-xl font-bold text-green-400">{snapshot.objective.high}</p>
-            <p className="text-xs text-gray-500 mt-2">Escenario más alto</p>
+            <p className="text-xs var(--text-muted) mt-2">Escenario más alto</p>
           </div>
         </div>
 
@@ -607,10 +607,10 @@ export function FavoritoDashboard() {
       </div>
 
       {/* Competitive Read Card */}
-      <div className="bg-[#171717] rounded-2xl p-6 border border-[#2a2a2a]">
+      <div className="var(--bg-surface) rounded-2xl p-6 border var(--border-color)">
         <div className="flex items-center gap-2 mb-4">
           <TrendingUp className="w-5 h-5 text-blue-500" />
-          <h3 className="text-lg font-bold text-white">Lectura competitiva</h3>
+          <h3 className="text-lg font-bold var(--text-primary)">Lectura competitiva</h3>
         </div>
 
         <div className="flex gap-2 mb-4">
@@ -621,17 +621,17 @@ export function FavoritoDashboard() {
         </div>
 
         <div className="space-y-3">
-          <div className="bg-[#1a1a1a] rounded-lg p-3">
-            <p className="text-xs text-gray-500 mb-1">Dónde está realmente:</p>
-            <p className="text-white text-sm">Objetivo base <strong>{read.objective.realistic}</strong>.</p>
+          <div className="var(--bg-elevated) rounded-lg p-3">
+            <p className="text-xs var(--text-muted) mb-1">Dónde está realmente:</p>
+            <p className="var(--text-primary) text-sm">Objetivo base <strong>{read.objective.realistic}</strong>.</p>
           </div>
-          <div className="bg-[#1a1a1a] rounded-lg p-3">
-            <p className="text-xs text-gray-500 mb-1">Qué necesita:</p>
-            <p className="text-white text-sm">{read.need}</p>
+          <div className="var(--bg-elevated) rounded-lg p-3">
+            <p className="text-xs var(--text-muted) mb-1">Qué necesita:</p>
+            <p className="var(--text-primary) text-sm">{read.need}</p>
           </div>
-          <div className="bg-[#1a1a1a] rounded-lg p-3">
-            <p className="text-xs text-gray-500 mb-1">Qué le puede hundir:</p>
-            <p className="text-white text-sm">{read.danger}</p>
+          <div className="var(--bg-elevated) rounded-lg p-3">
+            <p className="text-xs var(--text-muted) mb-1">Qué le puede hundir:</p>
+            <p className="var(--text-primary) text-sm">{read.danger}</p>
           </div>
         </div>
 
@@ -639,7 +639,7 @@ export function FavoritoDashboard() {
         {teamData && (
           <>
             <div className="mt-6">
-              <p className="text-sm font-medium text-white mb-3">Métricas del equipo</p>
+              <p className="text-sm font-medium var(--text-primary) mb-3">Métricas del equipo</p>
               <div className="grid grid-cols-2 gap-3">
                 <MetricBar label="Aero" value={teamData.aero} accent="bg-blue-500" />
                 <MetricBar label="Tracción" value={teamData.traction} accent="bg-green-500" />
@@ -649,15 +649,15 @@ export function FavoritoDashboard() {
             </div>
 
             <div className="mt-6 grid grid-cols-2 gap-4">
-              <div className="bg-[#1a1a1a] rounded-xl p-4">
-                <p className="text-xs text-gray-500 uppercase tracking-wider mb-1">Fortaleza base</p>
+              <div className="var(--bg-elevated) rounded-xl p-4">
+                <p className="text-xs var(--text-muted) uppercase tracking-wider mb-1">Fortaleza base</p>
                 <p className="text-lg font-bold text-green-400">{edges.best.label}</p>
-                <p className="text-2xl font-bold text-white mt-1">{edges.best.value}%</p>
+                <p className="text-2xl font-bold var(--text-primary) mt-1">{edges.best.value}%</p>
               </div>
-              <div className="bg-[#1a1a1a] rounded-xl p-4">
-                <p className="text-xs text-gray-500 uppercase tracking-wider mb-1">Debilidad principal</p>
+              <div className="var(--bg-elevated) rounded-xl p-4">
+                <p className="text-xs var(--text-muted) uppercase tracking-wider mb-1">Debilidad principal</p>
                 <p className="text-lg font-bold text-red-400">{edges.worst.label}</p>
-                <p className="text-2xl font-bold text-white mt-1">{edges.worst.value}%</p>
+                <p className="text-2xl font-bold var(--text-primary) mt-1">{edges.worst.value}%</p>
               </div>
             </div>
           </>
@@ -666,7 +666,7 @@ export function FavoritoDashboard() {
         {/* Additional Team Status Metrics */}
         {teamData && (
           <div className="mt-6">
-            <p className="text-sm font-medium text-white mb-3">Estado competitivo</p>
+            <p className="text-sm font-medium var(--text-primary) mb-3">Estado competitivo</p>
             <div className="space-y-3">
               <MetricBar label="Ritmo carrera" value={teamData.racePace} accent="bg-[#229971]" />
               <MetricBar label="Qualy" value={teamData.qualyPace} accent="bg-[#229971]" />
@@ -677,10 +677,10 @@ export function FavoritoDashboard() {
       </div>
 
       {/* Quick Look Rivals Card */}
-      <div className="bg-[#171717] rounded-2xl p-6 border border-[#2a2a2a]">
+      <div className="var(--bg-surface) rounded-2xl p-6 border var(--border-color)">
         <div className="flex items-center gap-2 mb-4">
           <AlertTriangle className="w-5 h-5 text-yellow-500" />
-          <h3 className="text-lg font-bold text-white">Rivales directos</h3>
+          <h3 className="text-lg font-bold var(--text-primary)">Rivales directos</h3>
         </div>
 
         <div className="space-y-2">
@@ -691,22 +691,22 @@ export function FavoritoDashboard() {
             .map((driver) => (
               <div
                 key={driver.name}
-                className="flex items-center gap-3 py-2 px-3 bg-[#1a1a1a] rounded-lg"
+                className="flex items-center gap-3 py-2 px-3 var(--bg-elevated) rounded-lg"
               >
-                <div className="w-8 h-8 rounded-full bg-[#2a2a2a] flex items-center justify-center text-xs font-bold text-white">
+                <div className="w-8 h-8 rounded-full var(--bg-overlay) flex items-center justify-center text-xs font-bold var(--text-primary)">
                   {driver.shortCode}
                 </div>
                 <div className="flex-1">
-                  <p className="text-white text-sm font-medium">{driver.name}</p>
-                  <p className="text-gray-500 text-xs">{driver.team}</p>
+                  <p className="var(--text-primary) text-sm font-medium">{driver.name}</p>
+                  <p className="var(--text-muted) text-xs">{driver.team}</p>
                 </div>
-                <span className="text-xs text-gray-400">Compañero de equipo</span>
+                <span className="text-xs var(--text-muted)">Compañero de equipo</span>
               </div>
             ))
           }
         </div>
 
-        <p className="text-xs text-gray-500 mt-4">
+        <p className="text-xs var(--text-muted) mt-4">
           Los rivales directos se definen por la ventana de objetivo del fin de semana.
         </p>
       </div>

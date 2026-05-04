@@ -399,13 +399,13 @@ export default function RaceMode({
 
   if (!favorite) {
     return (
-      <div className="bg-[#171717] rounded-xl border border-[#333] p-6 text-center">
+      <div className="var(--bg-surface) rounded-xl border var(--border-color) p-6 text-center">
         <AlertTriangle className="w-10 h-10 text-yellow-500 mx-auto mb-3" />
-        <p className="text-gray-400">No hay favorito seleccionado. Configúralo en Home.</p>
+        <p className="var(--text-muted)">No hay favorito seleccionado. Configúralo en Home.</p>
         {onNavigateHome && (
           <button
             onClick={onNavigateHome}
-            className="mt-4 px-4 py-2 bg-[#1f1f1f] text-white rounded-lg text-sm hover:bg-[#2a2a2a] transition-colors"
+            className="mt-4 px-4 py-2 var(--bg-elevated) var(--text-primary) rounded-lg text-sm hover:var(--bg-overlay) transition-colors"
           >
             Ir a Home
           </button>
@@ -464,130 +464,130 @@ export default function RaceMode({
   const signalColors: Record<string, string> = {
     up: 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30',
     down: 'bg-red-500/20 text-red-400 border-red-500/30',
-    neutral: 'bg-gray-500/20 text-gray-400 border-gray-500/30'
+    neutral: 'bg-gray-500/20 var(--text-muted) border-gray-500/30'
   };
 
   return (
     <div className="space-y-4">
       {/* Header Card */}
-      <div className="bg-[#171717] rounded-xl border border-[#333] p-4">
+      <div className="var(--bg-surface) rounded-xl border var(--border-color) p-4">
         <div className="flex items-center justify-between mb-3">
           <div className="flex items-center gap-2">
-            <Flag className="w-5 h-5 text-white" />
-            <span className="text-white font-bold text-lg">Modo Carrera</span>
+            <Flag className="w-5 h-5 var(--text-primary)" />
+            <span className="var(--text-primary) font-bold text-lg">Modo Carrera</span>
           </div>
           <span className={`text-xs px-2 py-1 rounded border ${signalColors[signal.className] || signalColors.neutral}`}>
             {signal.label}
           </span>
         </div>
-        <p className="text-gray-400 text-sm">{raceName}</p>
+        <p className="var(--text-muted) text-sm">{raceName}</p>
         {stage && (
-          <div className="mt-2 text-xs text-gray-500">
+          <div className="mt-2 text-xs var(--text-muted)">
             {stage.label} · {stage.description}
           </div>
         )}
       </div>
 
       {/* Favorite Summary Card */}
-      <div className="bg-[#171717] rounded-xl border border-[#333] p-4">
+      <div className="var(--bg-surface) rounded-xl border var(--border-color) p-4">
         <div className="flex items-center justify-between mb-4">
           <div>
-            <p className="text-gray-400 text-xs uppercase tracking-wider">Tu favorito</p>
-            <p className="text-white font-bold text-lg">{favorite.name}</p>
-            <p className="text-gray-500 text-sm">{favorite.type === 'driver' ? favorite.team : 'Equipo'}</p>
+            <p className="var(--text-muted) text-xs uppercase tracking-wider">Tu favorito</p>
+            <p className="var(--text-primary) font-bold text-lg">{favorite.name}</p>
+            <p className="var(--text-muted) text-sm">{favorite.type === 'driver' ? favorite.team : 'Equipo'}</p>
           </div>
           <div className="text-right">
-            <p className="text-2xl font-bold text-white">{favorite.points || '0'}</p>
-            <p className="text-gray-500 text-xs">pts</p>
+            <p className="text-2xl font-bold var(--text-primary)">{favorite.points || '0'}</p>
+            <p className="var(--text-muted) text-xs">pts</p>
           </div>
         </div>
 
         {/* Stats Grid */}
         <div className="grid grid-cols-4 gap-3 mb-4">
-          <div className="bg-[#1a1a1a] rounded-lg p-3 text-center">
-            <p className="text-gray-500 text-xs mb-1">Clasificación</p>
-            <p className="text-white font-bold text-lg">{favoritePrediction.qualy}</p>
+          <div className="var(--bg-elevated) rounded-lg p-3 text-center">
+            <p className="var(--text-muted) text-xs mb-1">Clasificación</p>
+            <p className="var(--text-primary) font-bold text-lg">{favoritePrediction.qualy}</p>
           </div>
-          <div className="bg-[#1a1a1a] rounded-lg p-3 text-center">
-            <p className="text-gray-500 text-xs mb-1">Carrera</p>
-            <p className="text-white font-bold text-lg">{favoritePrediction.race}</p>
+          <div className="var(--bg-elevated) rounded-lg p-3 text-center">
+            <p className="var(--text-muted) text-xs mb-1">Carrera</p>
+            <p className="var(--text-primary) font-bold text-lg">{favoritePrediction.race}</p>
           </div>
-          <div className="bg-[#1a1a1a] rounded-lg p-3 text-center">
-            <p className="text-gray-500 text-xs mb-1">Puntos</p>
-            <p className="text-white font-bold text-lg">{favoritePrediction.points}</p>
+          <div className="var(--bg-elevated) rounded-lg p-3 text-center">
+            <p className="var(--text-muted) text-xs mb-1">Puntos</p>
+            <p className="var(--text-primary) font-bold text-lg">{favoritePrediction.points}</p>
           </div>
-          <div className="bg-[#1a1a1a] rounded-lg p-3 text-center">
-            <p className="text-gray-500 text-xs mb-1">Abandono</p>
-            <p className="text-white font-bold text-lg">{favoritePrediction.dnf}</p>
+          <div className="var(--bg-elevated) rounded-lg p-3 text-center">
+            <p className="var(--text-muted) text-xs mb-1">Abandono</p>
+            <p className="var(--text-primary) font-bold text-lg">{favoritePrediction.dnf}</p>
           </div>
         </div>
 
         {/* Meta Grid */}
         <div className="grid grid-cols-3 gap-3">
-          <div className="bg-[#1a1a1a] rounded-lg p-3">
-            <p className="text-gray-500 text-xs mb-1">Ventana</p>
-            <p className="text-white font-semibold text-sm">{metrics.expectedWindow}</p>
-            <p className="text-gray-600 text-xs">Rango</p>
+          <div className="var(--bg-elevated) rounded-lg p-3">
+            <p className="var(--text-muted) text-xs mb-1">Ventana</p>
+            <p className="var(--text-primary) font-semibold text-sm">{metrics.expectedWindow}</p>
+            <p className="var(--text-muted) text-xs">Rango</p>
           </div>
-          <div className="bg-[#1a1a1a] rounded-lg p-3">
-            <p className="text-gray-500 text-xs mb-1">Tendencia</p>
+          <div className="var(--bg-elevated) rounded-lg p-3">
+            <p className="var(--text-muted) text-xs mb-1">Tendencia</p>
             <p className={`font-semibold text-sm ${
               metrics.trendInfo.className === 'up' ? 'text-emerald-400' :
-              metrics.trendInfo.className === 'down' ? 'text-red-400' : 'text-gray-400'
+              metrics.trendInfo.className === 'down' ? 'text-red-400' : 'var(--text-muted)'
             }`}>
               {metrics.trendInfo.label}
             </p>
-            <p className="text-gray-600 text-xs">{metrics.trendInfo.description}</p>
+            <p className="var(--text-muted) text-xs">{metrics.trendInfo.description}</p>
           </div>
-          <div className="bg-[#1a1a1a] rounded-lg p-3">
-            <p className="text-gray-500 text-xs mb-1">Balance</p>
-            <p className="text-white font-semibold text-sm">{balance.label}</p>
-            <p className="text-gray-600 text-xs">Qualy / carrera</p>
+          <div className="var(--bg-elevated) rounded-lg p-3">
+            <p className="var(--text-muted) text-xs mb-1">Balance</p>
+            <p className="var(--text-primary) font-semibold text-sm">{balance.label}</p>
+            <p className="var(--text-muted) text-xs">Qualy / carrera</p>
           </div>
         </div>
       </div>
 
       {/* Quick Read Card */}
-      <div className="bg-[#171717] rounded-xl border border-[#333] p-4">
+      <div className="var(--bg-surface) rounded-xl border var(--border-color) p-4">
         <div className="flex items-center gap-2 mb-4">
           <Zap className="w-4 h-4 text-yellow-400" />
-          <span className="text-white font-semibold text-sm">Lectura rápida</span>
+          <span className="var(--text-primary) font-semibold text-sm">Lectura rápida</span>
         </div>
         <div className="space-y-4">
           {quickReadItems.map((item, idx) => (
-            <div key={idx} className="border-l-2 border-[#333] pl-3">
-              <p className="text-gray-400 text-xs uppercase tracking-wider mb-1">{item.title}</p>
-              <p className="text-white text-sm leading-relaxed">{item.text}</p>
+            <div key={idx} className="border-l-2 var(--border-color) pl-3">
+              <p className="var(--text-muted) text-xs uppercase tracking-wider mb-1">{item.title}</p>
+              <p className="var(--text-primary) text-sm leading-relaxed">{item.text}</p>
             </div>
           ))}
         </div>
       </div>
 
       {/* Strategy Card */}
-      <div className="bg-[#171717] rounded-xl border border-[#333] p-4">
+      <div className="var(--bg-surface) rounded-xl border var(--border-color) p-4">
         <div className="flex items-center gap-2 mb-3">
           <Target className="w-4 h-4 text-cyan-400" />
-          <span className="text-white font-semibold text-sm">Estrategia</span>
+          <span className="var(--text-primary) font-semibold text-sm">Estrategia</span>
         </div>
-        <div className="bg-[#1a1a1a] rounded-lg p-3 mb-3">
+        <div className="var(--bg-elevated) rounded-lg p-3 mb-3">
           <div className="flex items-center justify-between mb-2">
-            <span className="text-gray-400 text-xs">{strategy.label}</span>
+            <span className="var(--text-muted) text-xs">{strategy.label}</span>
             <span className="text-cyan-400 text-xs font-medium">{strategy.factor}</span>
           </div>
-          <p className="text-gray-300 text-xs leading-relaxed">{strategy.note}</p>
+          <p className="var(--text-secondary) text-xs leading-relaxed">{strategy.note}</p>
         </div>
-        <div className="flex items-center gap-2 text-xs text-gray-500">
+        <div className="flex items-center gap-2 text-xs var(--text-muted)">
           <Clock className="w-3 h-3" />
           <span>Ventana de parada: {strategy.window}</span>
         </div>
       </div>
 
       {/* Top 10 Estimated */}
-      <div className="bg-[#171717] rounded-xl border border-[#333] p-4">
+      <div className="var(--bg-surface) rounded-xl border var(--border-color) p-4">
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-2">
-            <TrendingUp className="w-4 h-4 text-white" />
-            <span className="text-white font-semibold text-sm">Top 10 estimado</span>
+            <TrendingUp className="w-4 h-4 var(--text-primary)" />
+            <span className="var(--text-primary) font-semibold text-sm">Top 10 estimado</span>
           </div>
           {predictData && (
             <span className="text-xs text-emerald-400 bg-emerald-500/10 px-2 py-1 rounded">
@@ -607,25 +607,25 @@ export default function RaceMode({
               return (
                 <div key={`${driver.name}-${driver.position}`} className="flex items-center justify-between py-2 border-b border-[#222] last:border-0">
                   <div className="flex items-center gap-3">
-                    <span className="text-gray-500 text-sm w-5 text-center">{driver.position}</span>
+                    <span className="var(--text-muted) text-sm w-5 text-center">{driver.position}</span>
                     <div className="w-1 h-6 rounded-full" style={{ backgroundColor: getTeamColor(driver.team) }} />
                     <div>
-                      <p className="text-white text-sm">{driver.name}</p>
-                      <p className="text-gray-500 text-xs">{driver.team}</p>
+                      <p className="var(--text-primary) text-sm">{driver.name}</p>
+                      <p className="var(--text-muted) text-xs">{driver.team}</p>
                     </div>
                   </div>
                   <div className="flex items-center gap-2">
                     {badges.length > 0 && (
                       <div className="flex gap-1">
                         {badges.map((badge) => (
-                          <span key={badge} className="text-xs bg-[#2a2a2a] text-gray-300 px-1.5 py-0.5 rounded">
+                          <span key={badge} className="text-xs var(--bg-overlay) var(--text-secondary) px-1.5 py-0.5 rounded">
                             {badge}
                           </span>
                         ))}
                       </div>
                     )}
                     {driver.pointsProbability != null && (
-                      <span className="text-xs text-gray-500">{driver.pointsProbability}% pts</span>
+                      <span className="text-xs var(--text-muted)">{driver.pointsProbability}% pts</span>
                     )}
                   </div>
                 </div>
@@ -634,12 +634,12 @@ export default function RaceMode({
           </div>
         ) : (
           <div className="text-center py-8">
-            <p className="text-gray-500 text-sm">No hay top 10 disponible.</p>
-            <p className="text-gray-600 text-xs mt-1">Genera una predicción en el Ingeniero para ver el orden estimado.</p>
+            <p className="var(--text-muted) text-sm">No hay top 10 disponible.</p>
+            <p className="var(--text-muted) text-xs mt-1">Genera una predicción en el Ingeniero para ver el orden estimado.</p>
             {onNavigatePredict && (
               <button
                 onClick={onNavigatePredict}
-                className="mt-3 px-4 py-2 bg-[#1f1f1f] text-white rounded-lg text-sm hover:bg-[#2a2a2a] transition-colors"
+                className="mt-3 px-4 py-2 var(--bg-elevated) var(--text-primary) rounded-lg text-sm hover:var(--bg-overlay) transition-colors"
               >
                 Ir al Ingeniero
               </button>
@@ -653,7 +653,7 @@ export default function RaceMode({
         {onNavigateHome && (
           <button
             onClick={onNavigateHome}
-            className="flex-1 px-4 py-2.5 bg-[#1f1f1f] text-white rounded-lg text-sm hover:bg-[#2a2a2a] transition-colors"
+            className="flex-1 px-4 py-2.5 var(--bg-elevated) var(--text-primary) rounded-lg text-sm hover:var(--bg-overlay) transition-colors"
           >
             Inicio
           </button>
@@ -661,7 +661,7 @@ export default function RaceMode({
         {onNavigateSessions && (
           <button
             onClick={onNavigateSessions}
-            className="flex-1 px-4 py-2.5 bg-[#1f1f1f] text-white rounded-lg text-sm hover:bg-[#2a2a2a] transition-colors"
+            className="flex-1 px-4 py-2.5 var(--bg-elevated) var(--text-primary) rounded-lg text-sm hover:var(--bg-overlay) transition-colors"
           >
             Sesiones
           </button>

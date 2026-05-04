@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { circuitImages, teamColors, getTeamColor } from "@/lib/f1-assets";
+import { circuitImages, getTeamColor } from "@/lib/f1-assets";
 import Image from "next/image";
 import { MapPin, Calendar, Flag, CheckCircle, XCircle, Clock } from "lucide-react";
 import { fetchRaceCalendar } from "@/lib/api";
@@ -45,19 +45,16 @@ export function RaceCalendarVisual({ races = [], title = "2026 Calendar" }: Race
   useEffect(() => {
     async function loadData() {
       try {
-        // Fetch races from Ergast
         const racesData = await fetchRaceCalendar(selectedYear);
         if (racesData.length > 0) {
           setRaceData(racesData);
-          
-          // Fetch sessions from OpenF1 to get detailed schedule
+
           const sessionsRes = await fetch(
             `https://api.openf1.org/v1/sessions?year=${selectedYear}`,
             { signal: AbortSignal.timeout(8000) }
           );
           const sessionsData: Session[] = await sessionsRes.json();
-          
-          // Group sessions by meeting (race weekend)
+
           const sessionsByMeeting: Record<number, Session[]> = {};
           sessionsData.forEach((session) => {
             if (!sessionsByMeeting[session.meeting_key]) {
@@ -65,7 +62,7 @@ export function RaceCalendarVisual({ races = [], title = "2026 Calendar" }: Race
             }
             sessionsByMeeting[session.meeting_key].push(session);
           });
-          
+
           setSessions(sessionsByMeeting);
         }
       } catch (error) {
@@ -73,7 +70,7 @@ export function RaceCalendarVisual({ races = [], title = "2026 Calendar" }: Race
       }
       setLoading(false);
     }
-    
+
     if (raceData.length === 0) {
       loadData();
     }
@@ -87,11 +84,13 @@ export function RaceCalendarVisual({ races = [], title = "2026 Calendar" }: Race
     return (
       <div className="space-y-4">
         <div className="flex items-center justify-between">
-          <h2 className="text-xl font-bold text-white">{title}</h2>
+          <h2 className="text-xl font-bold text-[var(--text-primary)]" style={{ fontFamily: 'var(--font-heading)' }}>
+            {title}
+          </h2>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {[1, 2, 3].map((i) => (
-            <div key={i} className="bg-[#1a1a1a] rounded-xl h-48 animate-pulse" />
+            <div key={i} className="bg-[var(--bg-surface)] rounded-xl h-48 skeleton" />
           ))}
         </div>
       </div>
@@ -101,25 +100,27 @@ export function RaceCalendarVisual({ races = [], title = "2026 Calendar" }: Race
   return (
     <div className="space-y-6">
       {/* Header Stats */}
-      <div className="grid grid-cols-3 gap-4">
-        <div className="bg-[#171717] rounded-lg p-4 text-center">
-          <p className="text-3xl font-black text-green-500">{completedRaces.length}</p>
-          <p className="text-xs text-gray-500 uppercase">Completed</p>
+      <div className="grid grid-cols-3 gap-3">
+        <div className="card text-center py-4">
+          <p className="stat-number text-3xl" style={{ color: 'var(--status-live)' }}>{completedRaces.length}</p>
+          <p className="stat-label mt-1">Completed</p>
         </div>
-        <div className="bg-[#171717] rounded-lg p-4 text-center">
-          <p className="text-3xl font-black text-blue-500">{upcomingRaces.length}</p>
-          <p className="text-xs text-gray-500 uppercase">Upcoming</p>
+        <div className="card text-center py-4">
+          <p className="stat-number text-3xl" style={{ color: 'var(--status-upcoming)' }}>{upcomingRaces.length}</p>
+          <p className="stat-label mt-1">Upcoming</p>
         </div>
-        <div className="bg-[#171717] rounded-lg p-4 text-center">
-          <p className="text-3xl font-black text-red-500">{cancelledRaces.length}</p>
-          <p className="text-xs text-gray-500 uppercase">Cancelled</p>
+        <div className="card text-center py-4">
+          <p className="stat-number text-3xl" style={{ color: 'var(--accent-red)' }}>{cancelledRaces.length}</p>
+          <p className="stat-label mt-1">Cancelled</p>
         </div>
       </div>
 
       {/* Races Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {raceData.map((race) => (
-          <RaceCard key={race.round} race={race} sessions={sessions} />
+        {raceData.map((race, i) => (
+          <div key={race.round} className="animate-enter" style={{ animationDelay: `${i * 40}ms` }}>
+            <RaceCard race={race} sessions={sessions} />
+          </div>
         ))}
       </div>
     </div>
@@ -134,12 +135,10 @@ function RaceCard({ race, sessions }: { race: Race; sessions: Record<number, Ses
 
   return (
     <div
-      className={`relative bg-[#1a1a1a] rounded-xl overflow-hidden group transition-all ${
-        isCancelled ? "opacity-60" : "hover:ring-2 hover:ring-[#E10600]"
-      }`}
+      className={`card card-interactive overflow-hidden ${isCancelled ? "opacity-60" : ""}`}
     >
-      {/* Circuit Image Background */}
-      <div className="relative h-32 overflow-hidden">
+      {/* Circuit Image */}
+      <div className="relative h-32 -mx-5 -mt-5 overflow-hidden rounded-t-xl">
         {circuitImage ? (
           <Image
             src={circuitImage}
@@ -149,15 +148,28 @@ function RaceCard({ race, sessions }: { race: Race; sessions: Record<number, Ses
             unoptimized
           />
         ) : (
-          <div className="w-full h-full bg-gradient-to-br from-[#2a2a2a] to-[#1a1a1a]" />
+          <div
+            className="w-full h-full"
+            style={{
+              background: `linear-gradient(135deg, var(--bg-elevated) 0%, var(--bg-surface) 100%)`,
+            }}
+          />
         )}
 
         {/* Gradient overlay */}
-        <div className="absolute inset-0 bg-gradient-to-t from-[#1a1a1a] via-transparent to-transparent" />
+        <div
+          className="absolute inset-0"
+          style={{
+            background: `linear-gradient(to top, var(--bg-surface) 0%, transparent 60%)`,
+          }}
+        />
 
         {/* Round badge */}
         <div className="absolute top-3 left-3">
-          <span className="px-2 py-1 rounded-md bg-[#E10600] text-white text-xs font-bold">
+          <span
+            className="px-2 py-1 rounded-md text-white text-xs font-bold"
+            style={{ backgroundColor: 'var(--accent-red)', fontFamily: 'var(--font-heading)' }}
+          >
             R{race.round}
           </span>
         </div>
@@ -165,55 +177,76 @@ function RaceCard({ race, sessions }: { race: Race; sessions: Record<number, Ses
         {/* Status badge */}
         {isCancelled && (
           <div className="absolute inset-0 flex items-center justify-center">
-            <span className="px-4 py-2 rounded-lg bg-red-600/90 text-white text-sm font-bold uppercase tracking-wider flex items-center gap-2">
+            <span
+              className="px-4 py-2 rounded-lg text-white text-sm font-bold uppercase tracking-wider flex items-center gap-2"
+              style={{ backgroundColor: 'rgba(239,68,68,0.9)', backdropFilter: 'blur(4px)' }}
+            >
               <XCircle className="w-4 h-4" />
-              CANCELLED
+              Cancelled
             </span>
           </div>
         )}
         {isCompleted && race.winner && (
-          <div className="absolute top-3 right-3 flex items-center gap-1 px-2 py-1 rounded-md bg-black/70 backdrop-blur-sm">
-            <Flag className="w-3 h-3 text-yellow-500" />
+          <div
+            className="absolute top-3 right-3 flex items-center gap-1.5 px-2 py-1 rounded-md"
+            style={{ backgroundColor: 'rgba(0,0,0,0.7)', backdropFilter: 'blur(4px)' }}
+          >
+            <Flag className="w-3 h-3" style={{ color: '#eab308' }} />
             <span className="text-white text-xs font-medium">{race.winner}</span>
           </div>
         )}
         {!isCancelled && !isCompleted && (
-          <div className="absolute top-3 right-3 flex items-center gap-1 px-2 py-1 rounded-md bg-blue-600/90 text-white text-xs font-medium">
+          <div
+            className="absolute top-3 right-3 flex items-center gap-1.5 px-2 py-1 rounded-md"
+            style={{ backgroundColor: 'rgba(59,130,246,0.9)', backdropFilter: 'blur(4px)' }}
+          >
             <Clock className="w-3 h-3" />
-            UPCOMING
+            <span className="text-white text-xs font-medium">Upcoming</span>
           </div>
         )}
       </div>
 
       {/* Content */}
-      <div className="p-4">
-        <div className="flex items-start justify-between mb-2">
+      <div className="mt-2">
+        <div className="flex items-start justify-between mb-1">
           <div>
-            <h3 className="text-white font-bold text-lg">{race.country}</h3>
-            <div className="flex items-center gap-1 text-gray-400 text-sm">
+            <h3
+              className="text-[var(--text-primary)] font-bold text-base"
+              style={{ fontFamily: 'var(--font-heading)' }}
+            >
+              {race.country}
+            </h3>
+            <div className="flex items-center gap-1 text-[var(--text-muted)] text-sm">
               <MapPin className="w-3 h-3" />
               <span>{race.city}</span>
             </div>
           </div>
-          <div className="text-right">
-            <div className="flex items-center gap-1 text-gray-300">
-              <Calendar className="w-4 h-4 text-gray-500" />
-              <span className="text-sm">{race.date}</span>
-            </div>
+          <div className="flex items-center gap-1 text-[var(--text-secondary)]">
+            <Calendar className="w-3.5 h-3.5" style={{ color: 'var(--text-muted)' }} />
+            <span className="text-xs">{race.date}</span>
           </div>
         </div>
 
         {/* Circuit name */}
-        <p className="text-gray-500 text-xs uppercase tracking-wider mb-2">{race.circuit}</p>
+        <p
+          className="text-[var(--text-muted)] text-xs uppercase tracking-wider mb-2"
+          style={{ fontFamily: 'var(--font-body)' }}
+        >
+          {race.circuit}
+        </p>
 
         {/* Winner info */}
         {race.winner && !isCancelled && (
-          <div className="flex items-center gap-2 pt-2 border-t border-[#333]">
-            <div className="w-2 h-2 rounded-full" style={{ backgroundColor: winnerColor }} />
-            <span className="text-white text-sm">
-              <span className="text-yellow-500 font-bold">Winner:</span> {race.winner}
+          <div
+            className="flex items-center gap-2 pt-2 border-t mt-2"
+            style={{ borderColor: 'var(--bg-overlay)' }}
+          >
+            <div className="team-dot" style={{ backgroundColor: winnerColor }} />
+            <span className="text-[var(--text-secondary)] text-sm">
+              <span style={{ color: '#eab308', fontWeight: 600 }}>Winner:</span>
+              {' '}{race.winner}
             </span>
-            <span className="text-gray-500 text-xs">({race.winnerTeam})</span>
+            <span className="text-[var(--text-muted)] text-xs">({race.winnerTeam})</span>
           </div>
         )}
       </div>

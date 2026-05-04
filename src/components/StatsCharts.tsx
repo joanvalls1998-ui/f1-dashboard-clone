@@ -15,15 +15,15 @@ export function BarChart({ data, maxValue, title, unit = '' }: BarChartProps) {
   const max = maxValue || Math.max(...data.map(d => d.value));
   
   return (
-    <div className="bg-[#1a1a1a] rounded-xl p-4">
-      {title && <h3 className="text-white font-semibold mb-3 flex items-center gap-2">{title}</h3>}
+    <div className="var(--bg-elevated) rounded-xl p-4">
+      {title && <h3 className="var(--text-primary) font-semibold mb-3 flex items-center gap-2">{title}</h3>}
       <div className="space-y-2">
         {data.map((item, idx) => {
           const percentage = (item.value / max) * 100;
           return (
             <div key={idx} className="flex items-center gap-3">
-              <span className="w-24 text-xs text-gray-400 truncate">{item.label}</span>
-              <div className="flex-1 h-6 bg-[#2a2a2a] rounded-full overflow-hidden">
+              <span className="w-24 text-xs var(--text-muted) truncate">{item.label}</span>
+              <div className="flex-1 h-6 var(--bg-overlay) rounded-full overflow-hidden">
                 <div 
                   className="h-full rounded-full flex items-center justify-end px-2 transition-all duration-500"
                   style={{ 
@@ -32,7 +32,7 @@ export function BarChart({ data, maxValue, title, unit = '' }: BarChartProps) {
                   }}
                 >
                   {percentage > 15 && (
-                    <span className="text-xs font-bold text-white">{item.value}{unit}</span>
+                    <span className="text-xs font-bold var(--text-primary)">{item.value}{unit}</span>
                   )}
                 </div>
               </div>
@@ -87,10 +87,10 @@ export function ProgressRing({ value, max, label, color = '#E10600', size = 80 }
           />
         </svg>
         <div className="absolute inset-0 flex items-center justify-center">
-          <span className="text-lg font-bold text-white">{value}</span>
+          <span className="text-lg font-bold var(--text-primary)">{value}</span>
         </div>
       </div>
-      <span className="text-xs text-gray-400 mt-1 text-center">{label}</span>
+      <span className="text-xs var(--text-muted) mt-1 text-center">{label}</span>
     </div>
   );
 }
@@ -106,7 +106,7 @@ interface StatCardProps {
 
 export function StatCard({ icon, label, value, sublabel, color = '#E10600' }: StatCardProps) {
   return (
-    <div className="bg-[#1a1a1a] rounded-xl p-4 flex items-center gap-4">
+    <div className="var(--bg-elevated) rounded-xl p-4 flex items-center gap-4">
       <div 
         className="w-12 h-12 rounded-lg flex items-center justify-center"
         style={{ backgroundColor: color + '22' }}
@@ -114,9 +114,9 @@ export function StatCard({ icon, label, value, sublabel, color = '#E10600' }: St
         <div style={{ color }}>{icon}</div>
       </div>
       <div>
-        <p className="text-2xl font-bold text-white">{value}</p>
-        <p className="text-sm text-gray-400">{label}</p>
-        {sublabel && <p className="text-xs text-gray-500">{sublabel}</p>}
+        <p className="text-2xl font-bold var(--text-primary)">{value}</p>
+        <p className="text-sm var(--text-muted)">{label}</p>
+        {sublabel && <p className="text-xs var(--text-muted)">{sublabel}</p>}
       </div>
     </div>
   );
@@ -160,25 +160,25 @@ interface GapChartProps {
 
 export function GapChart({ gaps }: GapChartProps) {
   return (
-    <div className="bg-[#1a1a1a] rounded-xl p-4">
-      <h3 className="text-white font-semibold mb-3 flex items-center gap-2">
+    <div className="var(--bg-elevated) rounded-xl p-4">
+      <h3 className="var(--text-primary) font-semibold mb-3 flex items-center gap-2">
         <TrendingUp className="w-4 h-4 text-red-500" />
         Intervalos
       </h3>
       <div className="space-y-1">
         {gaps.map((item, idx) => (
-          <div key={idx} className="flex items-center justify-between py-2 px-3 rounded-lg hover:bg-[#252525] transition-colors">
+          <div key={idx} className="flex items-center justify-between py-2 px-3 rounded-lg hover:var(--bg-overlay) transition-colors">
             <div className="flex items-center gap-3">
-              <span className="w-6 text-center font-mono text-gray-500">{idx + 1}</span>
-              <span className="text-white font-medium">{item.driver}</span>
+              <span className="w-6 text-center font-mono var(--text-muted)">{idx + 1}</span>
+              <span className="var(--text-primary) font-medium">{item.driver}</span>
             </div>
             <div className="flex items-center gap-2">
               {item.interval && (
-                <span className="text-xs text-gray-500 bg-[#333] px-2 py-0.5 rounded">INTERVAL</span>
+                <span className="text-xs var(--text-muted) var(--bg-overlay) px-2 py-0.5 rounded">INTERVAL</span>
               )}
               <span className={`font-mono font-bold ${
                 item.gap === 'Leader' ? 'text-yellow-500' :
-                item.gap.startsWith('+') ? 'text-green-400' : 'text-gray-300'
+                item.gap.startsWith('+') ? 'text-green-400' : 'var(--text-secondary)'
               }`}>
                 {item.gap}
               </span>
@@ -211,15 +211,15 @@ const tyreColors: Record<string, string> = {
 
 export function TyreStrategyChart({ stints }: TyreStrategyChartProps) {
   return (
-    <div className="bg-[#1a1a1a] rounded-xl p-4">
-      <h3 className="text-white font-semibold mb-3 flex items-center gap-2">
+    <div className="var(--bg-elevated) rounded-xl p-4">
+      <h3 className="var(--text-primary) font-semibold mb-3 flex items-center gap-2">
         <Gauge className="w-4 h-4 text-blue-400" />
         Estrategia de Neumáticos
       </h3>
       <div className="space-y-3">
         {stints.map((stint, idx) => (
           <div key={idx} className="flex items-center gap-3">
-            <span className="w-20 text-xs text-gray-400 truncate">{stint.driver}</span>
+            <span className="w-20 text-xs var(--text-muted) truncate">{stint.driver}</span>
             <div className="flex-1 flex gap-1">
               {stint.stints.map((s, sIdx) => (
                 <div
@@ -240,11 +240,11 @@ export function TyreStrategyChart({ stints }: TyreStrategyChartProps) {
         ))}
       </div>
       {/* Legend */}
-      <div className="flex items-center justify-center gap-4 mt-4 pt-4 border-t border-[#333]">
+      <div className="flex items-center justify-center gap-4 mt-4 pt-4 border-t var(--border-color)">
         {Object.entries(tyreColors).map(([tyre, color]) => (
           <div key={tyre} className="flex items-center gap-1">
             <div className="w-3 h-3 rounded" style={{ backgroundColor: color }} />
-            <span className="text-xs text-gray-500">{tyre}</span>
+            <span className="text-xs var(--text-muted)">{tyre}</span>
           </div>
         ))}
       </div>
@@ -268,16 +268,16 @@ export function SpeedTraceChart({ data, maxSpeed: globalMax }: SpeedTraceChartPr
   const max = globalMax || Math.max(...data.flatMap(d => d.speeds));
   
   return (
-    <div className="bg-[#1a1a1a] rounded-xl p-4">
-      <h3 className="text-white font-semibold mb-3 flex items-center gap-2">
+    <div className="var(--bg-elevated) rounded-xl p-4">
+      <h3 className="var(--text-primary) font-semibold mb-3 flex items-center gap-2">
         <Activity className="w-4 h-4 text-green-400" />
         Trace de Velocidad
       </h3>
       <div className="space-y-3">
         {data.map((driver, idx) => (
           <div key={idx} className="flex items-center gap-2">
-            <span className="w-16 text-xs text-gray-400 truncate">{driver.driver}</span>
-            <div className="flex-1 h-6 bg-[#2a2a2a] rounded overflow-hidden relative">
+            <span className="w-16 text-xs var(--text-muted) truncate">{driver.driver}</span>
+            <div className="flex-1 h-6 var(--bg-overlay) rounded overflow-hidden relative">
               <div 
                 className="h-full transition-all duration-300"
                 style={{ 
@@ -285,7 +285,7 @@ export function SpeedTraceChart({ data, maxSpeed: globalMax }: SpeedTraceChartPr
                   background: `linear-gradient(90deg, #43B02A 0%, #FFD700 50%, #FF3333 100%)`
                 }}
               />
-              <span className="absolute right-2 top-1/2 -translate-y-1/2 text-xs font-mono text-gray-400">
+              <span className="absolute right-2 top-1/2 -translate-y-1/2 text-xs font-mono var(--text-muted)">
                 {driver.maxSpeed} km/h
               </span>
             </div>
@@ -308,20 +308,20 @@ export function SeasonProgress({ completed, total, nextRace, nextDate }: SeasonP
   const percentage = (completed / total) * 100;
   
   return (
-    <div className="bg-[#1a1a1a] rounded-xl p-4">
-      <h3 className="text-white font-semibold mb-3 flex items-center gap-2">
+    <div className="var(--bg-elevated) rounded-xl p-4">
+      <h3 className="var(--text-primary) font-semibold mb-3 flex items-center gap-2">
         <Flag className="w-4 h-4 text-red-500" />
         Progreso de Temporada
       </h3>
       
       {/* Progress bar */}
-      <div className="relative h-4 bg-[#2a2a2a] rounded-full overflow-hidden mb-3">
+      <div className="relative h-4 var(--bg-overlay) rounded-full overflow-hidden mb-3">
         <div 
           className="h-full bg-gradient-to-r from-red-600 to-red-400 transition-all duration-500"
           style={{ width: `${percentage}%` }}
         />
         <div className="absolute inset-0 flex items-center justify-center">
-          <span className="text-xs font-bold text-white bg-black/50 px-2 py-0.5 rounded-full">
+          <span className="text-xs font-bold var(--text-primary) bg-black/50 px-2 py-0.5 rounded-full">
             {completed}/{total} carreras
           </span>
         </div>
@@ -329,14 +329,14 @@ export function SeasonProgress({ completed, total, nextRace, nextDate }: SeasonP
       
       {/* Next race info */}
       {nextRace && (
-        <div className="flex items-center justify-between pt-3 border-t border-[#333]">
+        <div className="flex items-center justify-between pt-3 border-t var(--border-color)">
           <div>
-            <p className="text-xs text-gray-500">Próxima carrera</p>
-            <p className="text-white font-medium">{nextRace}</p>
+            <p className="text-xs var(--text-muted)">Próxima carrera</p>
+            <p className="var(--text-primary) font-medium">{nextRace}</p>
           </div>
           <div className="text-right">
-            <p className="text-xs text-gray-500">Fecha</p>
-            <p className="text-white font-medium">{nextDate}</p>
+            <p className="text-xs var(--text-muted)">Fecha</p>
+            <p className="var(--text-primary) font-medium">{nextDate}</p>
           </div>
         </div>
       )}
@@ -357,17 +357,17 @@ export function PositionChange({ current, previous, driver }: PositionChangeProp
   const isNeutral = change === 0;
   
   return (
-    <div className="flex items-center gap-3 py-2 px-3 rounded-lg bg-[#1a1a1a]">
+    <div className="flex items-center gap-3 py-2 px-3 rounded-lg var(--bg-elevated)">
       <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold ${
         isPositive ? 'bg-green-500/20 text-green-400' :
-        isNeutral ? 'bg-gray-500/20 text-gray-400' :
+        isNeutral ? 'bg-gray-500/20 var(--text-muted)' :
         'bg-red-500/20 text-red-400'
       }`}>
         {isPositive ? `+${change}` : isNeutral ? '—' : change}
       </div>
       <div className="flex-1">
-        <p className="text-white text-sm font-medium">{driver}</p>
-        <p className="text-xs text-gray-500">P{previous} → P{current}</p>
+        <p className="var(--text-primary) text-sm font-medium">{driver}</p>
+        <p className="text-xs var(--text-muted)">P{previous} → P{current}</p>
       </div>
     </div>
   );
@@ -385,27 +385,27 @@ interface ChampionshipTileProps {
 
 export function ChampionshipTile({ position, driver, team, points, pointsBehind, color }: ChampionshipTileProps) {
   return (
-    <div className="bg-[#1a1a1a] rounded-xl p-3 flex items-center gap-3">
+    <div className="var(--bg-elevated) rounded-xl p-3 flex items-center gap-3">
       <div className={`w-10 h-10 rounded-lg flex items-center justify-center text-xl font-bold ${
         position === 1 ? 'bg-yellow-500/20 text-yellow-500' :
-        position <= 3 ? 'bg-gray-300/20 text-gray-300' :
-        'bg-[#333] text-gray-400'
+        position <= 3 ? 'bg-gray-300/20 var(--text-secondary)' :
+        'var(--bg-overlay) var(--text-muted)'
       }`}>
         {position}
       </div>
       <div className="flex-1 min-w-0">
-        <p className="text-white font-medium truncate">{driver}</p>
+        <p className="var(--text-primary) font-medium truncate">{driver}</p>
         <div className="flex items-center gap-2">
           <div className="w-2 h-2 rounded-full" style={{ backgroundColor: color }} />
-          <p className="text-xs text-gray-500">{team}</p>
+          <p className="text-xs var(--text-muted)">{team}</p>
         </div>
       </div>
       <div className="text-right">
-        <p className="text-lg font-bold text-white">{points}</p>
-        <p className="text-xs text-gray-500">pts</p>
+        <p className="text-lg font-bold var(--text-primary)">{points}</p>
+        <p className="text-xs var(--text-muted)">pts</p>
       </div>
       {pointsBehind !== undefined && pointsBehind > 0 && (
-        <div className="text-xs text-gray-500">-{pointsBehind}</div>
+        <div className="text-xs var(--text-muted)">-{pointsBehind}</div>
       )}
     </div>
   );

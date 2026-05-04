@@ -30,44 +30,98 @@ import {
   Zap,
   Star,
   Settings,
+  X,
+  ChevronDown,
+  Github,
+  Menu,
 } from "lucide-react";
+import { useState } from "react";
+
+/* ────────────────────── dades ────────────────────── */
 
 const navItems = [
-  { href: "/", label: "Home", icon: Home },
-  { href: "/live", label: "Live Timing", icon: Radio },
-  { href: "/predictions", label: "Predicción", icon: Zap },
-  { href: "/favorito", label: "Favorito", icon: Star },
-  { href: "/home-intel", label: "Home Intel", icon: Home },
-  { href: "/news", label: "News", icon: ScrollText },
-  { href: "/engineer", label: "Ingeniero", icon: Settings },
-  { href: "/race-mode", label: "Modo Carrera", icon: Flag },
-  { href: "/calendar", label: "Race Calendar", icon: Calendar },
-  { href: "/standings", label: "Standings", icon: Trophy },
-  { href: "/drivers", label: "Drivers", icon: User },
-  { href: "/teams", label: "Teams", icon: Users },
-  { href: "/driver-stats", label: "Driver Stats", icon: BarChart3 },
-  { href: "/head-to-head", label: "Head to Head", icon: Swords },
-  { href: "/driver-comparison", label: "Driver Comparison", icon: Activity },
-  { href: "/race-pace", label: "Race Pace", icon: Flame },
-  { href: "/sector-times", label: "Sector Times", icon: Clock },
-  { href: "/intervals", label: "Intervals", icon: TrendingUp },
-  { href: "/pit-stops", label: "Pit Stops", icon: CircleDot },
-  { href: "/tyre-strategy", label: "Tyre Strategy", icon: Gauge },
-  { href: "/speed-trap", label: "Speed Trap", icon: Gauge },
-  { href: "/speed-histogram", label: "Speed Histogram", icon: BarChart },
-  { href: "/qualifying", label: "Qualifying", icon: Flag },
-  { href: "/starting-grid", label: "Starting Grid", icon: Flag },
-  { href: "/race-history", label: "Race History", icon: Map },
-  { href: "/weather", label: "Weather", icon: Cloud },
-  { href: "/track-map", label: "Track Map", icon: Map },
-  { href: "/season-stats", label: "Season Stats", icon: TrendingUp },
-  { href: "/dnf", label: "DNF Tracker", icon: AlertTriangle },
-  { href: "/tech-updates", label: "Tech Updates", icon: Wrench },
-  { href: "/used-elements", label: "Used Elements", icon: Wrench },
-  { href: "/destructors", label: "Destructors", icon: Bomb },
-  { href: "/track-dna", label: "Track DNA", icon: Dna },
-  { href: "/consistency", label: "Consistency", icon: Activity },
+  {
+    label: "Inici",
+    items: [
+      { href: "/", label: "Inici", icon: Home },
+      { href: "/news", label: "Notícies", icon: ScrollText },
+      { href: "/calendar", label: "Calendari", icon: Calendar },
+    ],
+  },
+  {
+    label: "Classificació",
+    items: [
+      { href: "/standings", label: "Pilots", icon: Trophy },
+      { href: "/constructors", label: "Constructors", icon: Gauge },
+    ],
+  },
+  {
+    label: "Temps Real",
+    items: [
+      { href: "/live", label: "Directe", icon: Radio },
+      { href: "/speed-trap", label: "Radar", icon: Gauge },
+      { href: "/intervals", label: "Intervals", icon: TrendingUp },
+      { href: "/pit-stops", label: "Parades", icon: CircleDot },
+      { href: "/tyre-strategy", label: "Estratègia", icon: Flame },
+    ],
+  },
+  {
+    label: "Anàlisi",
+    items: [
+      { href: "/race-pace", label: "Ritme", icon: Flame },
+      { href: "/sector-times", label: "Sectors", icon: Clock },
+      { href: "/qualifying", label: "Quali", icon: Flag },
+      { href: "/starting-grid", label: "Grill Sortida", icon: Flag },
+      { href: "/race-history", label: "Històric", icon: Map },
+      { href: "/weather", label: "Temps", icon: Cloud },
+      { href: "/track-map", label: "Circuit", icon: Map },
+    ],
+  },
+  {
+    label: "Estadístiques",
+    items: [
+      { href: "/drivers", label: "Pilots", icon: User },
+      { href: "/teams", label: "Equips", icon: Users },
+      { href: "/driver-stats", label: "Stats Pilots", icon: BarChart3 },
+      { href: "/head-to-head", label: "Cara a Cara", icon: Swords },
+      { href: "/driver-comparison", label: "Comparativa", icon: Activity },
+      { href: "/season-stats", label: "Temporada", icon: TrendingUp },
+      { href: "/dnf", label: "Abandonaments", icon: AlertTriangle },
+    ],
+  },
+  {
+    label: "Especials",
+    items: [
+      { href: "/predictions", label: "Prediccions", icon: Zap },
+      { href: "/favorito", label: "Favorit", icon: Star },
+      { href: "/home-intel", label: "Intel·ligència", icon: Settings },
+      { href: "/engineer", label: "Enginyer", icon: Wrench },
+      { href: "/race-mode", label: "Mode Cursa", icon: Flag },
+      { href: "/speed-histogram", label: "Histograma", icon: BarChart },
+      { href: "/tech-updates", label: "Tecnologia", icon: Wrench },
+      { href: "/used-elements", label: "Elements", icon: Wrench },
+      { href: "/destructors", label: "Destructors", icon: Bomb },
+      { href: "/track-dna", label: "ADN Circuit", icon: Dna },
+      { href: "/consistency", label: "Consistència", icon: Activity },
+    ],
+  },
 ];
+
+/* ────────────────── subcomponents ────────────────── */
+
+export function MobileMenuButton({ onClick }: { onClick: () => void }) {
+  return (
+    <button
+      onClick={onClick}
+      className="p-2 rounded-lg text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-elevated)] transition-colors"
+      aria-label="Obrir menú"
+    >
+      <Menu className="w-5 h-5" />
+    </button>
+  );
+}
+
+/* ──────────────────── sidebar ────────────────────── */
 
 interface SidebarProps {
   collapsed: boolean;
@@ -76,79 +130,155 @@ interface SidebarProps {
 
 export function Sidebar({ collapsed, onToggle }: SidebarProps) {
   const pathname = usePathname();
+  const [expandedSections, setExpandedSections] = useState<
+    Record<string, boolean>
+  >({});
+
+  const toggleSection = (label: string) => {
+    setExpandedSections((prev) => ({
+      ...prev,
+      [label]: !prev[label],
+    }));
+  };
 
   return (
-    <aside
-      className={cn(
-        "fixed left-0 top-0 z-40 h-screen bg-sidebar transition-all duration-300 flex flex-col",
-        collapsed ? "w-16" : "w-64"
+    <>
+      {/* Mobile overlay */}
+      {!collapsed && (
+        <div
+          className="fixed inset-0 z-30 bg-black/60 backdrop-blur-sm lg:hidden"
+          onClick={onToggle}
+        />
       )}
-    >
-      {/* Logo */}
-      <div className="flex items-center h-16 px-4 border-b border-sidebar-border">
-        <div className="flex items-center gap-2 overflow-hidden">
-          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-red-500 to-red-700 flex items-center justify-center">
-            <span className="text-white font-bold text-sm">F1</span>
+
+      <aside
+        className={cn(
+          "fixed left-0 top-0 z-40 h-screen flex flex-col transition-all duration-300",
+          "bg-[var(--sidebar-bg)] border-r border-[var(--sidebar-border)]",
+          collapsed ? "w-16" : "w-64"
+        )}
+      >
+        {/* Logo */}
+        <div className="flex items-center h-16 px-4 border-b border-[var(--sidebar-border)]">
+          <div className="flex items-center gap-2 overflow-hidden">
+            <div className="w-8 h-8 rounded-lg bg-[var(--accent-red)] flex items-center justify-center shrink-0">
+              <span
+                className="text-white font-bold text-xs"
+                style={{ fontFamily: "var(--font-heading)" }}
+              >
+                F1
+              </span>
+            </div>
+            {!collapsed && (
+              <span
+                className="font-bold text-[var(--text-primary)] whitespace-nowrap"
+                style={{ fontFamily: "var(--font-heading)" }}
+              >
+                F1 Dashboard
+              </span>
+            )}
           </div>
           {!collapsed && (
-            <span className="font-bold text-sidebar-foreground whitespace-nowrap">
-              F1 Dashboard
-            </span>
+            <button
+              onClick={onToggle}
+              className="ml-auto p-1 rounded-md text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:bg-[var(--sidebar-accent)] transition-colors lg:hidden"
+              aria-label="Tancar menú"
+            >
+              <X className="w-5 h-5" />
+            </button>
           )}
         </div>
-      </div>
 
-      {/* Navigation */}
-      <nav className="flex-1 overflow-y-auto py-4 px-2">
-        <ul className="space-y-1">
-          {navItems.map((item) => {
-            const isActive = pathname === item.href;
-            return (
-              <li key={item.href}>
-                <Link
-                  href={item.href}
-                  className={cn(
-                    "flex items-center gap-3 px-3 py-2 rounded-md text-sm transition-colors",
-                    isActive
-                      ? "bg-sidebar-accent text-sidebar-accent-foreground font-medium"
-                      : "text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
-                  )}
-                  title={collapsed ? item.label : undefined}
-                >
-                  <item.icon className="w-5 h-5 shrink-0" />
-                  {!collapsed && <span className="truncate">{item.label}</span>}
-                </Link>
-              </li>
-            );
-          })}
-        </ul>
-      </nav>
-
-      {/* Footer */}
-      <div className="border-t border-sidebar-border py-4 px-2">
-        <ul className="space-y-1">
-          <li>
-            <a
-              href="https://github.com/joanvalls1998-ui/f1-dashboard-clone"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-3 px-3 py-2 rounded-md text-sm text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground transition-colors"
-              title={collapsed ? "GitHub" : undefined}
-            >
-              <ScrollText className="w-5 h-5 shrink-0" />
-              {!collapsed && <span className="truncate">GitHub</span>}
-            </a>
-          </li>
-        </ul>
-
-        {/* Collapse button */}
-        <button
-          onClick={onToggle}
-          className="flex items-center justify-center w-full mt-2 p-2 rounded-md text-sidebar-foreground hover:bg-sidebar-accent transition-colors"
+        {/* Navigation */}
+        <nav
+          className="flex-1 overflow-y-auto py-2 px-2"
+          aria-label="Navegació principal"
         >
-          <span className="text-xs">{collapsed ? "→" : "←"}</span>
-        </button>
-      </div>
-    </aside>
+          <ul className="space-y-2">
+            {navItems.map((section) => (
+              <li key={section.label}>
+                {!collapsed && (
+                  <button
+                    onClick={() => toggleSection(section.label)}
+                    className="flex items-center justify-between w-full px-2 py-1 text-xs font-semibold text-[var(--text-muted)] uppercase tracking-wider hover:text-[var(--text-primary)] transition-colors"
+                    aria-expanded={expandedSections[section.label] ?? true}
+                  >
+                    <span>{section.label}</span>
+                    <ChevronDown
+                      className={cn(
+                        "w-3 h-3 transition-transform",
+                        expandedSections[section.label] === false
+                          ? "-rotate-90"
+                          : ""
+                      )}
+                    />
+                  </button>
+                )}
+                <ul
+                  className={cn(
+                    "space-y-0.5",
+                    collapsed ? "mt-2" : "mt-1",
+                    expandedSections[section.label] === false && !collapsed
+                      ? "hidden"
+                      : ""
+                  )}
+                >
+                  {section.items.map((item) => {
+                    const isActive = pathname === item.href;
+                    return (
+                      <li key={item.href}>
+                        <Link
+                          href={item.href}
+                          className={cn(
+                            "flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-all duration-150",
+                            "hover:bg-[var(--sidebar-accent)]",
+                            isActive
+                              ? "bg-[var(--sidebar-accent)] text-[var(--text-primary)] font-medium"
+                              : "text-[var(--sidebar-fg)] hover:text-[var(--text-primary)]"
+                          )}
+                          title={collapsed ? item.label : undefined}
+                          aria-current={isActive ? "page" : undefined}
+                          onClick={() => {
+                            if (window.innerWidth < 1024) onToggle();
+                          }}
+                        >
+                          <item.icon
+                            className={cn(
+                              "w-5 h-5 shrink-0 transition-colors",
+                              isActive ? "text-[var(--accent-red)]" : ""
+                            )}
+                          />
+                          {!collapsed && (
+                            <span className="truncate">{item.label}</span>
+                          )}
+                        </Link>
+                      </li>
+                    );
+                  })}
+                </ul>
+              </li>
+            ))}
+          </ul>
+        </nav>
+
+        {/* Footer */}
+        <div className="border-t border-[var(--sidebar-border)] py-3 px-2">
+          <ul className="space-y-0.5">
+            <li>
+              <a
+                href="https://github.com/joanvalls1998-ui/f1-dashboard-clone"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-[var(--sidebar-fg)] hover:bg-[var(--sidebar-accent)] hover:text-[var(--text-primary)] transition-all duration-150"
+                title={collapsed ? "GitHub" : undefined}
+              >
+                <Github className="w-5 h-5 shrink-0" />
+                {!collapsed && <span className="truncate">GitHub</span>}
+              </a>
+            </li>
+          </ul>
+        </div>
+      </aside>
+    </>
   );
 }

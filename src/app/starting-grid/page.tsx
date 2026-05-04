@@ -78,7 +78,7 @@ export default function StartingGridPage() {
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-cyan-500" />
+        <div className="border-2 rounded-full h-8 w-8 animate-spin" style={{ borderColor: 'var(--bg-overlay)', borderTopColor: 'var(--accent-red)' }} />
       </div>
     );
   }
@@ -88,12 +88,12 @@ export default function StartingGridPage() {
       {/* Header */}
       <div className="flex items-center gap-2">
         <Flag className="w-6 h-6 text-yellow-500" />
-        <h1 className="text-2xl font-bold">Starting Grid</h1>
+        <h1 className="text-2xl font-bold" style={{ fontFamily: 'var(--font-heading)' }}>Starting Grid</h1>
       </div>
-      <p className="text-muted-foreground text-sm">Japanese Grand Prix 2026 — Qualifying Results</p>
+      <p className="text-sm" style={{ color: 'var(--text-muted)' }}>Japanese Grand Prix 2026 — Qualifying Results</p>
 
       {/* Grid visualization */}
-      <div className="bg-gradient-to-b from-slate-900 to-slate-800 rounded-xl p-6 border">
+      <div className="rounded-xl p-6 border" style={{ background: 'linear-gradient(to bottom, var(--bg-elevated), var(--bg-surface))' }}>
         <div className="flex items-center justify-center mb-6">
           <div className="inline-flex items-center gap-2 px-4 py-2 bg-yellow-500 text-black rounded-lg font-bold">
             <Trophy className="w-5 h-5" />
@@ -119,8 +119,8 @@ export default function StartingGridPage() {
               {/* Position */}
               <div className={`w-10 text-center font-bold text-lg ${
                 driver.position === 1 ? "text-yellow-500" :
-                driver.position === 2 ? "text-gray-400" :
-                driver.position === 3 ? "text-amber-600" : "text-muted-foreground"
+                driver.position === 2 ? "var(--text-muted)" :
+                driver.position === 3 ? "text-amber-600" : ""
               }`}>
                 {driver.position}
               </div>
@@ -141,7 +141,7 @@ export default function StartingGridPage() {
               {/* Driver info */}
               <div className="flex-1">
                 <div className="font-bold">{driver.driver}</div>
-                <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                <div className="flex items-center gap-2 text-xs" style={{ color: 'var(--text-muted)' }}>
                   <div
                     className="w-2 h-4 rounded-full"
                     style={{ backgroundColor: teamColors[driver.team] || "#666" }}
@@ -153,8 +153,8 @@ export default function StartingGridPage() {
 
               {/* Times */}
               <div className="hidden sm:flex gap-4 text-xs font-mono">
-                {driver.q1 && <div className="text-muted-foreground">Q1: <span className="text-foreground">{driver.q1}</span></div>}
-                {driver.q2 && <div className="text-muted-foreground">Q2: <span className="text-foreground">{driver.q2}</span></div>}
+                {driver.q1 && <div style={{ color: 'var(--text-muted)' }}>Q1: <span style={{ color: 'var(--text-primary)' }}>{driver.q1}</span></div>}
+                {driver.q2 && <div style={{ color: 'var(--text-muted)' }}>Q2: <span style={{ color: 'var(--text-primary)' }}>{driver.q2}</span></div>}
                 {driver.q3 && <div className="text-cyan-400 font-bold">Q3: {driver.q3}</div>}
               </div>
             </div>

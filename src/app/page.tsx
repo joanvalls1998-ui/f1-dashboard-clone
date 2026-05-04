@@ -1,16 +1,15 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-
 import { driverImages, teamColors, getDriverInitials, getTeamColor } from '@/lib/f1-assets';
 import { fetchDriverStandings, fetchConstructorStandings, fetchRaceCalendar } from '@/lib/api';
 import { ConstructorStandingsVisual } from '@/components/TeamCard';
 import { RaceCalendarVisual } from '@/components/CircuitCard';
 import { TeamGallery, AllDriversGrid } from '@/components/TeamGallery';
-import { 
-  Trophy, 
-  Users, 
-  Calendar, 
+import {
+  Trophy,
+  Users,
+  Calendar,
   TrendingUp,
   Activity,
   Flag,
@@ -50,12 +49,12 @@ interface Race {
   status: 'completed' | 'upcoming' | 'cancelled';
 }
 
-// Quick stats
-const quickStats = [
+// Quick stats — animated counters
+const quickStatsData = [
   { label: 'Races Completed', value: '3/22', icon: Flag, color: '#43B02A' },
-  { label: 'Leading Driver', value: 'Antonelli', icon: Target, color: '#FFD700' },
+  { label: 'Leading Driver', value: 'ANT', icon: Target, color: '#FFD700' },
   { label: 'Leading Team', value: 'Mercedes', icon: Trophy, color: '#27F4D2' },
-  { label: 'Points Leaders', value: '123 pts', icon: TrendingUp, color: '#E8002D' },
+  { label: 'Points Leader', value: '68 pts', icon: TrendingUp, color: '#E10600' },
 ];
 
 export default function HomePage() {
@@ -73,10 +72,9 @@ export default function HomePage() {
           fetchConstructorStandings(2026),
           fetchRaceCalendar(2026),
         ]);
-        
+
         setDrivers(driversData);
-        
-        // Match drivers to constructors
+
         const constructorsWithDrivers = constructorsData.map(c => ({
           ...c,
           drivers: driversData
@@ -84,10 +82,7 @@ export default function HomePage() {
             .map(d => d.fullName)
         }));
         setConstructors(constructorsWithDrivers);
-        
-        // Update races with winners from Ergast if completed
         setRaces(racesData);
-        
         setLoading(false);
       } catch (error) {
         console.error('Error loading data:', error);
@@ -98,42 +93,64 @@ export default function HomePage() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-[#0a0a0a]">
+    <div className="min-h-screen">
       {/* Hero Section */}
-      <div className="relative bg-gradient-to-br from-[#1a1a1a] via-[#0f0f0f] to-[#1a1a1a] border-b border-[#333]">
-        <div className="absolute inset-0 opacity-10">
-          <div className="absolute inset-0" style={{
-            backgroundImage: `radial-gradient(circle at 20% 50%, #E10600 0%, transparent 50%),
-                             radial-gradient(circle at 80% 50%, #3671C6 0%, transparent 50%)`
-          }} />
-        </div>
-        
-        <div className="relative px-6 py-8">
-          {/* Header */}
+      <div className="relative overflow-hidden">
+        {/* Background texture */}
+        <div
+          className="absolute inset-0 opacity-5 pointer-events-none"
+          style={{
+            backgroundImage: `radial-gradient(circle at 15% 50%, #E10600 0%, transparent 45%),
+                             radial-gradient(circle at 85% 50%, #3671C6 0%, transparent 45%)`,
+          }}
+        />
+        {/* Subtle grid */}
+        <div
+          className="absolute inset-0 opacity-[0.03] pointer-events-none"
+          style={{
+            backgroundImage: `linear-gradient(var(--bg-overlay) 1px, transparent 1px),
+                             linear-gradient(90deg, var(--bg-overlay) 1px, transparent 1px)`,
+            backgroundSize: '40px 40px',
+          }}
+        />
+
+        <div className="relative px-1 pt-4 pb-6">
+          {/* Header row */}
           <div className="flex items-center justify-between mb-6">
             <div>
-              <p className="text-gray-500 text-sm uppercase tracking-wider">2026 Season</p>
-              <h1 className="text-3xl font-black text-white">F1 Dashboard</h1>
+              <p className="eyebrow">2026 Season</p>
+              <h1
+                className="text-3xl md:text-4xl font-extrabold text-[var(--text-primary)] tracking-tight"
+                style={{ fontFamily: "var(--font-heading)" }}
+              >
+                F1 Dashboard
+              </h1>
             </div>
-            <div className="flex items-center gap-2">
-              <span className="w-3 h-3 rounded-full bg-green-500 animate-pulse" />
-              <span className="text-green-400 text-sm font-medium">Live Data</span>
+            <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-[var(--bg-surface)] border border-[var(--bg-overlay)]">
+              <div className="live-dot" />
+              <span className="text-xs font-medium text-[var(--status-live)]">Live Data</span>
             </div>
           </div>
 
-          {/* Quick Stats Row */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-            {quickStats.map((stat) => (
-              <div key={stat.label} className="bg-[#1a1a1a]/80 backdrop-blur rounded-xl p-3 flex items-center gap-3">
-                <div 
-                  className="w-10 h-10 rounded-lg flex items-center justify-center"
-                  style={{ backgroundColor: stat.color + '22' }}
-                >
-                  <stat.icon className="w-5 h-5" style={{ color: stat.color }} />
-                </div>
-                <div>
-                  <p className="text-xl font-bold text-white">{stat.value}</p>
-                  <p className="text-xs text-gray-500">{stat.label}</p>
+          {/* Quick Stats Grid */}
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+            {quickStatsData.map((stat, i) => (
+              <div
+                key={stat.label}
+                className="card animate-enter"
+                style={{ animationDelay: `${i * 60}ms` }}
+              >
+                <div className="flex items-center gap-3">
+                  <div
+                    className="w-10 h-10 rounded-lg flex items-center justify-center shrink-0"
+                    style={{ backgroundColor: stat.color + '18' }}
+                  >
+                    <stat.icon className="w-5 h-5" style={{ color: stat.color }} />
+                  </div>
+                  <div className="min-w-0">
+                    <p className="stat-number" style={{ fontSize: '1.1rem' }}>{stat.value}</p>
+                    <p className="stat-label">{stat.label}</p>
+                  </div>
                 </div>
               </div>
             ))}
@@ -142,129 +159,174 @@ export default function HomePage() {
       </div>
 
       {/* Tab Navigation */}
-      <div className="bg-[#171717] border-b border-[#333]">
-        <div className="flex px-6">
-          <button
-            onClick={() => setActiveTab('standings')}
-            className={`px-4 py-3 text-sm font-medium border-b-2 transition-colors ${
-              activeTab === 'standings'
-                ? 'border-red-500 text-white'
-                : 'border-transparent text-gray-500 hover:text-white'
-            }`}
-          >
-            <span className="flex items-center gap-2">
-              <Trophy className="w-4 h-4" />
-              Standings
-            </span>
-          </button>
-          <button
-            onClick={() => setActiveTab('calendar')}
-            className={`px-4 py-3 text-sm font-medium border-b-2 transition-colors ${
-              activeTab === 'calendar'
-                ? 'border-red-500 text-white'
-                : 'border-transparent text-gray-500 hover:text-white'
-            }`}
-          >
-            <span className="flex items-center gap-2">
-              <Calendar className="w-4 h-4" />
-              Calendar
-            </span>
-          </button>
-          <button
-            onClick={() => setActiveTab('teams')}
-            className={`px-4 py-3 text-sm font-medium border-b-2 transition-colors ${
-              activeTab === 'teams'
-                ? 'border-red-500 text-white'
-                : 'border-transparent text-gray-500 hover:text-white'
-            }`}
-          >
-            <span className="flex items-center gap-2">
-              <Users className="w-4 h-4" />
-              Teams
-            </span>
-          </button>
+      <div className="border-b border-[var(--bg-overlay)] mt-2 mb-6">
+        <div className="flex gap-1">
+          {[
+            { key: 'standings', label: 'Standings', icon: Trophy },
+            { key: 'calendar', label: 'Calendar', icon: Calendar },
+            { key: 'teams', label: 'Teams', icon: Users },
+          ].map((tab) => (
+            <button
+              key={tab.key}
+              onClick={() => setActiveTab(tab.key as typeof activeTab)}
+              className={`tab-item flex items-center gap-2 ${activeTab === tab.key ? 'active' : ''}`}
+            >
+              <tab.icon className="w-4 h-4" />
+              {tab.label}
+            </button>
+          ))}
         </div>
       </div>
 
       {/* Content */}
-      <div className="p-6">
-        {activeTab === 'standings' ? (
-          <div className="space-y-6">
-            {/* Top 3 Podium */}
-            <div className="bg-[#171717] rounded-xl p-6">
-              <h2 className="text-xl font-bold text-white mb-6 flex items-center gap-2">
-                <span className="text-2xl">🏆</span> Championship Leaders
-              </h2>
-              {loading ? (
-                <div className="flex items-center justify-center py-12">
-                  <Loader2 className="w-8 h-8 text-white animate-spin" />
-                </div>
-              ) : drivers.length > 0 ? (
-                <div className="flex items-end justify-center gap-4">
-                  {[
-                    { idx: 1, driver: drivers[1] }, // P2
-                    { idx: 0, driver: drivers[0] }, // P1
-                    { idx: 2, driver: drivers[2] }, // P3
-                  ].map(({ idx, driver }) => {
-                    const heights = ['h-40', 'h-48', 'h-36'];
-                    const colors = ['#C0C0C0', '#FFD700', '#CD7F32'];
-                    const imageUrl = driverImages[driver.abbreviation as keyof typeof driverImages] || '';
-                    
-                    return (
-                      <div key={driver.position} className={`flex-1 max-w-[140px] ${heights[idx]}`}>
-                        {/* Driver Image */}
-                        <div className="w-20 h-20 mx-auto rounded-full overflow-hidden border-4 mb-2"
-                             style={{ borderColor: colors[idx] }}>
-                          {imageUrl ? (
-                            <img 
-                              src={imageUrl}
-                              alt={driver.fullName}
-                              className="w-full h-full object-cover"
-                              onError={(e) => {
-                                (e.target as HTMLImageElement).style.display = 'none';
-                              }}
-                            />
-                          ) : (
-                            <div className="w-full h-full bg-gray-700 flex items-center justify-center text-white text-xs">
-                              {driver.abbreviation}
-                            </div>
-                          )}
+      {loading ? (
+        <div className="flex items-center justify-center py-20">
+          <Loader2 className="w-8 h-8 text-[var(--accent-red)] animate-spin" />
+        </div>
+      ) : (
+        <div className="space-y-6">
+          {activeTab === 'standings' && (
+            <div className="space-y-6">
+              {/* Podium */}
+              {drivers.length > 0 && (
+                <div className="card">
+                  <div className="flex items-center gap-2 mb-6">
+                    <Trophy className="w-5 h-5 text-[var(--accent-red)]" />
+                    <h2
+                      className="text-lg font-bold"
+                      style={{ fontFamily: "var(--font-heading)" }}
+                    >
+                      Championship Leaders
+                    </h2>
+                  </div>
+                  <div className="flex items-end justify-center gap-3 md:gap-6">
+                    {/* P2 */}
+                    {drivers[1] && (
+                      <div className="flex-1 max-w-32 flex flex-col items-center animate-enter" style={{ animationDelay: '80ms' }}>
+                        <div
+                          className="w-16 h-16 rounded-full border-[3px] overflow-hidden mb-2"
+                          style={{ borderColor: '#C0C0C0' }}
+                        >
+                          {getDriverImg(drivers[1].abbreviation)}
                         </div>
-                        <p className="text-white text-center font-bold text-sm truncate">
-                          {driver.fullName.split(' ').pop()}
+                        <p
+                          className="text-sm font-semibold text-[var(--text-primary)] truncate max-w-full"
+                          style={{ fontFamily: "var(--font-heading)" }}
+                        >
+                          {drivers[1].fullName.split(' ').pop()}
                         </p>
-                        <p className="text-gray-400 text-center text-xs">{driver.points} pts</p>
-                        {/* Podium block */}
-                        <div className="mt-auto bg-gradient-to-t from-[#2a2a2a] to-[#1a1a1a] rounded-t-lg pt-2"
-                             style={{ borderTop: `3px solid ${colors[idx]}` }}>
-                          <p className="text-center text-2xl font-black" style={{ color: colors[idx] }}>
-                            {driver.position}
+                        <p className="stat-label">{drivers[1].points} pts</p>
+                        <div
+                          className="mt-auto w-full podium-block"
+                          style={{ '--podium-color': '#C0C0C0' } as React.CSSProperties}
+                        >
+                          <p className="text-2xl font-extrabold" style={{ color: '#C0C0C0', fontFamily: "var(--font-mono)" }}>
+                            P2
                           </p>
                         </div>
                       </div>
-                    );
-                  })}
+                    )}
+
+                    {/* P1 */}
+                    {drivers[0] && (
+                      <div className="flex-1 max-w-36 flex flex-col items-center animate-enter" style={{ animationDelay: '0ms' }}>
+                        <div
+                          className="w-20 h-20 rounded-full border-[4px] overflow-hidden mb-2"
+                          style={{ borderColor: '#FFD700' }}
+                        >
+                          {getDriverImg(drivers[0].abbreviation)}
+                        </div>
+                        <p
+                          className="text-base font-bold text-[var(--text-primary)] truncate max-w-full"
+                          style={{ fontFamily: "var(--font-heading)" }}
+                        >
+                          {drivers[0].fullName.split(' ').pop()}
+                        </p>
+                        <p className="stat-label">{drivers[0].points} pts</p>
+                        <div
+                          className="mt-auto w-full podium-block"
+                          style={{ '--podium-color': '#FFD700' } as React.CSSProperties}
+                        >
+                          <p className="text-3xl font-extrabold" style={{ color: '#FFD700', fontFamily: "var(--font-mono)" }}>
+                            P1
+                          </p>
+                        </div>
+                      </div>
+                    )}
+
+                    {/* P3 */}
+                    {drivers[2] && (
+                      <div className="flex-1 max-w-28 flex flex-col items-center animate-enter" style={{ animationDelay: '160ms' }}>
+                        <div
+                          className="w-14 h-14 rounded-full border-[3px] overflow-hidden mb-2"
+                          style={{ borderColor: '#CD7F32' }}
+                        >
+                          {getDriverImg(drivers[2].abbreviation)}
+                        </div>
+                        <p
+                          className="text-sm font-semibold text-[var(--text-primary)] truncate max-w-full"
+                          style={{ fontFamily: "var(--font-heading)" }}
+                        >
+                          {drivers[2].fullName.split(' ').pop()}
+                        </p>
+                        <p className="stat-label">{drivers[2].points} pts</p>
+                        <div
+                          className="mt-auto w-full podium-block"
+                          style={{ '--podium-color': '#CD7F32' } as React.CSSProperties}
+                        >
+                          <p className="text-xl font-extrabold" style={{ color: '#CD7F32', fontFamily: "var(--font-mono)" }}>
+                            P3
+                          </p>
+                        </div>
+                      </div>
+                    )}
+                  </div>
                 </div>
-              ) : (
-                <p className="text-gray-400 text-center py-8">No data available</p>
+              )}
+
+              {/* Constructor Standings */}
+              {constructors.length > 0 && (
+                <ConstructorStandingsVisual teams={constructors} />
               )}
             </div>
+          )}
 
-            {/* Constructor Standings */}
-            {constructors.length > 0 && (
-              <ConstructorStandingsVisual teams={constructors} />
-            )}
-          </div>
-        ) : (
-          <RaceCalendarVisual races={races} />
-        )}
-        {activeTab === 'teams' && (
-          <div className="space-y-6">
-            <AllDriversGrid />
-            <TeamGallery />
-          </div>
-        )}
-      </div>
+          {activeTab === 'calendar' && (
+            <RaceCalendarVisual races={races} />
+          )}
+
+          {activeTab === 'teams' && (
+            <div className="space-y-6">
+              <AllDriversGrid />
+              <TeamGallery />
+            </div>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
+
+function getDriverImg(abbreviation: string) {
+  const imgUrl = driverImages[abbreviation as keyof typeof driverImages];
+  if (imgUrl) {
+    return (
+      <img
+        src={imgUrl}
+        alt={abbreviation}
+        className="w-full h-full object-cover"
+        onError={(e) => {
+          (e.target as HTMLImageElement).style.display = 'none';
+        }}
+      />
+    );
+  }
+  return (
+    <div
+      className="w-full h-full bg-[var(--bg-elevated)] flex items-center justify-center"
+      style={{ fontFamily: "var(--font-mono)" }}
+    >
+      <span className="text-[var(--text-secondary)] text-xs">{abbreviation}</span>
     </div>
   );
 }

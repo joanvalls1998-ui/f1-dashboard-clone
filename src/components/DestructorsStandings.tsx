@@ -300,9 +300,9 @@ export function DestructorsStandings() {
       case "PENALTY":
         return "text-purple-500 bg-purple-500/10";
       case "RETIRED":
-        return "text-gray-500 bg-gray-500/10";
+        return "var(--text-muted) bg-gray-500/10";
       default:
-        return "text-gray-500 bg-gray-500/10";
+        return "var(--text-muted) bg-gray-500/10";
     }
   };
 
@@ -319,13 +319,13 @@ export function DestructorsStandings() {
       {/* Filters */}
       <div className="flex flex-wrap gap-3">
         <div className="relative flex-1 min-w-[200px]">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 var(--text-muted)" />
           <input
             type="text"
             placeholder="Search driver..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full pl-9 pr-3 py-2 rounded-md border bg-[#1a1a1a] text-sm"
+            className="w-full pl-9 pr-3 py-2 rounded-md border var(--bg-elevated) text-sm"
             aria-label="Search drivers"
           />
         </div>
@@ -333,7 +333,7 @@ export function DestructorsStandings() {
         <select
           value={filterType}
           onChange={(e) => setFilterType(e.target.value)}
-          className="px-3 py-2 rounded-md border bg-[#1a1a1a] text-sm"
+          className="px-3 py-2 rounded-md border var(--bg-elevated) text-sm"
           aria-label="Filter by incident type"
         >
           <option value="all">All Incidents</option>
@@ -345,10 +345,10 @@ export function DestructorsStandings() {
       </div>
 
       {/* Standings Table */}
-      <div className="bg-[#1a1a1a] rounded-xl overflow-hidden">
+      <div className="var(--bg-elevated) rounded-xl overflow-hidden">
         <table className="w-full" aria-label="Destructors championship standings">
           <thead>
-            <tr className="border-b border-[#333] text-xs text-gray-500 uppercase tracking-wider">
+            <tr className="border-b var(--border-color) text-xs var(--text-muted) uppercase tracking-wider">
               <th className="text-left p-4">#</th>
               <th className="text-left p-4">Driver</th>
               <th className="text-center p-4">DNFs</th>
@@ -363,18 +363,18 @@ export function DestructorsStandings() {
             {filteredDrivers.map((driver) => (
               <tr
                 key={driver.abbreviation}
-                className="border-b border-[#252525] hover:bg-[#252525] transition-colors"
+                className="border-b var(--border-color) hover:var(--bg-overlay) transition-colors"
               >
                 <td className="p-4">
                   <div
                     className={`w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm ${
                       driver.position === 1
-                        ? "bg-red-500 text-white"
+                        ? "bg-red-500 var(--text-primary)"
                         : driver.position === 2
-                        ? "bg-orange-500 text-white"
+                        ? "bg-orange-500 var(--text-primary)"
                         : driver.position === 3
                         ? "bg-yellow-500 text-black"
-                        : "bg-[#333] text-gray-300"
+                        : "var(--bg-overlay) var(--text-secondary)"
                     }`}
                   >
                     {driver.position}
@@ -387,9 +387,9 @@ export function DestructorsStandings() {
                       style={{ backgroundColor: driver.teamColor }}
                     />
                     <div>
-                      <p className="text-white font-bold">{driver.fullName}</p>
+                      <p className="var(--text-primary) font-bold">{driver.fullName}</p>
                       <div className="flex items-center gap-2">
-                        <span className="text-xs text-gray-500">{driver.team}</span>
+                        <span className="text-xs var(--text-muted)">{driver.team}</span>
                         <span
                           className="px-2 py-0.5 rounded text-xs"
                           style={{
@@ -419,7 +419,7 @@ export function DestructorsStandings() {
                   <span className="text-lg font-bold text-purple-400">{driver.penalties}</span>
                 </td>
                 <td className="p-4 text-center">
-                  <span className="text-xl font-black text-white bg-[#333] px-3 py-1 rounded">
+                  <span className="text-xl font-black var(--text-primary) var(--bg-overlay) px-3 py-1 rounded">
                     {driver.totalIncidents}
                   </span>
                 </td>
@@ -433,23 +433,23 @@ export function DestructorsStandings() {
       <div className="flex flex-wrap gap-4 text-xs">
         <div className="flex items-center gap-2">
           <span className="px-2 py-1 rounded bg-red-500/10 text-red-500 font-medium">DNF</span>
-          <span className="text-gray-500">Did Not Finish</span>
+          <span className="text-[var(--text-muted)]">Did Not Finish</span>
         </div>
         <div className="flex items-center gap-2">
           <span className="px-2 py-1 rounded bg-red-400/10 text-red-400 font-medium">ACC</span>
-          <span className="text-gray-500">Accidents/Collisions</span>
+          <span className="text-[var(--text-muted)]">Accidents/Collisions</span>
         </div>
         <div className="flex items-center gap-2">
           <span className="px-2 py-1 rounded bg-orange-400/10 text-orange-400 font-medium">MECH</span>
-          <span className="text-gray-500">Mechanical Failures</span>
+          <span className="text-[var(--text-muted)]">Mechanical Failures</span>
         </div>
         <div className="flex items-center gap-2">
           <span className="px-2 py-1 rounded bg-yellow-400/10 text-yellow-400 font-medium">ERR</span>
-          <span className="text-gray-500">Driver Errors</span>
+          <span className="text-[var(--text-muted)]">Driver Errors</span>
         </div>
         <div className="flex items-center gap-2">
           <span className="px-2 py-1 rounded bg-purple-400/10 text-purple-400 font-medium">PEN</span>
-          <span className="text-gray-500">Penalties/DSQ</span>
+          <span className="text-[var(--text-muted)]">Penalties/DSQ</span>
         </div>
       </div>
     </div>
@@ -632,7 +632,7 @@ export function DestructorsLeaderboard() {
         {top3.map((driver) => (
           <div
             key={driver.position}
-            className="relative bg-[#1a1a1a] rounded-xl overflow-hidden"
+            className="relative var(--bg-elevated) rounded-xl overflow-hidden"
             style={{
               borderTop: `4px solid ${
                 driver.position === 1 ? "#FF4444" : driver.position === 2 ? "#FF8844" : "#FFAA44"
@@ -643,9 +643,9 @@ export function DestructorsLeaderboard() {
               <div
                 className={`w-12 h-12 rounded-full mx-auto mb-3 flex items-center justify-center text-xl font-black ${
                   driver.position === 1
-                    ? "bg-red-500 text-white"
+                    ? "bg-red-500 var(--text-primary)"
                     : driver.position === 2
-                    ? "bg-orange-500 text-white"
+                    ? "bg-orange-500 var(--text-primary)"
                     : "bg-yellow-500 text-black"
                 }`}
               >
@@ -657,17 +657,17 @@ export function DestructorsLeaderboard() {
                 style={{ backgroundColor: driver.teamColor }}
               />
 
-              <h3 className="text-white font-bold text-lg">{driver.fullName}</h3>
-              <p className="text-sm text-gray-500">{driver.team}</p>
+              <h3 className="var(--text-primary) font-bold text-lg">{driver.fullName}</h3>
+              <p className="text-sm var(--text-muted)">{driver.team}</p>
 
               <div className="mt-4 space-y-2">
                 <div className="flex justify-between text-sm">
-                  <span className="text-gray-500">DNFs</span>
+                  <span className="text-[var(--text-muted)]">DNFs</span>
                   <span className="text-red-500 font-bold">{driver.dnfs}</span>
                 </div>
                 <div className="flex justify-between text-sm">
-                  <span className="text-gray-500">Total Incidents</span>
-                  <span className="text-white font-bold">{driver.totalIncidents}</span>
+                  <span className="text-[var(--text-muted)]">Total Incidents</span>
+                  <span className="var(--text-primary) font-bold">{driver.totalIncidents}</span>
                 </div>
               </div>
             </div>
