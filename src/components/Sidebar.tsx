@@ -34,11 +34,8 @@ import {
   ChevronDown,
   Github,
   Menu,
-  GripVertical,
-  Minimize2,
-  Maximize2,
 } from "lucide-react";
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 
 /* ═══════════════ Dades de navegació ═══════════════ */
 
@@ -121,50 +118,45 @@ const navSections: NavSection[] = [
   },
 ];
 
-/* ═══════════════ Subcomponents ═══════════════ */
+/* ═══════════════ Tooltip desktop col·lapsat ═══════════════ */
 
-/** Tooltip que apareix al passar el ratolí sobre items quan el sidebar està col·lapsat */
-function CollapsedTooltip({ label, children }: { label: string; children: React.ReactNode }) {
+function Tooltip({ label, children }: { label: string; children: React.ReactNode }) {
   return (
-    <div className="group relative isolate">
+    <div className="group/tooltip relative">
       {children}
       <span
         className={cn(
-          "pointer-events-none absolute left-[calc(100%+12px)] top-1/2 z-[100] -translate-y-1/2",
-          "rounded-md bg-[#1a1a1e] px-3 py-1.5 text-xs font-medium text-[#fafafa]",
-          "border border-[#27272a] shadow-lg",
-          "opacity-0 translate-x-[-4px] transition-all duration-200 ease-out",
-          "group-hover:opacity-100 group-hover:translate-x-0",
-          "lg:block hidden",
-          "whitespace-nowrap"
+          "pointer-events-none absolute left-full top-1/2 z-[100] ml-2 -translate-y-1/2",
+          "rounded-md bg-[#1a1a1e] px-3 py-1.5 text-xs font-medium text-white",
+          "border border-[#27272a] shadow-xl",
+          "opacity-0 translate-x-[-4px] transition-all duration-200",
+          "group-hover/tooltip:opacity-100 group-hover/tooltip:translate-x-0",
+          "hidden lg:block whitespace-nowrap"
         )}
         role="tooltip"
       >
         {label}
-        {/* Arrow */}
-        <span
-          className="absolute top-1/2 left-0 -translate-x-1/2 -translate-y-1/2 -rotate-45 w-1.5 h-1.5 bg-[#1a1a1e] border-l border-b border-[#27272a]"
-        />
+        <span className="absolute top-1/2 left-0 -translate-x-1/2 -translate-y-1/2 -rotate-45 w-1.5 h-1.5 bg-[#1a1a1e] border-l border-b border-[#27272a]" />
       </span>
     </div>
   );
 }
 
+/* ═══════════════ Botó mòbil ═══════════════ */
+
 export function MobileMenuButton({ onClick }: { onClick: () => void }) {
   return (
     <button
       onClick={onClick}
-      className="p-2 rounded-lg text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-elevated)] transition-colors duration-200"
-      aria-label="Obrir menú de navegació"
-      aria-expanded="false"
-      aria-controls="sidebar-navigation"
+      className="p-2 rounded-lg text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-elevated)] transition-colors"
+      aria-label="Obrir menú"
     >
-      <Menu className="w-5 h-5" aria-hidden="true" />
+      <Menu className="w-5 h-5" />
     </button>
   );
 }
 
-/* ═══════════════ Sidebar Principal ═══════════════ */
+/* ═══════════════ Sidebar ═══════════════ */
 
 interface SidebarProps {
   collapsed: boolean;
@@ -175,184 +167,144 @@ export function Sidebar({ collapsed, onToggle }: SidebarProps) {
   const pathname = usePathname();
   const [expandedSections, setExpandedSections] = useState<Record<string, boolean>>({});
 
-  // Per defecte totes les seccions obertes excepte les últimes quan hi ha molts items
-  const isExpanded = useCallback((label: string, itemCount: number) => {
-    if (expandedSections[label] !== undefined) return expandedSections[label];
-    return true; // Per defecte obertes
-  }, [expandedSections]);
-
   const toggleSection = (label: string) => {
-    setExpandedSections((prev) => ({
-      ...prev,
-      [label]: !prev[label],
-    }));
+    setExpandedSections((prev) => ({ ...prev, [label]: !prev[label] }));
   };
+
+  /* ── Overlay mòbil ── */
+  const showOverlay = !collapsed;
+
+  /* ── Classe de l'aside segons estat ── */
+  // Mòbil:  només obert (translate-x-0 w-64) o tancat (translate-x-[-100%])
+  // Desktop: col·lapsat (w-16) o expandit (w-64)
+  const asideClass = cn(
+    "fixed left-0 top-0 z-40 h-dvh flex flex-col",
+    "bg-[var(--sidebar-bg)] border-r border-[var(--sidebar-border)]",
+    "transition-transform duration-300 ease-out lg:transition-[width]",
+    // Mòbil:
+    collapsed ? "-translate-x-full w-64" : "translate-x-0 w-64",
+    // Desktop:
+    "lg:translate-x-0",
+    collapsed ? "lg:w-16" : "lg:w-64"
+  );
 
   return (
     <>
-      {/* ── Overlay mòbil ── */}
-      {!collapsed && (
+      {/* Overlay */}
+      {showOverlay && (
         <div
-          className="fixed inset-0 z-30 bg-black/70 backdrop-blur-sm lg:hidden transition-opacity duration-300"
+          className="fixed inset-0 z-30 bg-black/60 backdrop-blur-sm lg:hidden transition-opacity"
           onClick={onToggle}
-          aria-hidden="true"
         />
       )}
 
-      {/* ── Sidebar base ── */}
-      <aside
-        id="sidebar-navigation"
-        className={cn(
-          "fixed left-0 top-0 z-40 h-dvh flex flex-col",
-          "bg-[var(--sidebar-bg)] border-r border-[var(--sidebar-border)]",
-          "transition-[width] duration-300 ease-[cubic-bezier(0.25,0.46,0.45,0.94)]",
-          collapsed ? "w-[4.5rem]" : "w-[17rem]"
-        )}
-        aria-label="Barra lateral de navegació principal"
-        role="navigation"
-      >
-        {/* ═══════ Capçalera / Logo ═══════ */}
-        <div
-          className={cn(
-            "flex items-center shrink-0 border-b border-[var(--sidebar-border)]",
-            collapsed ? "h-16 justify-center px-0" : "h-16 px-5"
-          )}
-        >
-          <Link href="/" className="flex items-center gap-3 overflow-hidden" aria-label="F1 Dashboard - Inici">
-            {/* Logo mark — sempre visible */}
-            <div className="relative flex items-center justify-center shrink-0">
-              <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-[#E10600] to-[#b00500] flex items-center justify-center shadow-[0_0_12px_rgba(225,6,0,0.25)]">
-                <span
-                  className="text-white font-extrabold text-[10px] tracking-wider"
-                  style={{ fontFamily: "var(--font-heading)" }}
-                >
-                  F1
-                </span>
-              </div>
-            </div>
-
-            {/* Logo text */}
-            <div
-              className={cn(
-                "overflow-hidden transition-all duration-300",
-                collapsed ? "w-0 opacity-0 ml-0" : "w-auto opacity-100 ml-3"
-              )}
-            >
-              <span
-                className="font-bold text-[15px] tracking-tight text-[var(--text-primary)] whitespace-nowrap"
-                style={{ fontFamily: "var(--font-heading)" }}
-              >
-                F1 Dashboard
+      <aside className={asideClass} aria-label="Navegació principal">
+        {/* Capçalera */}
+        <div className="flex items-center h-16 px-4 border-b border-[var(--sidebar-border)] shrink-0">
+          <Link href="/" className="flex items-center gap-3 overflow-hidden">
+            {/* Logo */}
+            <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-[#E10600] to-[#b00500] flex items-center justify-center shrink-0 shadow-[0_0_12px_rgba(225,6,0,0.25)]">
+              <span className="text-white font-extrabold text-[10px] tracking-wider" style={{ fontFamily: "var(--font-heading)" }}>
+                F1
               </span>
             </div>
-
-            {/* Botón cerrar móvil */}
-            {!collapsed && (
-              <button
-                onClick={onToggle}
-                className="ml-auto p-1.5 rounded-md text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:bg-[var(--sidebar-accent)] transition-all duration-200 lg:hidden"
-                aria-label="Tancar menú"
-              >
-                <X className="w-5 h-5" aria-hidden="true" />
-              </button>
-            )}
-
-            {/* Toggle desktop (solo cuando colapsado) */}
-            {collapsed && (
-              <button
-                onClick={onToggle}
-                className="hidden lg:flex absolute -right-3 top-1/2 -translate-y-1/2 z-50 w-6 h-6 rounded-full bg-[#1a1a1e] border border-[var(--sidebar-border)] items-center justify-center text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:border-[var(--text-muted)] hover:bg-[#27272a] transition-all duration-200 shadow-md"
-                aria-label="Ampliar barra lateral"
-                title="Ampliar barra lateral"
-              >
-                <Maximize2 className="w-3 h-3" aria-hidden="true" />
-              </button>
-            )}
+            {/* Títol — amagat només al desktop col·lapsat */}
+            <span
+              className={cn(
+                "font-bold text-[15px] tracking-tight text-[var(--text-primary)] whitespace-nowrap transition-opacity duration-300",
+                collapsed ? "lg:opacity-0 lg:w-0" : "opacity-100"
+              )}
+              style={{ fontFamily: "var(--font-heading)" }}
+            >
+              F1 Dashboard
+            </span>
           </Link>
+
+          {/* Tancar (mòbil només) */}
+          {!collapsed && (
+            <button
+              onClick={onToggle}
+              className="ml-auto p-1.5 rounded-md text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:bg-[var(--sidebar-accent)] transition-colors lg:hidden"
+              aria-label="Tancar menú"
+            >
+              <X className="w-5 h-5" />
+            </button>
+          )}
         </div>
 
-        {/* ═══════ Botón colapsar/expandir (solo desktop cuando expandido) ═══════ */}
-        {!collapsed && (
-          <button
-            onClick={onToggle}
-            className="hidden lg:flex mx-4 mt-2 mb-1 items-center justify-center gap-1.5 px-2 py-1.5 rounded-md text-[11px] font-medium uppercase tracking-wider text-[var(--text-muted)] hover:text-[var(--text-secondary)] hover:bg-[var(--sidebar-accent)] transition-all duration-200 border border-transparent hover:border-[var(--sidebar-border)]"
-            aria-label="Colapsar barra lateral"
-            title="Colapsar barra lateral (⌘ + [)"
-          >
-            <Minimize2 className="w-3.5 h-3.5" aria-hidden="true" />
-            <span className="sr-only">Colapsar</span>
-          </button>
-        )}
-
-        {/* ═══════ Navegació ═══════ */}
-        <nav
-          className="flex-1 overflow-y-auto overflow-x-hidden py-2 custom-scrollbar"
-          aria-label="Navegació per categories"
-        >
-          <ul className={cn("space-y-4", collapsed ? "px-2" : "px-3")}>
+        {/* Navegació */}
+        <nav className="flex-1 overflow-y-auto overflow-x-hidden py-3 px-3" aria-label="Navegació per categories">
+          <ul className="space-y-5">
             {navSections.map((section) => {
-              const sectionExpanded = isExpanded(section.label, section.items.length);
+              const isOpen = expandedSections[section.label] ?? true;
               return (
                 <li key={section.label}>
-                  {/* Títol de secció (amagat quan col·lapsat) */}
-                  {!collapsed && (
-                    <button
-                      onClick={() => toggleSection(section.label)}
-                      className={cn(
-                        "flex items-center justify-between w-full group/section",
-                        "px-2.5 py-1.5 mb-1.5 text-[11px] font-semibold uppercase tracking-widest",
-                        "text-[var(--text-muted)] hover:text-[var(--text-secondary)]",
-                        "rounded-md transition-colors duration-200",
-                        "focus-visible:outline-2 focus-visible:outline-[var(--accent-red)] focus-visible:outline-offset-0"
-                      )}
-                      aria-expanded={sectionExpanded}
-                      aria-controls={`section-${section.label}`}
-                    >
-                      <span className="leading-none">{section.label}</span>
-                      <span className="sr-only">
-                        {sectionExpanded ? "Contraure secció" : "Expandir secció"}
-                      </span>
-                      <ChevronDown
-                        className={cn(
-                          "w-3.5 h-3.5 opacity-60 group-hover/section:opacity-100 transition-transform duration-300",
-                          sectionExpanded ? "rotate-0" : "-rotate-90"
-                        )}
-                        aria-hidden="true"
-                      />
-                    </button>
-                  )}
-
-                  {/* Items de la secció */}
-                  <ul
-                    id={`section-${section.label}`}
+                  {/* Títol secció — amagat al desktop col·lapsat */}
+                  <button
+                    onClick={() => toggleSection(section.label)}
                     className={cn(
-                      "space-y-0.5",
-                      collapsed ? "mt-0" : "mt-0",
-                      sectionExpanded || collapsed ? "opacity-100" : "max-h-0 opacity-0 overflow-hidden"
+                      "flex items-center justify-between w-full text-[11px] font-semibold uppercase tracking-widest text-[var(--text-muted)] hover:text-[var(--text-secondary)] transition-colors mb-1",
+                      collapsed ? "lg:hidden" : ""
                     )}
-                    style={
-                      !collapsed
-                        ? {
-                            maxHeight: sectionExpanded ? `${section.items.length * 44 + 20}px` : "0px",
-                            opacity: sectionExpanded ? 1 : 0,
-                            overflow: "hidden",
-                            transition: "max-height 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94), opacity 0.25s ease-out",
-                          }
-                        : undefined
-                    }
+                    aria-expanded={isOpen}
+                  >
+                    <span>{section.label}</span>
+                    <ChevronDown className={cn("w-3.5 h-3.5 transition-transform duration-300", isOpen ? "" : "-rotate-90")} />
+                  </button>
+
+                  {/* Items */}
+                  <ul
+                    className={cn(
+                      "space-y-0.5 overflow-hidden transition-all duration-300",
+                      isOpen ? "max-h-[600px] opacity-100" : "max-h-0 opacity-0"
+                    )}
                   >
                     {section.items.map((item) => {
                       const isActive = pathname === item.href;
                       return (
                         <li key={item.href}>
-                          <NavItemLink
-                            item={item}
-                            isActive={isActive}
-                            collapsed={collapsed}
-                            onNavigate={() => {
-                              if (window.innerWidth < 1024) onToggle();
-                            }}
-                          />
+                          <Tooltip label={item.label}>
+                            <Link
+                              href={item.href}
+                              className={cn(
+                                "group relative flex items-center rounded-lg transition-all duration-200",
+                                isActive
+                                  ? "bg-[var(--sidebar-accent)] text-[var(--text-primary)] font-semibold"
+                                  : "text-[var(--sidebar-fg)] hover:bg-[var(--sidebar-accent)] hover:text-[var(--text-primary)]",
+                              // Mòbil sempre expandit:
+                              "gap-3 px-3 py-2.5",
+                              // Desktop col·lapsat: només icona centrada
+                              collapsed && "lg:justify-center lg:px-2 lg:py-2.5 lg:gap-0"
+                              )}
+                              aria-current={isActive ? "page" : undefined}
+                              onClick={() => {
+                                if (window.innerWidth < 1024) onToggle();
+                              }}
+                            >
+                              {/* Indicador actiu */}
+                              {isActive && (
+                                <span className="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-5 rounded-r-full bg-gradient-to-b from-[#E10600] to-[#ff3b33] shadow-[0_0_8px_rgba(225,6,0,0.4)]" />
+                              )}
+
+                              <item.icon
+                                className={cn(
+                                  "shrink-0 transition-colors",
+                                  isActive ? "text-[var(--accent-red)]" : "text-[var(--text-muted)] group-hover:text-[var(--text-secondary)]",
+                                  "w-[18px] h-[18px]"
+                                )}
+                              />
+
+                              {/* Text — amagat al desktop col·lapsat */}
+                              <span
+                                className={cn(
+                                  "text-[13.5px] leading-snug truncate transition-opacity duration-200",
+                                  collapsed ? "lg:hidden" : ""
+                                )}
+                              >
+                                {item.label}
+                              </span>
+                            </Link>
+                          </Tooltip>
                         </li>
                       );
                     })}
@@ -363,106 +315,24 @@ export function Sidebar({ collapsed, onToggle }: SidebarProps) {
           </ul>
         </nav>
 
-        {/* ═══════ Footer ═══════ */}
-        <div className="shrink-0 border-t border-[var(--sidebar-border)] py-3">
-          <ul className={cn("space-y-0.5", collapsed ? "px-2" : "px-3")}>
-            <li>
-              <CollapsedTooltip label="Repositori GitHub">
-                <a
-                  href="https://github.com/joanvalls1998-ui/f1-dashboard-clone"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className={cn(
-                    "flex items-center gap-3 rounded-lg text-sm font-medium",
-                    "text-[var(--sidebar-fg)] hover:text-[var(--text-primary)]",
-                    "hover:bg-[var(--sidebar-accent)] transition-all duration-200",
-                    collapsed ? "justify-center px-2 py-2.5" : "px-3 py-2"
-                  )}
-                  aria-label="Visita el repositori a GitHub (s'obre en una pestanya nova)"
-                  title="GitHub"
-                >
-                  <Github className="w-5 h-5 shrink-0" aria-hidden="true" />
-                  {!collapsed && (
-                    <span className="truncate">GitHub</span>
-                  )}
-                </a>
-              </CollapsedTooltip>
-            </li>
-          </ul>
+        {/* Footer */}
+        <div className="shrink-0 border-t border-[var(--sidebar-border)] py-3 px-3">
+          <Tooltip label="GitHub">
+            <a
+              href="https://github.com/joanvalls1998-ui/f1-dashboard-clone"
+              target="_blank"
+              rel="noopener noreferrer"
+              className={cn(
+                "flex items-center gap-3 rounded-lg text-sm text-[var(--sidebar-fg)] hover:bg-[var(--sidebar-accent)] hover:text-[var(--text-primary)] transition-all duration-200",
+                collapsed ? "lg:justify-center lg:px-2 lg:py-2.5" : "px-3 py-2"
+              )}
+            >
+              <Github className="w-5 h-5 shrink-0" />
+              <span className={cn("truncate", collapsed ? "lg:hidden" : "")}>GitHub</span>
+            </a>
+          </Tooltip>
         </div>
       </aside>
     </>
-  );
-}
-
-/* ═══════════════ NavItemLink ═══════════════ */
-
-function NavItemLink({
-  item,
-  isActive,
-  collapsed,
-  onNavigate,
-}: {
-  item: NavItem;
-  isActive: boolean;
-  collapsed: boolean;
-  onNavigate: () => void;
-}) {
-  return (
-    <CollapsedTooltip label={item.label}>
-      <Link
-        href={item.href}
-        className={cn(
-          "group relative flex items-center rounded-lg transition-all duration-200 outline-none",
-          isActive
-            ? "bg-[var(--sidebar-accent)] text-[var(--text-primary)] font-semibold"
-            : "text-[var(--sidebar-fg)] hover:bg-[var(--sidebar-accent)] hover:text-[var(--text-primary)]",
-          collapsed ? "justify-center px-2 py-2.5" : "gap-3 px-3 py-2.5"
-        )}
-        aria-current={isActive ? "page" : undefined}
-        aria-label={collapsed ? item.label : undefined}
-        title={collapsed ? item.label : undefined}
-        onClick={onNavigate}
-      >
-        {/* Indicador lateral actiu */}
-        {isActive && (
-          <span
-            className={cn(
-              "absolute left-0 top-1/2 -translate-y-1/2",
-              "w-[3px] rounded-r-full",
-              "bg-gradient-to-b from-[#E10600] to-[#ff3b33]",
-              "shadow-[0_0_10px_rgba(225,6,0,0.5)]",
-              collapsed ? "h-5" : "h-6"
-            )}
-            aria-hidden="true"
-          />
-        )}
-
-        {/* Glow subtle de fons per al actiu */}
-        {isActive && !collapsed && (
-          <span
-            className="absolute inset-0 rounded-lg bg-[var(--accent-red-subtle)]"
-            aria-hidden="true"
-          />
-        )}
-
-        {/* Icona */}
-        <item.icon
-          className={cn(
-            "shrink-0 transition-colors duration-200",
-            isActive ? "text-[var(--accent-red)]" : "text-[var(--text-muted)] group-hover:text-[var(--text-secondary)]",
-            collapsed ? "w-5 h-5" : "w-[18px] h-[18px]"
-          )}
-          aria-hidden="true"
-        />
-
-        {/* Text */}
-        {!collapsed && (
-          <span className="relative text-[13.5px] leading-snug truncate z-[1]">
-            {item.label}
-          </span>
-        )}
-      </Link>
-    </CollapsedTooltip>
   );
 }
