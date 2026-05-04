@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Inter, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import SidebarWrapper from "@/components/SidebarWrapper";
+import { JsonLdScript } from "@/components/JsonLdScript";
 
 const geistSans = Inter({
   variable: "--font-geist-sans",
@@ -87,6 +88,7 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <SidebarWrapper>{children}</SidebarWrapper>
+      <JsonLdScript />
       </body>
     </html>
   );
