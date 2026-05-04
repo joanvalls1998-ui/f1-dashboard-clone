@@ -175,14 +175,14 @@ export function Sidebar({ collapsed, onToggle }: SidebarProps) {
   const showOverlay = !collapsed;
 
   /* ── Classe de l'aside segons estat ── */
-  // Mòbil:  només obert (translate-x-0 w-64) o tancat (translate-x-[-100%])
+  // Mòbil: obert = w-screen (tota pantalla), tancat = fora pantalla
   // Desktop: col·lapsat (w-16) o expandit (w-64)
   const asideClass = cn(
     "fixed left-0 top-0 z-40 h-dvh flex flex-col",
     "bg-[var(--sidebar-bg)] border-r border-[var(--sidebar-border)]",
     "transition-transform duration-300 ease-out lg:transition-[width]",
     // Mòbil:
-    collapsed ? "-translate-x-full w-64" : "translate-x-0 w-64",
+    collapsed ? "-translate-x-full w-screen" : "translate-x-0 w-screen",
     // Desktop:
     "lg:translate-x-0",
     collapsed ? "lg:w-16" : "lg:w-64"

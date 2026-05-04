@@ -5,6 +5,7 @@ import { DriverStandingsVisual } from './DriverCard';
 import { driverImages, getTeamColor } from '@/lib/f1-assets';
 import { fetchDriverStandings } from '@/lib/api';
 import { Loader2, Trophy } from 'lucide-react';
+import Image from "next/image";
 
 interface DriverStanding {
   position: number;

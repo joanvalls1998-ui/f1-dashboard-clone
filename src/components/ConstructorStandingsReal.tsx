@@ -1,16 +1,16 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Trophy, TrendingUp, Users } from "lucide-react";
+import { Trophy } from "lucide-react";
+import { getTeamColor } from "@/lib/f1-assets";
 
 interface Team {
+  position: number;
   name: string;
+  constructorId: string;
   teamColor: string;
   points: number;
   wins: number;
-  podiums: number;
-  poles: number;
-  fastestLaps: number;
 }
 
 export function ConstructorStandingsReal() {
@@ -20,57 +20,37 @@ export function ConstructorStandingsReal() {
   useEffect(() => {
     async function fetchTeams() {
       try {
-        // Use Ergast API - OpenF1 doesn't have a teams endpoint
-        const response = await fetch(
+        // Fetch constructor standings (includes points + wins)
+        const standingsRes = await fetch(
           "https://api.jolpi.ca/ergast/f1/2026/constructorstandings.json",
           { signal: AbortSignal.timeout(8000) }
         );
-        const json = await response.json();
-        const constructors = json.MRData.ConstructorTable.Constructors;
+        const standingsJson = await standingsRes.json();
+        const standings = standingsJson.MRData?.StandingsTable?.StandingsLists?.[0]?.ConstructorStandings || [];
         
-        // Fetch constructor standings to get points and wins
-        const standingsResponse = await fetch(
-          "https://api.jolpi.ca/ergast/f1/2026/constructorstandings.json",
-          { signal: AbortSignal.timeout(8000) }
-        );
-        const standingsJson = await standingsResponse.json();
-        const constructorStandings = standingsJson.MRData.StandingsTable.StandingsLists[0]?.ConstructorStandings || [];
-        
-        const standingsMap: Record<string, { points: number; wins: number }> = {};
-        constructorStandings.forEach((cs: any) => {
-          standingsMap[cs.Constructor.constructorId] = {
+        if (standings.length === 0) {
+          setTeams([]);
+          setLoading(false);
+          return;
+        }
+
+        const mappedTeams: Team[] = standings.map((cs: any, index: number) => {
+          const constructor = cs.Constructor || {};
+          return {
+            position: parseInt(cs.position) || index + 1,
+            name: constructor.name || "Unknown",
+            constructorId: constructor.constructorId || "",
+            teamColor: getTeamColor(constructor.name || ""),
             points: parseInt(cs.points) || 0,
             wins: parseInt(cs.wins) || 0,
           };
         });
 
-        const mappedTeams: Team[] = (constructors as any[]).map((c: any, i: number) => {
-          const stats = standingsMap[c.constructorId] || { points: 0, wins: 0 };
-          return {
-            name: c.name,
-            teamColor: c.constructorId === "red_bull" ? "3671c6" :
-                       c.constructorId === "mclaren" ? "ff8000" :
-                       c.constructorId === "ferrari" ? "e8002d" :
-                       c.constructorId === "mercedes" ? "27f4d2" :
-                       c.constructorId === "aston_martin" ? "229971" :
-                       c.constructorId === "alpine" ? "ff87bc" :
-                       c.constructorId === "rb" ? "6692ff" :
-                       c.constructorId === "williams" ? "64c4ff" :
-                       c.constructorId === "sauber" ? "52e252" :
-                       c.constructorId === "haas" ? "b6babd" : "666666",
-            points: stats.points,
-            wins: stats.wins,
-            podiums: 0,
-            poles: 0,
-            fastestLaps: 0,
-          };
-        });
         setTeams(mappedTeams);
-        setLoading(false);
       } catch (error) {
-        console.error("Error fetching teams:", error);
-        setLoading(false);
+        console.error("Error fetching constructor standings:", error);
       }
+      setLoading(false);
     }
     
     fetchTeams();
@@ -79,7 +59,16 @@ export function ConstructorStandingsReal() {
   if (loading) {
     return (
       <div className="flex items-center justify-center py-12">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[var(--accent-red)]" />
+      </div>
+    );
+  }
+
+  if (teams.length === 0) {
+    return (
+      <div className="flex flex-col items-center justify-center py-12 text-[var(--text-muted)]">
+        <Trophy className="w-12 h-12 mb-4 opacity-30" />
+        <p className="text-sm">No hi ha dades de constructors disponibles</p>
       </div>
     );
   }
@@ -88,67 +77,52 @@ export function ConstructorStandingsReal() {
     <div className="space-y-4">
       <div className="flex items-center gap-2">
         <Trophy className="w-5 h-5 text-yellow-500" />
-        <h2 className="text-lg font-semibold">Constructor Standings</h2>
+        <h2 className="text-lg font-semibold">Classificació Constructors</h2>
       </div>
 
-      <div className="rounded-lg border bg-card overflow-hidden">
-        <table className="w-full">
-          <thead className="bg-muted">
-            <tr>
-              <th className="text-left p-3 font-medium">Pos</th>
-              <th className="text-left p-3 font-medium">Team</th>
-              <th className="text-center p-3 font-medium">Pts</th>
-              <th className="text-center p-3 font-medium hidden md:table-cell">W</th>
-              <th className="text-center p-3 font-medium hidden md:table-cell">Pod</th>
-              <th className="text-center p-3 font-medium hidden md:table-cell">Pole</th>
-              <th className="text-center p-3 font-medium hidden md:table-cell">FL</th>
-            </tr>
-          </thead>
-          <tbody>
-            {teams.map((team, index) => (
-              <tr key={team.name} className="border-t hover:bg-muted/50">
-                <td className="p-3">
-                  <span className={`font-bold ${
-                    index === 0 ? "text-yellow-500" : 
-                    index === 1 ? "text-gray-400" : 
-                    index === 2 ? "text-amber-600" : ""
-                  }`}>
-                    {index + 1}
-                  </span>
-                </td>
-                <td className="p-3">
-                  <div className="flex items-center gap-2">
-                    <div
-                      className="w-3 h-3 rounded-full"
-                      style={{ backgroundColor: `#${team.teamColor.replace('#', '')}` }}
-                    />
-                    <span className="font-medium">{team.name}</span>
-                  </div>
-                </td>
-                <td className="p-3 text-center font-bold">{team.points}</td>
-                <td className="p-3 text-center hidden md:table-cell">{team.wins}</td>
-                <td className="p-3 text-center hidden md:table-cell">{team.podiums}</td>
-                <td className="p-3 text-center hidden md:table-cell">{team.poles}</td>
-                <td className="p-3 text-center hidden md:table-cell">{team.fastestLaps}</td>
+      <div className="rounded-xl border overflow-hidden" style={{ borderColor: 'var(--sidebar-border)' }}>
+        <div className="overflow-x-auto">
+          <table className="w-full text-sm">
+            <thead>
+              <tr className="border-b" style={{ borderColor: 'var(--sidebar-border)', backgroundColor: 'var(--bg-elevated)' }}>
+                <th className="text-left p-3 font-medium text-[var(--text-muted)]">Pos</th>
+                <th className="text-left p-3 font-medium text-[var(--text-muted)]">Equip</th>
+                <th className="text-center p-3 font-medium text-[var(--text-muted)]">Pts</th>
+                <th className="text-center p-3 font-medium text-[var(--text-muted)]">Victòries</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-
-      <div className="flex items-center gap-4 text-sm text-muted-foreground">
-        <span className="flex items-center gap-1">
-          <span className="w-3 h-3 rounded-full bg-yellow-500"></span> W = Wins
-        </span>
-        <span className="flex items-center gap-1">
-          <span className="w-3 h-3 rounded-full bg-green-500"></span> Pod = Podiums
-        </span>
-        <span className="flex items-center gap-1">
-          <span className="w-3 h-3 rounded-full bg-blue-500"></span> Pole = Pole Positions
-        </span>
-        <span className="flex items-center gap-1">
-          <span className="w-3 h-3 rounded-full bg-orange-500"></span> FL = Fastest Laps
-        </span>
+            </thead>
+            <tbody>
+              {teams.map((team) => (
+                <tr
+                  key={team.constructorId}
+                  className="border-b hover:bg-[var(--sidebar-accent)] transition-colors"
+                  style={{ borderColor: 'var(--sidebar-border)' }}
+                >
+                  <td className="p-3">
+                    <span className={`font-bold ${
+                      team.position === 1 ? "text-yellow-500" : 
+                      team.position === 2 ? "text-gray-400" : 
+                      team.position === 3 ? "text-amber-600" : ""
+                    }`}>
+                      {team.position}
+                    </span>
+                  </td>
+                  <td className="p-3">
+                    <div className="flex items-center gap-2">
+                      <div
+                        className="w-3 h-3 rounded-full"
+                        style={{ backgroundColor: team.teamColor }}
+                      />
+                      <span className="font-medium text-[var(--text-primary)]">{team.name}</span>
+                    </div>
+                  </td>
+                  <td className="p-3 text-center font-bold text-[var(--text-primary)]">{team.points}</td>
+                  <td className="p-3 text-center text-[var(--text-muted)]">{team.wins}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   );
