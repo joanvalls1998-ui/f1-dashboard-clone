@@ -14,6 +14,7 @@ const geistMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://f1-dashboard-clone.vercel.app"),
   title: "F1 Dashboard - Classificacions, Calendari i Estadístiques",
   description:
     "Explora les classificacions de la Fórmula 1, calendari de curses, estadístiques de pilots i equips, cronometratge en directe i molt més.",
